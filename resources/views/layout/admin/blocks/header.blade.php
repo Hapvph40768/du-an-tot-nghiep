@@ -1,0 +1,30 @@
+<header class="top-header">
+    <div class="header-title">
+        <h1>@yield('header-title', 'Tổng quan')</h1>
+        <p>@yield('header-subtitle', 'Chào mừng trở lại!')</p>
+    </div>
+
+    <div class="header-actions">
+        <div class="search-box">
+            <i class='bx bx-search'></i>
+            <input type="text" placeholder="Tìm kiếm...">
+        </div>
+
+        <button class="notif-btn">
+            <i class='bx bx-bell'></i>
+            <div class="notif-badge"></div>
+        </button>
+
+        <!-- Logout -->
+        @auth
+            <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class='bx bx-log-out'></i>
+                    Đăng xuất
+                </button>
+            </form>
+        @endauth
+
+    </div>
+</header>
