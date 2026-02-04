@@ -34,7 +34,7 @@ class AuthController extends Controller
             'role' => 'customer',
             'status' => 'active',
         ]);
-        return redirect()->route('/login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
+        return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
     }
     public function login(Request $request){
         //validate dữ liệu

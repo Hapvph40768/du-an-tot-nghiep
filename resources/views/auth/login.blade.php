@@ -3,13 +3,40 @@
 @section('title', 'Đăng nhập')
 
 @section('content')
+    {{-- SUCCESS --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
+    {{-- ERROR --}}
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- VALIDATE ERROR --}}
+    @if ($errors->any())
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
     <form method="post" action="{{ route('login') }}">
         @csrf
-                <div class="form-group">
+        <div class="form-group">
             <label class="form-label">Email</label>
             <div class="input-group">
-                <input type="text" name="email" class="form-control" placeholder="phamvana@gmai.com" required autofocus>
+                <input type="text" name="email" class="form-control" placeholder="phamvana@gmai.com" required
+                    autofocus>
                 <i class='bx bx-user input-icon'></i>
             </div>
         </div>
@@ -37,6 +64,6 @@
         <div class="auth-links" style="justify-content: center; margin-top: 32px;">
             <span>Chưa có tài khoản? <a href="{{ route('register') }}" class="text-link">Đăng ký ngay</a></span>
         </div>
-        
+
     </form>
 @endsection
