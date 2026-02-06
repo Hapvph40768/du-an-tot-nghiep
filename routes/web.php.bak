@@ -82,7 +82,7 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/home', fn () => view('customer.home'));
+    Route::get('/home', fn () => view('home'));
 });
 
 Route::resource('routes', RouteController::class);

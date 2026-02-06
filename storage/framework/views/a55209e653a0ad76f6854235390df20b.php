@@ -12,7 +12,7 @@
             <nav class="sidebar-menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a href="{{ url('/admin') }}" class="menu-link active">
+                        <a href="<?php echo e(url('/admin')); ?>" class="menu-link active">
                             <i class='bx bx-grid-alt'></i>
                             <span>Tổng quan</span>
                         </a>
@@ -30,7 +30,7 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{ route('routes.index') }}" class="menu-link">
+                        <a href="<?php echo e(route('routes.index')); ?>" class="menu-link">
                             <i class='bx bx-map-alt'></i>
                             <span>Quản lý tuyến</span>
                         </a>
@@ -54,3 +54,4 @@
                 </div>
             </div>
         </aside>
+<?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/blocks/aside.blade.php ENDPATH**/ ?>
