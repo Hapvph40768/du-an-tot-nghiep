@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,3 +72,5 @@ Route::middleware(['auth','role:admin'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('locations', LocationController::class);
