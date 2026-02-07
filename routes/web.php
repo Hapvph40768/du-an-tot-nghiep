@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DriverController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,9 @@ Route::middleware(['auth','role:admin'])->group(function () {
 
 });
 
+// Tai xe
+Route::get('/tai-xe', [DriverController::class, 'index']);
+Route::resource('drivers', DriverController::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -71,3 +75,4 @@ Route::middleware(['auth','role:admin'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
