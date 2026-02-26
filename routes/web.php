@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,3 +87,25 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 });
 
 Route::resource('routes', RouteController::class);
+
+// Admin routes (prefix and name)
+Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
+    Route::resource('reviews', ReviewController::class);
+});
+
+// Public/customer routes for reviews
+// GET /reviews - redirect based on user role so a GET doesn't return 405
+Route::get('/reviews', function () {
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        return redirect()->route('admin.reviews.index');
+    }
+    if (auth()->check() && auth()->user()->role === 'customer') {
+        return redirect('/home');
+    }
+
+    return redirect()->route('login');
+})->name('reviews.redirect');
+
+// POST /reviews - customers can submit reviews
+Route::middleware(['auth','role:customer'])->post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');

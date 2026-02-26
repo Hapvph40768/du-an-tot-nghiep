@@ -41,6 +41,12 @@
                             <span>Quản lý tài xế</span>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.reviews.index') }}" class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                            <i class='bx bx-comment-detail'></i>
+                            <span>Quản lý đánh giá</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             
