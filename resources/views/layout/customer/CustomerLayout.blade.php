@@ -102,20 +102,50 @@
                         </div>
                     </div>
 
-                    <div class="bg-white/10 backdrop-blur rounded-2xl p-6">
-                        <h4 class="font-bold text-xl mb-4">Gửi yêu cầu hỗ trợ</h4>
-                        <form id="contact-form" class="space-y-4">
-                            <input type="text" placeholder="Họ và tên"
-                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60">
-                            <input type="tel" placeholder="Số điện thoại"
-                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60">
-                            <textarea placeholder="Nội dung cần hỗ trợ" rows="3"
-                                class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 resize-none"></textarea>
-                            <button type="submit" class="w-full btn-primary text-white font-bold py-3 rounded-xl">
-                                Gửi yêu cầu
+                    <div class="bg-white/10 backdrop-blur rounded-2xl p-6 shadow-xl">
+                        <h4 class="font-bold text-xl mb-6 text-white">Gửi yêu cầu hỗ trợ</h4>
+
+                        @if (session('success'))
+                        <div class="bg-green-500/20 border border-green-400/50 text-green-100 px-4 py-3 rounded-xl mb-6">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+
+                        @if ($errors->any())
+                        <div class="bg-red-500/20 border border-red-400/50 text-red-100 px-4 py-3 rounded-xl mb-6">
+                            <ul class="list-disc pl-5 space-y-1">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('contact.store') }}" class="space-y-5">
+                            @csrf
+
+                            <div>
+                                <input type="text" name="name" placeholder="Họ và tên" value="{{ old('name') }}"
+                                    class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('name') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
+                            </div>
+
+                            <div>
+                                <input type="tel" name="phone" placeholder="Số điện thoại" value="{{ old('phone') }}"
+                                    class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('phone') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
+                            </div>
+
+                            <div>
+                                <textarea name="message" placeholder="Nội dung cần hỗ trợ..." rows="4"
+                                    class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('message') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white resize-none transition-all">{{ old('message') }}</textarea>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                Gửi yêu cầu hỗ trợ
                             </button>
                         </form>
                     </div>
+
                 </div>
             </div>
         </section>

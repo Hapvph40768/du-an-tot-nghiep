@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +30,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth','role:customer'])->get('/home', function () {
-    return view('customer.home'); 
+Route::middleware(['auth', 'role:customer'])->get('/home', function () {
+    return view('customer.home');
 });
 
 
@@ -38,13 +41,36 @@ Route::middleware(['auth','role:customer'])->get('/home', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth','role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin', function () {
         return view('admin.dashboard');
     });
 
+    Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
+        Route::get('/', [SupportTicketController::class, 'index'])
+            ->name('index');
+
+        Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])
+            ->name('show');
+
+        Route::post('/{supportTicket}/reply', [SupportTicketController::class, 'reply'])
+            ->name('reply');
+
+        Route::patch('/{supportTicket}/status', [SupportTicketController::class, 'updateStatus'])
+            ->name('update-status');
+    });
+
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+        Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    Route::post('/lien-he', [ContactController::class, 'store'])->name('contact.store');
 });
+
+
 
 
 /*
