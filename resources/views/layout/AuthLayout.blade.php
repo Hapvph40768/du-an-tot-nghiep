@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Đăng nhập') - Mạnh Hùng </title>
     
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    {{-- boostraps --}}
+    {{-- Bootstrap (Cân nhắc gỡ bỏ nếu dùng Tailwind toàn dự án để tránh xung đột) --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">   
-    <!-- CSS -->
+
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-</head>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
 <body>
     <div class="auth-container">
-        <!-- Decoration Banner (Left) -->
         <div class="auth-banner">
             <div class="banner-content">
                 <h2>Cổng truy cập hệ thống đặt vé Mạnh Hùng<br>Hiệu quả & Chuyên nghiệp</h2>
@@ -28,7 +29,6 @@
             <div class="glass-shape shape-2"></div>
         </div>
 
-        <!-- Form Section (Right) -->
         <div class="auth-wrapper">
             <div class="auth-card">
                 <div class="brand-header">
