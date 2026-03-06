@@ -18,7 +18,7 @@
                     <a href="#search" class="hover:text-amber-300 transition-colors">Đặt vé</a>
                     <a href="#routes" class="hover:text-amber-300 transition-colors">Tuyến đường</a>
                     <a href="#features" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
-                    <a href="#contact" class="hover:text-amber-300 transition-colors">Liên hệ</a>
+                    {{-- <a href="{{ route('customer.support.index') }}" class="hover:text-amber-300 transition-colors @yield('active-support-index')">Liên hệ</a> --}}
                 </nav>
 
                 <div class="flex items-center gap-3">

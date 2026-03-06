@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('end_location_id')->constrained('locations');
             $table->integer('distance_km')->nullable();
             $table->integer('estimated_time')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

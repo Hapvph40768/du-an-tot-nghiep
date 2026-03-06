@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'success', 'failed'])->nullable();
             $table->string('transaction_code')->nullable();
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

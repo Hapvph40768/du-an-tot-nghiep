@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('ticket_code')->unique()->nullable();
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'used'])->default('pending');
             $table->unique(['trip_id', 'seat_id']);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

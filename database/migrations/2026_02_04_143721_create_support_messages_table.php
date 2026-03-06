@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('sender_id')->constrained('users');
             $table->text('message')->nullable();
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

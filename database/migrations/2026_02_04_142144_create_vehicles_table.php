@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->integer('total_seats');
             $table->enum('status', ['active', 'maintenance'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

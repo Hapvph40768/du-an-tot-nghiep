@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->constrained('vehicles');
             $table->string('seat_number');
             $table->unique(['vehicle_id', 'seat_number']);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
