@@ -1,111 +1,105 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
-| AUTH
+| AUTH ROUTES
 |--------------------------------------------------------------------------
 */
 
-// form
+// Login/Register forms
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 
-// xử lý
+// Authentication processing
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-// logout
+// Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
 /*
 |--------------------------------------------------------------------------
-| CUSTOMER
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth','role:customer'])->get('/home', function () {
-    return view('customer.home'); 
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth','role:admin'])->group(function () {
-
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    });
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| STAFF
-|--------------------------------------------------------------------------
-*/
-
-// Route::middleware(['auth','role:staff'])->group(function () {
-
-//     Route::get('/staff', function () {
-//         // return view('staff.dashboard');
-//     });
-
-// });
-
-
-/*
-|--------------------------------------------------------------------------
-| PUBLIC
+| PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
     return view('welcome');
 });
-//middleware
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', fn () => view('admin.dashboard'));
+
+/*
+|--------------------------------------------------------------------------
+| AUTHENTICATED USERS (ALL ROLES)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+    // Any authenticated user routes can go here
 });
 
-Route::middleware(['auth', 'role:staff'])->group(function () {
-    Route::get('/staff', fn () => view('staff.dashboard'));
-});
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER ROUTES
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/home', fn () => view('customer.home'));
+    Route::get('/home', function () {
+        return view('customer.home');
+    })->name('customer.home');
 });
 
-Route::resource('routes', RouteController::class);
+/*
+|--------------------------------------------------------------------------
+| STAFF ROUTES
+|--------------------------------------------------------------------------
+*/
 
-// Admin routes (prefix and name)
-Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
+Route::middleware(['auth', 'role:staff'])->group(function () {
+    Route::get('/staff', function () {
+        return view('staff.dashboard');
+    })->name('staff.dashboard');
+});
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin dashboard
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    // Admin resources
     Route::resource('reviews', ReviewController::class);
+    Route::resource('routes', RouteController::class);
 });
 
-// Public/customer routes for reviews
-// GET /reviews - redirect based on user role so a GET doesn't return 405
+/*
+|--------------------------------------------------------------------------
+| PUBLIC/CUSTOMER REVIEW ROUTES
+|--------------------------------------------------------------------------
+*/
+
+// Redirect reviews based on user role
 Route::get('/reviews', function () {
-    if (auth()->check() && auth()->user()->role === 'admin') {
+    if (Auth::check() && Auth::user()->role === 'admin') {
         return redirect()->route('admin.reviews.index');
     }
-    if (auth()->check() && auth()->user()->role === 'customer') {
+    if (Auth::check() && Auth::user()->role === 'customer') {
         return redirect('/home');
     }
-
     return redirect()->route('login');
 })->name('reviews.redirect');
 
-// POST /reviews - customers can submit reviews
-Route::middleware(['auth','role:customer'])->post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+// Customers can submit reviews
+Route::middleware(['auth', 'role:customer'])->post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');

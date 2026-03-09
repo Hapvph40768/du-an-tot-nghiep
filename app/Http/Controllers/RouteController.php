@@ -31,7 +31,7 @@ class RouteController extends Controller
 
         Route::create($validated);
 
-        return redirect()->route('routes.index')->with('success', 'Tuyến xe được tạo thành công!');
+        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được tạo thành công!');
     }
 
     public function show(Route $route)
@@ -57,12 +57,12 @@ class RouteController extends Controller
 
         $route->update($validated);
 
-        return redirect()->route('routes.index')->with('success', 'Tuyến xe được cập nhật thành công!');
+        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được cập nhật thành công!');
     }
 
     public function destroy(Route $route)
     {
         $route->delete();
-        return redirect()->route('routes.index')->with('success', 'Tuyến xe được xóa thành công!');
+        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được xóa thành công!');
     }
 }
