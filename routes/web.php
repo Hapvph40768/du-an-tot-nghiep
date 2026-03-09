@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DriverController;
+use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TripController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,21 +37,11 @@ Route::controller(AuthController::class)->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('checkout')->name('checkout.')->group(function () {
-    
-    // 1. Hiển thị form chọn phương thức thanh toán
     Route::get('/', [PaymentController::class, 'index'])->name('index');
-    
-    // 2. Xử lý tạo đơn và chuyển hướng thanh toán
     Route::post('/process', [PaymentController::class, 'process'])->name('process');
-    
-    // 3. Callback VNPAY
     Route::get('/vnpay-return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
-    
-    // 4. Các route phụ trợ cho Bank Transfer 
     Route::get('/bank-transfer/{order}', [PaymentController::class, 'bankTransfer'])->name('bank_transfer');
     Route::post('/bank-transfer/{id}/upload', [PaymentController::class, 'uploadBankTransfer'])->name('bank_transfer.upload');
-    
-    // 5. Route dự phòng hiển thị kết quả chung
     Route::get('/result', [PaymentController::class, 'result'])->name('result');
 });
 
@@ -69,9 +62,17 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    // Gọi thẳng vào DashboardController chúng ta đã viết trước đó
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Hoặc nếu bạn muốn link ngắn gọn /admin cũng chạy dashboard:
+    Route::get('/', [DashboardController::class, 'index']);
+
+    // ROUTE QUẢN LÝ ĐƠN HÀNG CỦA ADMIN 
+    // Resource tự động bao hàm đủ index, create, store, show, edit, update, destroy
+    Route::resource('orders', AdminOrderController::class);
+    
+    // Quản lý Chuyến xe (Đưa Trip vào nhóm Admin để bảo mật)
+    Route::resource('trips', TripController::class);
 });
 
 /*
@@ -84,12 +85,12 @@ Route::resource('drivers', DriverController::class);
 
 /*
 |--------------------------------------------------------------------------
-| ORDER MANAGEMENT ROUTES
+| ORDER MANAGEMENT ROUTES (Frontend cho khách hàng)
 |--------------------------------------------------------------------------
 */
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });

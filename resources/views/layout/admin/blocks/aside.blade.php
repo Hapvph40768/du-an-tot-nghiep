@@ -12,36 +12,52 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
             <li class="menu-item">
-                <a href="#" class="menu-link active">
+                <a href="{{ route('admin.dashboard') }}" class="menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class='bx bx-grid-alt'></i>
                     <span>Tổng quan</span>
                 </a>
             </li>
+
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('checkout.index') }}" class="menu-link {{ request()->routeIs('checkout.*') ? 'active' : '' }}">
                     <i class='bx bx-ticket'></i>
-                    <span>Quản lý đặt vé</span>
+                    <span>Quản lý đặt vé (Checkout)</span>
                 </a>
             </li>
+
             <li class="menu-item">
                 <a href="#" class="menu-link">
                     <i class='bx bx-bus'></i>
                     <span>Quản lý xe</span>
                 </a>
             </li>
+
             <li class="menu-item">
                 <a href="#" class="menu-link">
                     <i class='bx bx-map-alt'></i>
                     <span>Quản lý tuyến</span>
                 </a>
             </li>
+
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{{ route('drivers.index') }}" class="menu-link {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
                     <i class='bx bx-user-pin'></i>
                     <span>Quản lý tài xế</span>
                 </a>
             </li>
-            <a class="nav-link" href="#"> <i class="bx bx-money"></i> Quản lý giao dịch </a>
+
+            <li class="menu-item">
+                <a href="{{ route('orders.index') }}" class="menu-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+                    <i class='bx bx-cart'></i>
+                    <span>Quản lý đơn hàng</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="#" class="menu-link">
+                    <i class='bx bx-money'></i>
+                    <span>Quản lý giao dịch</span>
+                </a>
             </li>
         </ul>
     </nav>

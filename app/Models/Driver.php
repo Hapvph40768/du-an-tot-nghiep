@@ -8,16 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Driver extends Model
 {
     use HasFactory;
-    
-    protected $table = 'drivers'; 
 
-    // Các cột được phép điền dữ liệu
+    // Thêm 'experience_years' và 'personal_info' vào mảng này
     protected $fillable = [
-        'id',
         'name',
         'phone',
         'license_number',
+        'experience_years', // Cột mới thêm
+        'personal_info',    // Cột mới thêm
         'status',
-        // thêm các cột khác nếu database của bạn có
+        'image',
     ];
 }
