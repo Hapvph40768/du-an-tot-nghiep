@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
         <aside class="sidebar">
+=======
+﻿        <aside class="sidebar">
+>>>>>>> HaiPhuc2004
             <div class="sidebar-header">
                 <div class="logo-icon">
                     <i class='bx bx-transfer-alt'></i>
@@ -13,7 +17,7 @@
             <nav class="sidebar-menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a href="#" class="menu-link active">
+                        <a href="{{ url('/admin') }}" class="menu-link active">
                             <i class='bx bx-grid-alt'></i>
                             <span>Tổng quan</span>
                         </a>
@@ -31,7 +35,7 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('routes.index') }}" class="menu-link">
                             <i class='bx bx-map-alt'></i>
                             <span>Quản lý tuyến</span>
                         </a>
@@ -40,6 +44,12 @@
                         <a href="#" class="menu-link">
                             <i class='bx bx-user-pin'></i>
                             <span>Quản lý tài xế</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.reviews.index') }}" class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                            <i class='bx bx-comment-detail'></i>
+                            <span>Quản lý đánh giá</span>
                         </a>
                     </li>
                 </ul>

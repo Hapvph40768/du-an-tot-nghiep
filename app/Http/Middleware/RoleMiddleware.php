@@ -13,16 +13,19 @@ class RoleMiddleware
     {
         // Chưa đăng nhập
         if (!Auth::check()) {
-            return redirect()->route('login');
+
+            return redirect()->route('login');   
+
         }
 
         $userRole = Auth::user()->role;
 
+    
         // Không thuộc role được phép
         if (!in_array($userRole, $roles)) {
             abort(403, 'Bạn không có quyền truy cập.');
-        }
 
+        }
         return $next($request);
     }
 }
