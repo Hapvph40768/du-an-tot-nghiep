@@ -4,33 +4,55 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use Notifiable;
 
-    // Tên bảng trong CSDL
-    protected $table = 'users';
-
-    // Khóa chính
-    protected $primaryKey = 'id';
-
-    // Nếu bảng có created_at, updated_at
-    public $timestamps = true;
-
-    // Các cột cho phép insert / update
     protected $fillable = [
-        'role',
         'name',
         'email',
         'phone',
         'password',
         'avatar',
-        'status'
+        'role',
+        'status',
     ];
 
-    // Ẩn khi trả dữ liệu
     protected $hidden = [
-        'password'
+        'password',
+        'remember_token',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'role'   => 'string',
+        'status' => 'string',
+    ];
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === 'staff';
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->role === 'customer';
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random';
+    }
 }

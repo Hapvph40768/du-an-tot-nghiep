@@ -8,7 +8,7 @@
                     <span>Hệ thống quản trị</span>
                 </div>
             </div>
-            
+
             <nav class="sidebar-menu">
                 <ul class="menu-list">
                     <li class="menu-item">
@@ -41,9 +41,21 @@
                             <span>Quản lý tài xế</span>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.support-tickets.index') }}" class="menu-link">
+                            <i class='bx bx-support'></i>
+                            <span>Quản lý Support / Ticket</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('admin.users.index') }}" class="menu-link">
+                            <i class='bx bx-user'></i>
+                            <span>Quản lý Người dùng</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="user-avatar">
                     <span>A</span>
