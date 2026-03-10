@@ -92,7 +92,7 @@ Route::middleware(['auth', 'role:admin'])
         })->name('dashboard');
 
         //location
-        Route::resource('locations', LocationController::class);
+        
 
         // Quản lý support tickets
 
