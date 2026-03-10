@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\LocationController;
@@ -18,21 +19,19 @@ use App\Http\Controllers\Admin\SupportTicketController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
 
+
+use App\Http\Controllers\Admin\SeatController;
+
+
 /*
 |--------------------------------------------------------------------------
-| PUBLIC
+| PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-/*
-|--------------------------------------------------------------------------
-| AUTH
-|--------------------------------------------------------------------------
-*/
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
@@ -46,7 +45,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATED USERS
+| AUTHENTICATED USERS (ALL ROLES)
 |--------------------------------------------------------------------------
 */
 
@@ -57,12 +56,6 @@ Route::middleware(['auth'])->group(function () {
         'support_tickets/{support_ticket}/messages',
         [SupportMessageController::class, 'store']
     )->name('support_messages.store');
-
-    // orders frontend
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });
 
 /*
@@ -80,12 +73,20 @@ Route::middleware(['auth', 'role:customer'])
             return view('customer.home');
         })->name('home');
 
-        // support
-        Route::get('/support', [SupportController::class, 'index'])->name('support.index');
-        Route::post('/support', [SupportController::class, 'store'])->name('support.store');
-        Route::get('/support/{id}', [SupportController::class, 'show'])->name('support.show');
-        Route::post('/support/{id}/send', [SupportController::class, 'sendMessage'])->name('support.send');
-    });
+        // Support tickets
+        Route::get('/support', [SupportController::class, 'index'])
+            ->name('support.index');
+
+        Route::post('/support', [SupportController::class, 'store'])
+            ->name('support.store');
+
+        Route::get('/support/{id}', [SupportController::class, 'show'])
+            ->name('support.show');
+
+        Route::post('/support/{id}/send', [SupportController::class, 'sendMessage'])
+            ->name('support.send');
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -98,35 +99,11 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        // dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-        // vehicles
-        Route::resource('vehicles', VehicleController::class);
-
-        // drivers
-        Route::resource('drivers', DriverController::class);
-
-        // locations
-        Route::resource('locations', LocationController::class);
-
-        // trips
-        Route::resource('trips', TripController::class);
-
-        // bookings
-        Route::resource('bookings', BookingController::class)->only([
-            'index',
-            'store',
-            'destroy'
-        ]);
-
-        // admin orders
-        Route::resource('orders', AdminOrderController::class);
 
         // support tickets
         Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
-
-            Route::get('/', [SupportTicketController::class, 'index'])
+Route::get('/', [SupportTicketController::class, 'index'])
                 ->name('index');
 
             Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])
@@ -151,6 +128,15 @@ Route::middleware(['auth', 'role:admin'])
             Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])
                 ->name('toggle-status');
         });
+
+        //Tài xế
+        Route::resource('drivers', DriverController::class);
+
+        //Địa điểm
+        Route::resource('locations', LocationController::class);
+
+        //Phương tiện
+        Route::resource('vehicles', VehiclesController::class);
     });
 
 /*
@@ -159,5 +145,42 @@ Route::middleware(['auth', 'role:admin'])
 |--------------------------------------------------------------------------
 */
 
+
+
+
 Route::post('/lien-he', [ContactController::class, 'store'])
     ->name('contact.store');
+
+    // Nhóm các Route yêu cầu phải Đăng nhập và có quyền truy cập Session
+Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+
+    // 1. Quản lý Xe (Resource chuẩn)
+    Route::resource('vehicles', VehicleController::class);
+
+    // 2. Quản lý Sơ đồ ghế (Đi theo từng xe cụ thể)
+    Route::prefix('vehicles/{vehicle}')->name('vehicles.')->group(function () {
+
+        // Hiển thị sơ đồ ghế
+        Route::get('/seats', [SeatController::class, 'index'])->name('seats.index');
+
+        // Khởi tạo tự động số lượng ghế theo loại xe
+        Route::post('/generate-seats', [SeatController::class, 'generate'])->name('seats.generate');
+
+        // Xóa sạch sơ đồ ghế để làm lại từ đầu
+        Route::delete('/delete-all-seats', [SeatController::class, 'deleteAll'])->name('seats.deleteAll');
+
+        // Thêm lẻ 1 ghế thủ công
+        Route::post('/seats/store', [SeatController::class, 'store'])->name('seats.store');
+    });
+
+    // 3. Các thao tác trực tiếp trên từng Ghế (Dùng ID của Ghế)
+
+    // LOGIC QUAN TRỌNG: Khóa ghế (Seat Lock)
+    // URL sẽ là: /admin/seats/{id}/select
+    Route::post('/seats/{seat}/select', [SeatController::class, 'selectSeat'])->name('seats.select');
+    // Route để hủy ghế
+    Route::post('/seats/{seat}/unlock', [SeatController::class, 'unlockSeat'])->name('admin.seats.unlock');
+    // Xóa lẻ 1 ghế
+    Route::delete('/seats/{seat}', [SeatController::class, 'destroy'])->name('seats.destroy');
+});
+

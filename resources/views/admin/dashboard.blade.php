@@ -5,6 +5,7 @@
 @section('header-subtitle', 'Báo cáo và thống kê hoạt động')
 
 @section('content-main')
+<<<<<<< HEAD
 <div class="container-fluid">
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">
@@ -77,6 +78,10 @@
         </div>
     </div>
 </div>
+=======
+    
+    @yield('content')
+>>>>>>> QManh
 @endsection
 
 @push('scripts')

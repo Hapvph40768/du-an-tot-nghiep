@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::create('vehicles', function (Blueprint $table) {
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
+
 
     /**
      * Reverse the migrations.
