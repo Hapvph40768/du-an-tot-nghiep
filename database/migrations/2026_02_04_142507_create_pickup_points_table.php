@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('location_id')->constrained('locations');
             $table->string('name');
             $table->text('address')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->enum('type', ['payment', 'ticket', 'complaint'])->nullable();
+            $table->text('description'); 
             $table->enum('status', ['open', 'processing', 'closed'])->default('open');
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

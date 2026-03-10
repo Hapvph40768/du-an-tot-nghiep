@@ -15,6 +15,8 @@ return new class extends Migration
             $table->foreignId('trip_id')->constrained('trips');
             $table->foreignId('pickup_point_id')->constrained('pickup_points');
             $table->primary(['trip_id', 'pickup_point_id']);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('booking_id')->nullable()->constrained('bookings');
             $table->dateTime('locked_until');
             $table->unique(['trip_id', 'seat_id']);
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

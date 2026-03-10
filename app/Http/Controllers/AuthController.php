@@ -14,11 +14,13 @@ class AuthController extends Controller
         return view('auth.login');
     }
     //hiển thị form đăng ký
-    public function registerForm(){
+    public function registerForm()
+    {
         return view('auth.register');
     }
     //xử lý đăng ky
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         //validate dữ liệu
         $request->validate([
             'name' => 'required',
@@ -36,26 +38,34 @@ class AuthController extends Controller
         ]);
         return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         //validate dữ liệu
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        if(Auth::attempt([
+        if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password,
             'status' => 'active',
-        ])){
+        ])) {
             $user = Auth::user();
-            if($user->role == 'admin') return redirect('/admin');
-            if($user->role == 'staff') return redirect('/staff');
-            return redirect('/home');
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            if ($user->role === 'staff') {
+                return redirect('/staff');
+            }
+
+            return redirect()->route('customer.home');
         }
-        return back()->with('error', 'Email hoặc mật khẩu không đúng.');
     }
     //xử lý đăng xuất
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return redirect('/login');
     }

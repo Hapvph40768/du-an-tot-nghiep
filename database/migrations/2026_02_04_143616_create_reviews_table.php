@@ -19,6 +19,7 @@ return new class extends Migration
             $table->tinyInteger('rating');
             $table->text('comment')->nullable();
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
