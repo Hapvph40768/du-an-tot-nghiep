@@ -19,6 +19,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="{{ route('admin.drivers.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-car"></i>
+                    <span>Tài xế</span>
+                </a>
+            </li>
+
             {{-- <li class="menu-item">
                 <a href="{{ route('orders.index') }}" class="menu-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                     <i class='bx bx-cart'></i>

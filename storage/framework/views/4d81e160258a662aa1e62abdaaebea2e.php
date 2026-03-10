@@ -1,8 +1,6 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Cập nhật Tài xế'); ?>
 
-@section('title', 'Cập nhật Tài xế')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
     <style>
         .form-control-custom {
@@ -45,18 +43,18 @@
 
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <div>
-                <a href="{{ route('admin.drivers.index') }}"
+                <a href="<?php echo e(route('admin.drivers.index')); ?>"
                     class="text-decoration-none text-muted fw-bold small hover-orange">
                     <i class='bx bx-arrow-back me-1'></i> Quay lại
                 </a>
-                <h3 class="fw-bold text-dark mt-2">Cập nhật: <span style="color: #f97316;">{{ $driver->name }}</span></h3>
+                <h3 class="fw-bold text-dark mt-2">Cập nhật: <span style="color: #f97316;"><?php echo e($driver->name); ?></span></h3>
             </div>
-            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">ID: #{{ $driver->id }}</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">ID: #<?php echo e($driver->id); ?></span>
         </div>
 
-        <form action="{{ route('admin.drivers.update', $driver->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+        <form action="<?php echo e(route('admin.drivers.update', $driver->id)); ?>" method="POST" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('PUT'); ?>
 
             <div class="row g-4">
                 <!-- Cột chính: Thông tin chi tiết -->
@@ -70,10 +68,17 @@
                             <div class="mb-4">
                                 <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control form-control-custom"
-                                    value="{{ old('name', $driver->name) }}" required>
-                                @error('name')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                    value="<?php echo e(old('name', $driver->name)); ?>" required>
+                                <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="row g-4">
@@ -85,20 +90,34 @@
                                         </span>
                                         <input type="text" name="phone"
                                             class="form-control form-control-custom rounded-end-3"
-                                            value="{{ old('phone', $driver->phone) }}" required>
+                                            value="<?php echo e(old('phone', $driver->phone)); ?>" required>
                                     </div>
-                                    @error('phone')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
+                                    <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Số bằng lái (GPLX) <span class="text-danger">*</span></label>
                                     <input type="text" name="license_number" class="form-control form-control-custom"
-                                        value="{{ old('license_number', $driver->license_number) }}" required>
-                                    @error('license_number')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
+                                        value="<?php echo e(old('license_number', $driver->license_number)); ?>" required>
+                                    <?php $__errorArgs = ['license_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
 
                                 <div class="col-md-6">
@@ -106,39 +125,60 @@
                                     <div class="input-group">
                                         <input type="number" name="experience_years" min="0" max="50"
                                             class="form-control form-control-custom"
-                                            value="{{ old('experience_years', $driver->experience_years ?? 0) }}">
+                                            value="<?php echo e(old('experience_years', $driver->experience_years ?? 0)); ?>">
                                         <span class="input-group-text">Năm</span>
                                     </div>
-                                    @error('experience_years')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
+                                    <?php $__errorArgs = ['experience_years'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Trạng thái <span class="text-danger">*</span></label>
                                     <select name="status" class="form-select form-control-custom" required>
                                         <option value="active"
-                                            {{ old('status', $driver->status) == 'active' ? 'selected' : '' }}>🟢 Sẵn sàng
+                                            <?php echo e(old('status', $driver->status) == 'active' ? 'selected' : ''); ?>>🟢 Sẵn sàng
                                             (Active)</option>
                                         <option value="busy"
-                                            {{ old('status', $driver->status) == 'busy' ? 'selected' : '' }}>🟠 Đang
+                                            <?php echo e(old('status', $driver->status) == 'busy' ? 'selected' : ''); ?>>🟠 Đang
                                             chạy (Busy)</option>
                                         <option
-                                            value="inactive"{{ old('status', $driver->status) == 'inactive' ? 'selected' : '' }}>
+                                            value="inactive"<?php echo e(old('status', $driver->status) == 'inactive' ? 'selected' : ''); ?>>
                                             ⚫ Ngừng hoạt động (Inactive)</option>
                                     </select>
-                                    @error('status')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
+                                    <?php $__errorArgs = ['status'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
                             </div>
 
                             <div class="mt-4">
                                 <label class="form-label">Thông tin cá nhân / Ghi chú</label>
-                                <textarea name="personal_info" rows="3" class="form-control form-control-custom">{{ old('personal_info', $driver->personal_info ?? '') }}</textarea>
-                                @error('personal_info')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                <textarea name="personal_info" rows="3" class="form-control form-control-custom"><?php echo e(old('personal_info', $driver->personal_info ?? '')); ?></textarea>
+                                <?php $__errorArgs = ['personal_info'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
                         </div>
                     </div>
@@ -154,7 +194,7 @@
 
                             <label for="imageUpload" class="upload-box d-block mx-auto" style="width: 100%; height: 240px;">
                                 <img id="preview-img"
-                                    src="{{ $driver->image ? asset($driver->image) : 'https://via.placeholder.com/300?text=Upload+Driver+Image' }}"
+                                    src="<?php echo e($driver->image ? asset($driver->image) : 'https://via.placeholder.com/300?text=Upload+Driver+Image'); ?>"
                                     class="w-100 h-100 object-fit-cover">
 
                                 <div
@@ -165,9 +205,16 @@
 
                             <input type="file" name="image" id="imageUpload" class="d-none" accept="image/*"
                                 onchange="previewFile(this)">
-                            @error('image')
-                                <div class="text-danger small mt-2">{{ $message }}</div>
-                            @enderror
+                            <?php $__errorArgs = ['image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <div class="text-danger small mt-2"><?php echo e($message); ?></div>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
@@ -176,7 +223,7 @@
                             style="background: #f97316; border: none;">
                             <i class='bx bx-check-double me-2'></i> CẬP NHẬT TÀI XẾ
                         </button>
-                        <a href="{{ route('admin.drivers.index') }}"
+                        <a href="<?php echo e(route('admin.drivers.index')); ?>"
                             class="btn btn-outline-secondary py-3 fw-bold rounded-3">
                             Hủy bỏ
                         </a>
@@ -199,4 +246,6 @@
         }
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/admin/drivers/edit.blade.php ENDPATH**/ ?>

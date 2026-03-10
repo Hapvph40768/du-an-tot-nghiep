@@ -84,10 +84,10 @@ class DriverController extends Controller
         // 2. Xử lý upload ảnh mới (nếu có)
         if ($request->hasFile('image')) {
             // Xóa ảnh cũ nếu có trong storage
-            if ($driver->image && Storage::disk('public')->exists(str_replace('storage/', '', $driver->image))) { 
-                Storage::disk('public')->delete(str_replace('storage/', '', $driver->image)); 
+            if ($driver->image && Storage::disk('public')->exists(str_replace('storage/', '', $driver->image))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $driver->image));
             }
-            
+
             $imagePath = $request->file('image')->store('drivers', 'public');
             $validatedData['image'] = 'storage/' . $imagePath;
         }
@@ -106,8 +106,8 @@ class DriverController extends Controller
         $driver = Driver::findOrFail($id);
 
         // Xóa ảnh đính kèm (nếu có)
-        if ($driver->image && Storage::disk('public')->exists(str_replace('storage/', '', $driver->image))) { 
-            Storage::disk('public')->delete(str_replace('storage/', '', $driver->image)); 
+        if ($driver->image && Storage::disk('public')->exists(str_replace('storage/', '', $driver->image))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $driver->image));
         }
 
         $driver->delete();

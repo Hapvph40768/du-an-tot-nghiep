@@ -19,6 +19,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.drivers.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.drivers.*') ? 'active' : ''); ?>">
+                    <i class="fa-solid fa-car"></i>
+                    <span>Tài xế</span>
+                </a>
+            </li>
+
             
 
             

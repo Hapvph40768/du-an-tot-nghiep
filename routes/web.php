@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DriverController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SupportController;
@@ -62,18 +63,19 @@ Route::middleware(['auth', 'role:customer'])
         })->name('home');
 
         // Support tickets
-        Route::get('/support', [SupportController::class,'index'])
+        Route::get('/support', [SupportController::class, 'index'])
             ->name('support.index');
 
-        Route::post('/support', [SupportController::class,'store'])
+        Route::post('/support', [SupportController::class, 'store'])
             ->name('support.store');
 
-        Route::get('/support/{id}', [SupportController::class,'show'])
+        Route::get('/support/{id}', [SupportController::class, 'show'])
             ->name('support.show');
 
-        Route::post('/support/{id}/send', [SupportController::class,'sendMessage'])
+        Route::post('/support/{id}/send', [SupportController::class, 'sendMessage'])
             ->name('support.send');
-    });
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +121,9 @@ Route::middleware(['auth', 'role:admin'])
             Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])
                 ->name('toggle-status');
         });
+
+        //Tài xế
+        Route::resource('drivers', DriverController::class);
     });
 
 /*
