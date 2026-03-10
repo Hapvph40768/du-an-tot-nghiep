@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\SupportMessageController;
+use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +29,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATED USERS (ALL ROLES)
@@ -36,13 +37,12 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::middleware(['auth'])->group(function () {
 
-    // Gửi message trong ticket
+    // gửi message trong ticket
     Route::post(
         'support_tickets/{support_ticket}/messages',
         [SupportMessageController::class, 'store']
     )->name('support_messages.store');
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -59,9 +59,8 @@ Route::middleware(['auth', 'role:customer'])
             return view('customer.home');
         })->name('home');
 
-        //support
-
-         Route::get('/support', [SupportController::class,'index'])
+        // Support tickets
+        Route::get('/support', [SupportController::class,'index'])
             ->name('support.index');
 
         Route::post('/support', [SupportController::class,'store'])
@@ -72,9 +71,7 @@ Route::middleware(['auth', 'role:customer'])
 
         Route::post('/support/{id}/send', [SupportController::class,'sendMessage'])
             ->name('support.send');
-
     });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -91,16 +88,44 @@ Route::middleware(['auth', 'role:admin'])
             return view('admin.dashboard');
         })->name('dashboard');
 
-        //location
-        
+        // locations
+        Route::resource('locations', LocationController::class);
 
-        // Quản lý support tickets
+        // support tickets
+        Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
 
-        Route::get('/tickets', [SupportTicketController::class, 'index'])
-            ->name('tickets');
+            Route::get('/', [SupportTicketController::class, 'index'])
+                ->name('index');
 
-        Route::get('/tickets/{id}', [SupportTicketController::class, 'show'])
-            ->name('tickets.show');
-Route::post('/tickets/{id}/reply', [SupportTicketController::class, 'reply'])
-            ->name('tickets.reply');
+            Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])
+                ->name('show');
+
+            Route::post('/{supportTicket}/reply', [SupportTicketController::class, 'reply'])
+                ->name('reply');
+
+            Route::patch('/{supportTicket}/status', [SupportTicketController::class, 'updateStatus'])
+                ->name('update-status');
+        });
+
+        // users
+        Route::prefix('users')->name('users.')->group(function () {
+
+            Route::get('/', [UserController::class, 'index'])
+                ->name('index');
+
+            Route::get('/{user}', [UserController::class, 'show'])
+                ->name('show');
+
+            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+                ->name('toggle-status');
+        });
     });
+
+/*
+|--------------------------------------------------------------------------
+| CONTACT
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/lien-he', [ContactController::class, 'store'])
+    ->name('contact.store');
