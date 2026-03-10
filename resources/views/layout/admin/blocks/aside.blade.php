@@ -13,41 +13,50 @@
         <ul class="menu-list">
 
             <li class="menu-item">
-                <a href="{{ url('/admin') }}" class="menu-link {{ request()->is('admin') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}"
+                   class="menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class='bx bx-grid-alt'></i>
                     <span>Tổng quan</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('vehicles.index') }}"
-                   class="menu-link {{ request()->is('admin/vehicles*') ? 'active' : '' }}">
-                    <i class='bx bx-bus'></i>
-                    <span>Quản lý xe</span>
+                <a href="{{ route('admin.vehicles.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bus"></i>
+                    <span>Phương tiện</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('routes.index') }}"
-                   class="menu-link {{ request()->is('admin/routes*') ? 'active' : '' }}">
+                <a href="{{ route('admin.routes.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">
                     <i class='bx bx-map-alt'></i>
-                    <span>Quản lý tuyến</span>
+                    <span>Tuyến đường</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('drivers.index') }}"
-                   class="menu-link {{ request()->is('admin/drivers*') ? 'active' : '' }}">
+                <a href="{{ route('admin.drivers.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}">
                     <i class='bx bx-user-pin'></i>
-                    <span>Quản lý tài xế</span>
+                    <span>Tài xế</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('bookings.index') }}"
-                   class="menu-link {{ request()->is('admin/bookings*') ? 'active' : '' }}">
+                <a href="{{ route('admin.bookings.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class='bx bx-ticket'></i>
-                    <span>Quản lý đặt vé</span>
+                    <span>Đặt vé</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('admin.locations.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.locations.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Địa điểm</span>
                 </a>
             </li>
 
@@ -55,7 +64,15 @@
                 <a href="{{ route('admin.reviews.index') }}"
                    class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <i class='bx bx-comment-detail'></i>
-                    <span>Quản lý đánh giá</span>
+                    <span>Đánh giá</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('admin.users.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    <i class='bx bx-user'></i>
+                    <span>Người dùng</span>
                 </a>
             </li>
 

@@ -11,6 +11,8 @@ use App\Http\Controllers\SupportMessageController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TripController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Admin\SupportTicketController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -83,7 +85,7 @@ Route::middleware(['auth', 'role:customer'])
         Route::post('/support', [SupportController::class, 'store'])->name('support.store');
         Route::get('/support/{id}', [SupportController::class, 'show'])->name('support.show');
         Route::post('/support/{id}/send', [SupportController::class, 'sendMessage'])->name('support.send');
-});
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -97,11 +99,19 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         // dashboard
-        Route::get('/', [DashboardController::class, 'index']);
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // vehicles
         Route::resource('vehicles', VehicleController::class);
+
+        // drivers
+        Route::resource('drivers', DriverController::class);
+
+        // locations
+        Route::resource('locations', LocationController::class);
+
+        // trips
+        Route::resource('trips', TripController::class);
 
         // bookings
         Route::resource('bookings', BookingController::class)->only([
@@ -110,20 +120,44 @@ Route::middleware(['auth', 'role:admin'])
             'destroy'
         ]);
 
-        // locations
-        Route::resource('locations', LocationController::class);
-
-        // drivers
-        Route::resource('drivers', DriverController::class);
-
-        // trips
-        Route::resource('trips', TripController::class);
-
         // admin orders
         Route::resource('orders', AdminOrderController::class);
 
         // support tickets
-        Route::get('/tickets', [SupportTicketController::class, 'index'])->name('tickets');
-        Route::get('/tickets/{id}', [SupportTicketController::class, 'show'])->name('tickets.show');
-        Route::post('/tickets/{id}/reply', [SupportTicketController::class, 'reply'])->name('tickets.reply');
-});
+        Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
+
+            Route::get('/', [SupportTicketController::class, 'index'])
+                ->name('index');
+
+            Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])
+                ->name('show');
+
+            Route::post('/{supportTicket}/reply', [SupportTicketController::class, 'reply'])
+                ->name('reply');
+
+            Route::patch('/{supportTicket}/status', [SupportTicketController::class, 'updateStatus'])
+                ->name('update-status');
+        });
+
+        // users
+        Route::prefix('users')->name('users.')->group(function () {
+
+            Route::get('/', [UserController::class, 'index'])
+                ->name('index');
+
+            Route::get('/{user}', [UserController::class, 'show'])
+                ->name('show');
+
+            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+                ->name('toggle-status');
+        });
+    });
+
+/*
+|--------------------------------------------------------------------------
+| CONTACT
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/lien-he', [ContactController::class, 'store'])
+    ->name('contact.store');

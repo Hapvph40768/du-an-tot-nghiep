@@ -11,19 +11,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/customer.css')); ?>">
 </head>
 
 <body class="h-full bg-gray-50">
     <div id="app-wrapper" class="w-full h-full overflow-auto">
 
         <!-- Header + search -->
-        @include('layout.customer.blocks.header')
+        <?php echo $__env->make('layout.customer.blocks.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         <!-- Hero Section with Search -->
 
-        {{-- content --}}
-        @yield('content-main')
+        
+        <?php echo $__env->yieldContent('content-main'); ?>
         <!-- Contact Section -->
         <section id="contact" class="py-12 gradient-hero bus-pattern text-white">
             <div class="max-w-7xl mx-auto px-4">
@@ -106,42 +105,43 @@
                         <div class="bg-white/10 backdrop-blur rounded-2xl p-6 shadow-xl">
                             <h4 class="font-bold text-xl mb-6 text-white">Gửi yêu cầu hỗ trợ</h4>
 
-                            @if (session('success'))
+                            <?php if(session('success')): ?>
                                 <div
                                     class="bg-green-500/20 border border-green-400/50 text-green-100 px-4 py-3 rounded-xl mb-6">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
+                                    <?php echo e(session('success')); ?>
 
-                            @if ($errors->any())
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if($errors->any()): ?>
                                 <div
                                     class="bg-red-500/20 border border-red-400/50 text-red-100 px-4 py-3 rounded-xl mb-6">
                                     <ul class="list-disc pl-5 space-y-1">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
+                                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <li><?php echo e($error); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
-                            <form method="POST" action="{{ route('contact.store') }}" class="space-y-5">
-                                @csrf
+                            <form method="POST" action="<?php echo e(route('contact.store')); ?>" class="space-y-5">
+                                <?php echo csrf_field(); ?>
 
                                 <div>
                                     <input type="text" name="name" placeholder="Họ và tên"
-                                        value="{{ old('name') }}"
-                                        class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('name') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
+                                        value="<?php echo e(old('name')); ?>"
+                                        class="w-full px-4 py-3 bg-white/10 border <?php echo e($errors->has('name') ? 'border-red-400' : 'border-white/20'); ?> rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
                                 </div>
 
                                 <div>
                                     <input type="tel" name="phone" placeholder="Số điện thoại"
-                                        value="{{ old('phone') }}"
-                                        class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('phone') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
+                                        value="<?php echo e(old('phone')); ?>"
+                                        class="w-full px-4 py-3 bg-white/10 border <?php echo e($errors->has('phone') ? 'border-red-400' : 'border-white/20'); ?> rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white transition-all">
                                 </div>
 
                                 <div>
                                     <textarea name="message" placeholder="Nội dung cần hỗ trợ..." rows="4"
-                                        class="w-full px-4 py-3 bg-white/10 border {{ $errors->has('message') ? 'border-red-400' : 'border-white/20' }} rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white resize-none transition-all">{{ old('message') }}</textarea>
+                                        class="w-full px-4 py-3 bg-white/10 border <?php echo e($errors->has('message') ? 'border-red-400' : 'border-white/20'); ?> rounded-xl focus:outline-none focus:border-amber-400 placeholder-white/60 text-white resize-none transition-all"><?php echo e(old('message')); ?></textarea>
                                 </div>
 
                                 <button type="submit"
@@ -158,7 +158,7 @@
         </section>
 
         <!-- Footer -->
-        @include('layout.customer.blocks.footer')
+        <?php echo $__env->make('layout.customer.blocks.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <!-- Booking Modal -->
         <div id="booking-modal"
@@ -208,8 +208,9 @@
         </div>
     </div>
 
-    <link rel="stylesheet" href="{{ asset('js/customer.js') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('js/customer.js')); ?>">
 
 </body>
 
 </html>
+<?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/layout/customer/CustomerLayout.blade.php ENDPATH**/ ?>

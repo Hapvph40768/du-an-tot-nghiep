@@ -9,28 +9,16 @@ class Driver extends Model
 {
     use HasFactory;
 
-    
-    protected $table = 'drivers'; 
+    protected $table = 'drivers';
 
-    // Các cột được phép điền dữ liệu
-    protected $fillable = [
-        'id',
-        'name',
-        'phone',
-        'license_number',
-        'status',
-        // thêm các cột khác nếu database của bạn có
-
-
-    // Thêm 'experience_years' và 'personal_info' vào mảng này
+    // Các cột được phép mass assignment
     protected $fillable = [
         'name',
         'phone',
         'license_number',
-        'experience_years', // Cột mới thêm
-        'personal_info',    // Cột mới thêm
+        'experience_years',
+        'personal_info',
         'status',
         'image',
-
     ];
 }

@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Location extends Model
 {
-    protected $table = 'locations';
-    public $timestamps = false;
+    use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'address',
+        'city',
+        'province_code',
+        'latitude',
+        'longitude',
+        'is_active',
+        'note',
+    ];
 
-    public function startRoutes()
-    {
-        return $this->hasMany(Route::class, 'start_location_id');
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
-    public function endRoutes()
-    {
-        return $this->hasMany(Route::class, 'end_location_id');
-    }
 }
-
-
-
-

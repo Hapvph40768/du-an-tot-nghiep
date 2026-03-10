@@ -1,10 +1,8 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Admin Dashboard'); ?>
+<?php $__env->startSection('header-title', 'TỔNG QUAN HỆ THỐNG'); ?>
+<?php $__env->startSection('header-subtitle', 'Báo cáo và thống kê hoạt động'); ?>
 
-@section('title', 'Admin Dashboard')
-@section('header-title', 'TỔNG QUAN HỆ THỐNG')
-@section('header-subtitle', 'Báo cáo và thống kê hoạt động')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 <div class="container-fluid">
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">
@@ -12,7 +10,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
                         <h6 class="text-uppercase mb-2">Tổng tài xế</h6>
-                        <h2 class="mb-0 fw-bold ">{{ $totalDrivers }}</h2>
+                        <h2 class="mb-0 fw-bold "><?php echo e($totalDrivers); ?></h2>
                     </div>
                     <i class='bx bxs-user-badge fs-1 opacity-50'></i>
                 </div>
@@ -23,7 +21,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
                         <h6 class="text-uppercase mb-2">Tổng chuyến xe</h6>
-                        <h2 class="mb-0 fw-bold">{{ $totalTrips }}</h2>
+                        <h2 class="mb-0 fw-bold"><?php echo e($totalTrips); ?></h2>
                     </div>
                     <i class='bx bxs-bus fs-1 opacity-50'></i>
                 </div>
@@ -34,7 +32,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
                         <h6 class="text-uppercase mb-2">Số vé đã đặt</h6>
-                        <h2 class="mb-0 fw-bold">{{ $totalTickets }}</h2>
+                        <h2 class="mb-0 fw-bold"><?php echo e($totalTickets); ?></h2>
                     </div>
                     <i class='bx bxs-coupon fs-1 opacity-50'></i>
                 </div>
@@ -45,7 +43,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
                         <h6 class="text-uppercase mb-2">Tổng doanh thu</h6>
-                        <h2 class="mb-0 fw-bold">{{ number_format($totalRevenue, 0, ',', '.') }} đ</h2>
+                        <h2 class="mb-0 fw-bold"><?php echo e(number_format($totalRevenue, 0, ',', '.')); ?> đ</h2>
                     </div>
                     <i class='bx bx-money fs-1 opacity-50'></i>
                 </div>
@@ -77,18 +75,18 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Nhận dữ liệu từ Controller
-    const chartLabels = @json($chartLabels);
-    const revenueData = @json($revenueData);
-    const ticketData = @json($ticketData);
+    const chartLabels = <?php echo json_encode($chartLabels, 15, 512) ?>;
+    const revenueData = <?php echo json_encode($revenueData, 15, 512) ?>;
+    const ticketData = <?php echo json_encode($ticketData, 15, 512) ?>;
     
-    const tripStatusLabels = @json($tripStatusLabels);
-    const tripStatusData = @json($tripStatusData);
+    const tripStatusLabels = <?php echo json_encode($tripStatusLabels, 15, 512) ?>;
+    const tripStatusData = <?php echo json_encode($tripStatusData, 15, 512) ?>;
 
     // 1. BIỂU ĐỒ DOANH THU & SỐ VÉ (Line & Bar Mix Chart)
     const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
@@ -163,4 +161,5 @@
         }
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>
