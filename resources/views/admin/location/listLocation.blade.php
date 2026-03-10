@@ -4,7 +4,7 @@
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Danh sách tỉnh / thành</h5>
-        <a href="{{ route('locations.create') }}" class="btn btn-success btn-sm">
+        <a href="{{ route('admin.locations.create') }}" class="btn btn-success btn-sm">
             + Thêm mới
         </a>
     </div>
@@ -29,12 +29,12 @@
                         <td>{{ $location->id }}</td>
                         <td>{{ $location->name }}</td>
                         <td>
-                            <a href="{{ route('locations.edit', $location) }}"
+                            <a href="{{ route('admin.locations.edit', $location) }}"
                                class="btn btn-warning btn-sm">
                                 Sửa
                             </a>
 
-                            <form action="{{ route('locations.destroy', $location) }}"
+                            <form action="{{ route('admin.locations.destroy', $location) }}"
                                   method="POST"
                                   class="d-inline"
                                   onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">

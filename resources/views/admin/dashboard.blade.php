@@ -12,7 +12,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
                         <h6 class="text-uppercase mb-2">Tổng tài xế</h6>
-                        <h2 class="mb-0 fw-bold">{{ $totalDrivers }}</h2>
+                        <h2 class="mb-0 fw-bold ">{{ $totalDrivers }}</h2>
                     </div>
                     <i class='bx bxs-user-badge fs-1 opacity-50'></i>
                 </div>
