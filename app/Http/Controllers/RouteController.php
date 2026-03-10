@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Route;
 use App\Models\Location;
+use App\Models\LocationModel;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller
@@ -16,7 +17,7 @@ class RouteController extends Controller
 
     public function create()
     {
-        $locations = Location::all();
+        $locations = LocationModel::all();
         return view('admin.routes.create', compact('locations'));
     }
 
@@ -42,7 +43,7 @@ class RouteController extends Controller
 
     public function edit(Route $route)
     {
-        $locations = Location::all();
+        $locations = LocationModel::all();
         return view('admin.routes.edit', compact('route', 'locations'));
     }
 

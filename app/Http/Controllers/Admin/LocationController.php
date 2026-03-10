@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Location;
+
+use App\Models\LocationModel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -11,7 +12,7 @@ class LocationController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Location::query();
+        $query = LocationModel::query();
 
         // Tìm kiếm theo tên hoặc địa chỉ
         if ($keyword = $request->input('keyword')) {
@@ -49,18 +50,18 @@ class LocationController extends Controller
             'note'         => 'nullable|string',
         ]);
 
-        Location::create($validated);
+        LocationModel::create($validated);
 
         return redirect()->route('admin.locations.index')
             ->with('success', 'Đã thêm địa điểm mới thành công!');
     }
 
-    public function edit(Location $location)
+    public function edit(LocationModel $location)
     {
         return view('admin.locations.edit', compact('location'));
     }
 
-    public function update(Request $request, Location $location)
+    public function update(Request $request, LocationModel $location)
     {
         $validated = $request->validate([
             'name' => [
@@ -86,7 +87,7 @@ class LocationController extends Controller
             ->with('success', 'Đã cập nhật địa điểm thành công!');
     }
 
-    public function destroy(Location $location)
+    public function destroy(LocationModel $location)
     {
 
         $location->delete();

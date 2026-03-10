@@ -19,11 +19,11 @@ class Route extends Model
 
     public function startLocation()
     {
-        return $this->belongsTo(Location::class, 'start_location_id');
+        return $this->belongsTo(LocationModel::class, 'start_location_id');
     }
 
     public function endLocation()
     {
-        return $this->belongsTo(Location::class, 'end_location_id');
+        return $this->belongsTo(LocationModel::class, 'end_location_id');
     }
 }
