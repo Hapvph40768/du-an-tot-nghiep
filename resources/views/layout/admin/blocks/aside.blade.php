@@ -8,7 +8,7 @@
                     <span>Hệ thống quản trị</span>
                 </div>
             </div>
-            
+
             <nav class="sidebar-menu">
                 <ul class="menu-list">
                     <li class="menu-item">
@@ -24,8 +24,8 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="menu-link">
-                            <i class='bx bx-bus'></i>
+                        <a href="{{ route('admin.vehicles.index') }}"
+                            class="flex items-center gap-3 p-2 rounded-sm {{ request()->routeIs('admin.vehicles.*') ? 'bg-[#fff2f2] text-[#f53003]' : '' }}">
                             <span>Quản lý xe</span>
                         </a>
                     </li>
@@ -43,7 +43,7 @@
                     </li>
                 </ul>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="user-avatar">
                     <span>A</span>

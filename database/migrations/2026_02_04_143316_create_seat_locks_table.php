@@ -10,17 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('seat_locks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('trip_id')->constrained('trips');
-            $table->foreignId('seat_id')->constrained('seats');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('booking_id')->nullable()->constrained('bookings');
-            $table->dateTime('locked_until');
-            $table->unique(['trip_id', 'seat_id']);
-        });
-    }
+{
+    Schema::create('seat_locks', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('seat_id')->constrained()->onDelete('cascade');
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->timestamp('locked_until'); // Cột quan trọng để check 10 phút
+        $table->timestamps();
+        
+        // Đảm bảo 1 ghế chỉ có 1 bản ghi lock hiệu lực
+        $table->unique('seat_id'); 
+    });
+}
 
     /**
      * Reverse the migrations.

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seats', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('vehicle_id')->constrained('vehicles');
-            $table->string('seat_number');
-            $table->unique(['vehicle_id', 'seat_number']);
-        });
+        Schema::create('seats', function (Illuminate\Database\Schema\Blueprint $table) {
+    $table->id();
+    $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
+    $table->string('seat_number'); // Ví dụ: A1, A2, B1...
+    $table->enum('type', ['Thường', 'VIP'])->default('Thường');
+    $table->enum('status', ['Trống', 'Đã đặt', 'Bảo trì'])->default('Trống');
+    $table->timestamps();
+});
     }
 
     /**
