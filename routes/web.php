@@ -3,6 +3,9 @@
 use App\Http\Controllers\Admin\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\SupportMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +33,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
 | AUTHENTICATED USERS (ALL ROLES)
 |--------------------------------------------------------------------------
 */
-<<<<<<< HEAD
 
 Route::middleware(['auth'])->group(function () {
 
@@ -39,15 +41,6 @@ Route::middleware(['auth'])->group(function () {
         'support_tickets/{support_ticket}/messages',
         [SupportMessageController::class, 'store']
     )->name('support_messages.store');
-=======
-Route::prefix('checkout')->name('checkout.')->group(function () {
-    Route::get('/', [PaymentController::class, 'index'])->name('index');
-    Route::post('/process', [PaymentController::class, 'process'])->name('process');
-    Route::get('/vnpay-return', [PaymentController::class, 'vnpayReturn'])->name('vnpay.return');
-    Route::get('/bank-transfer/{order}', [PaymentController::class, 'bankTransfer'])->name('bank_transfer');
-    Route::post('/bank-transfer/{id}/upload', [PaymentController::class, 'uploadBankTransfer'])->name('bank_transfer.upload');
-    Route::get('/result', [PaymentController::class, 'result'])->name('result');
->>>>>>> 6e485c7 (Initial commit: Hoàn thiện chức năng quản lý tài xế và thanh toán)
 });
 
 
@@ -85,7 +78,6 @@ Route::middleware(['auth', 'role:customer'])
 
 /*
 |--------------------------------------------------------------------------
-<<<<<<< HEAD
 | ADMIN
 |--------------------------------------------------------------------------
 */
@@ -95,29 +87,20 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
+        Route::get('/', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        //location
+        Route::resource('locations', LocationController::class);
+
+        // Quản lý support tickets
+
+        Route::get('/tickets', [SupportTicketController::class, 'index'])
+            ->name('tickets');
+
+        Route::get('/tickets/{id}', [SupportTicketController::class, 'show'])
+            ->name('tickets.show');
+Route::post('/tickets/{id}/reply', [SupportTicketController::class, 'reply'])
+            ->name('tickets.reply');
     });
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| DRIVER ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::get('/tai-xe', [DriverController::class, 'index']);
-Route::resource('drivers', DriverController::class);
-
-/*
-|--------------------------------------------------------------------------
-| ORDER MANAGEMENT ROUTES (Frontend cho khách hàng)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
-    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
-});
