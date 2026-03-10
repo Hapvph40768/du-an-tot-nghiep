@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\VehiclesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SupportController;
@@ -124,6 +125,9 @@ Route::middleware(['auth', 'role:admin'])
 
         //Địa điểm
         Route::resource('locations', LocationController::class);
+
+        //Phương tiện
+        Route::resource('vehicles', VehiclesController::class);
     });
 
 /*

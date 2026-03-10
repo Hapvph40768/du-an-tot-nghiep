@@ -35,6 +35,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.vehicles.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.vehicles.*') ? 'active' : ''); ?>">
+                    <i class="fa-solid fa-bus"></i>
+                    <span>Phương tiện</span>
+                </a>
+            </li>
+
             
 
             

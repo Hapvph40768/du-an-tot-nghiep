@@ -1,20 +1,16 @@
-@extends('layout.admin.AdminLayout')
 
-{{-- Đặt tiêu đề cho tab trình duyệt --}}
-@section('title', 'Quản lý Đội xe')
 
-@section('content-main')
+<?php $__env->startSection('title', 'Quản lý Đội xe'); ?>
+
+<?php $__env->startSection('content-main'); ?>
 
     <style>
-        /* --- CSS TÙY CHỈNH CHO TRANG NÀY (SaaS Style) --- */
         :root {
             --primary-color: #ff6b00;
-            /* Màu cam thương hiệu */
             --primary-hover: #e65100;
             --bg-light: #f9fafb;
         }
 
-        /* 1. Card Container: Khung trắng nổi bật */
         .card-box {
             background: #ffffff;
             border-radius: 16px;
@@ -23,7 +19,6 @@
             padding: 24px;
         }
 
-        /* 2. Toolbar: Thanh công cụ */
         .toolbar-area {
             display: flex;
             justify-content: space-between;
@@ -64,7 +59,6 @@
             font-size: 18px;
         }
 
-        /* 3. Button & Filter */
         .btn-primary-custom {
             background-color: var(--primary-color);
             border: none;
@@ -94,7 +88,6 @@
             cursor: pointer;
         }
 
-        /* 4. Table Design */
         .custom-table {
             width: 100%;
             border-collapse: separate;
@@ -128,7 +121,6 @@
             font-size: 14px;
         }
 
-        /* 5. Avatar & Info */
         .driver-info {
             display: flex;
             align-items: center;
@@ -152,7 +144,6 @@
             object-fit: cover;
         }
 
-        /* Action Buttons */
         .action-group {
             display: flex;
             justify-content: flex-end;
@@ -218,6 +209,12 @@
             font-weight: 600;
             font-size: 12px;
         }
+
+        .vehicle-plate {
+            font-family: monospace;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
     </style>
 
     <div class="container-fluid py-4">
@@ -225,64 +222,57 @@
         <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
                 <h5 class="text-muted mb-1 small text-uppercase fw-bold ls-1">Quản trị viên</h5>
-                <h2 class="fw-bold text-dark m-0">Danh sách Tài xế</h2>
+                <h2 class="fw-bold text-dark m-0">Danh sách Đội xe</h2>
             </div>
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-primary" aria-current="page">Tài xế</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('admin.dashboard')); ?>"
+                            class="text-decoration-none text-muted">Trang chủ</a></li>
+                    <li class="breadcrumb-item active text-primary" aria-current="page">Đội xe</li>
                 </ol>
             </nav>
         </div>
 
         <div class="card-box">
 
-            {{-- Thông báo thành công --}}
-            @if (session('success'))
+            <?php if(session('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
+                    <i class='bx bx-check-circle me-1'></i> <?php echo e(session('success')); ?>
+
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            <?php endif; ?>
+
+            <?php if(session('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class='bx bx-error-circle me-1'></i> <?php echo e(session('error')); ?>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
 
             <div class="toolbar-area">
-                {{-- 
-                    ĐÃ SỬA: Thay thẻ <div> bằng <form> để gửi dữ liệu tìm kiếm
-                    - Action: Gửi về route index
-                    - Method: GET
-                --}}
-                <form action="{{ route('admin.drivers.index') }}" method="GET" class="d-flex gap-3 flex-grow-1">
+
+                <form action="<?php echo e(route('admin.vehicles.index')); ?>" method="GET" class="d-flex gap-3 flex-grow-1">
 
                     <div class="search-box">
                         <i class='bx bx-search'></i>
-                        {{-- Thêm name="keyword" và value="{{ request('keyword') }}" để giữ lại chữ đã nhập --}}
-                        <input type="text" name="keyword" value="{{ request('keyword') }}" class="form-control"
-                            placeholder="Tìm tên, SĐT, bằng lái...">
+                        <input type="text" name="keyword" value="<?php echo e(request('keyword')); ?>" class="form-control"
+                            placeholder="Tìm biển số, loại xe...">
                     </div>
 
-                    {{-- Thêm name="status" và logic selected --}}
                     <select name="status" class="form-select form-select-custom" style="width: 180px;"
                         onchange="this.form.submit()">
                         <option value="">Tất cả trạng thái</option>
-
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
-                            Đang hoạt động
-                        </option>
-
-                        <option value="busy" {{ request('status') == 'busy' ? 'selected' : '' }}>
-                            Đang chạy
-                        </option>
-
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
-                            Đã nghỉ
+                        <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>Hoạt động</option>
+                        <option value="maintenance" <?php echo e(request('status') == 'maintenance' ? 'selected' : ''); ?>>Bảo dưỡng
                         </option>
                     </select>
                 </form>
 
-                {{-- NÚT THÊM MỚI (Giữ nguyên) --}}
-                <a href="{{ route('admin.drivers.create') }}" class="btn btn-primary-custom">
-                    <i class='bx bx-plus-circle'></i> Thêm Tài xế
+                <a href="<?php echo e(route('admin.vehicles.create')); ?>" class="btn btn-primary-custom">
+                    <i class='bx bx-plus-circle'></i> Thêm Xe Mới
                 </a>
             </div>
 
@@ -290,31 +280,25 @@
                 <table class="custom-table align-middle">
                     <thead>
                         <tr>
-                            <th class="ps-4">Tài xế</th>
-                            <th>Thông tin liên hệ</th>
-                            <th>Bằng lái / Hạng</th>
+                            <th class="ps-4">Biển số</th>
+                            <th>Loại xe / Số ghế</th>
                             <th>Trạng thái</th>
-                            <th>Ngày tham gia</th>
+                            <th>Ngày tạo</th>
                             <th class="text-end pe-4">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($drivers->count() > 0)
-                            @foreach ($drivers as $driver)
+                        <?php if($vehicles->count() > 0): ?>
+                            <?php $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
                                     <td class="ps-4">
-                                        <div class="driver-info">
-                                            <div class="avatar-box">
-                                                @if ($driver->image && file_exists(public_path($driver->image)))
-                                                    <img src="{{ asset($driver->image) }}" alt="{{ $driver->name }}">
-                                                @else
-                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->name) }}&background=random&color=fff&size=128&bold=true"
-                                                        alt="Avatar">
-                                                @endif
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div
+                                                class="avatar-box bg-light d-flex align-items-center justify-content-center">
+                                                <i class='bx bx-car fs-4 text-primary'></i>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-bold text-dark">{{ $driver->name }}</h6>
-                                                <small class="text-muted">ID: #{{ $driver->id }}</small>
+                                                <h6 class="mb-0 fw-bold vehicle-plate"><?php echo e($vehicle->license_plate); ?></h6>
                                             </div>
                                         </div>
                                     </td>
@@ -322,49 +306,46 @@
                                     <td>
                                         <div class="d-flex flex-column">
                                             <span class="fw-medium text-dark">
-                                                <i class='bx bx-phone text-muted me-1'></i> {{ $driver->phone }}
+                                                <?php echo e($vehicle->type ?? 'Chưa xác định'); ?>
+
                                             </span>
-                                            <span class="text-muted small mt-1">user{{ $driver->id }}@example.com</span>
+                                            <small class="text-muted mt-1">
+                                                <?php echo e($vehicle->total_seats); ?> chỗ
+                                            </small>
                                         </div>
                                     </td>
 
                                     <td>
-                                        <span class="badge bg-light text-dark border px-3 py-2">
-                                            <i class='bx bx-id-card me-1'></i> {{ $driver->license_number }}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        @if ($driver->status == 'active')
-                                            <span class="bg-soft-success"><span class="status-dot bg-success"></span>Hoạt
-                                                động</span>
-                                        @elseif($driver->status == 'busy')
-                                            <span class="bg-soft-warning"><span class="status-dot bg-warning"></span>Đang
-                                                chạy</span>
-                                        @else
-                                            <span class="bg-soft-secondary"><span class="status-dot bg-secondary"></span>Đã
-                                                nghỉ</span>
-                                        @endif
+                                        <?php if($vehicle->status == 'active'): ?>
+                                            <span class="bg-soft-success">
+                                                <span class="status-dot bg-success"></span>Hoạt động
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="bg-soft-warning">
+                                                <span class="status-dot bg-warning"></span>Bảo dưỡng
+                                            </span>
+                                        <?php endif; ?>
                                     </td>
 
                                     <td>
                                         <span class="text-muted small">
-                                            {{ $driver->created_at ? $driver->created_at->format('d/m/Y') : 'N/A' }}
+                                            <?php echo e($vehicle->created_at ? $vehicle->created_at->format('d/m/Y') : 'N/A'); ?>
+
                                         </span>
                                     </td>
 
                                     <td class="text-end pe-4">
                                         <div class="action-group">
-                                            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="action-btn"
+                                            <a href="<?php echo e(route('admin.vehicles.edit', $vehicle->id)); ?>" class="action-btn"
                                                 title="Chỉnh sửa">
                                                 <i class='bx bx-edit fs-5'></i>
                                             </a>
 
-                                            <form action="{{ route('admin.drivers.destroy', $driver->id) }}" method="POST"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài xế {{ $driver->name }}?');">
-                                                @csrf
-                                                @method('DELETE')
+                                            <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>"
+                                                method="POST" class="d-inline"
+                                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa xe biển <?php echo e($vehicle->license_plate); ?>?');">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
 
                                                 <button type="submit" class="action-btn delete-btn" title="Xóa"
                                                     style="border: none;">
@@ -374,32 +355,35 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                        @else
-                            {{-- Hiển thị khi không tìm thấy kết quả nào --}}
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="5" class="text-center py-5">
                                     <div class="text-muted">
-                                        <i class='bx bx-search-alt fs-1 mb-3 d-block'></i>
-                                        Không tìm thấy tài xế nào phù hợp.
+                                        <i class='bx bx-car fs-1 mb-3 d-block'></i>
+                                        Chưa có xe nào trong hệ thống hoặc không tìm thấy kết quả phù hợp.
                                     </div>
                                 </td>
                             </tr>
-                        @endif
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-                <small class="text-muted">Đang hiển thị <strong>{{ $drivers->count() }}</strong> trên tổng số
-                    <strong>{{ $drivers->total() }}</strong> tài xế</small>
+                <small class="text-muted">
+                    Đang hiển thị <strong><?php echo e($vehicles->count()); ?></strong> trên tổng số
+                    <strong><?php echo e($vehicles->total()); ?></strong> xe
+                </small>
 
                 <div>
-                    {{-- Thêm withQueryString() để giữ bộ lọc khi qua trang 2 --}}
-                    {{ $drivers->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    <?php echo e($vehicles->appends(request()->query())->links('pagination::bootstrap-4')); ?>
+
                 </div>
             </div>
 
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/admin/vehicles/index.blade.php ENDPATH**/ ?>

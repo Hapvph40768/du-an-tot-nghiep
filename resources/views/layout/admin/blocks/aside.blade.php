@@ -35,6 +35,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="{{ route('admin.vehicles.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bus"></i>
+                    <span>Phương tiện</span>
+                </a>
+            </li>
+
             {{-- <li class="menu-item">
                 <a href="{{ route('orders.index') }}" class="menu-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                     <i class='bx bx-cart'></i>
