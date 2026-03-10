@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,17 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::delete('/admin/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
     Route::get('/admin/vehicles/{vehicle}', [VehicleController::class, 'show'])
     ->name('vehicles.show');
+    //CRUD BOOKINGS
+    /*
+    |-------------------------
+    | BOOKINGS
+    |-------------------------
+    */
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+
+
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 });
 
 

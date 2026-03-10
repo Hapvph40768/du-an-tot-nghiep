@@ -21,6 +21,8 @@ return new class extends Migration
             $table->time('arrival_time')->nullable();
             $table->decimal('price', 10, 2);
             $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

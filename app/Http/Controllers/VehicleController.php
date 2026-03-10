@@ -53,6 +53,10 @@ class VehicleController extends Controller
 
     public function destroy(Vehicle $vehicle)
     {
+         if ($vehicle->status === 'active') {
+        return redirect()->route('vehicles.index')
+            ->with('error', 'Không thể xóa xe đang hoạt động');
+    }
         $vehicle->delete();
 
         return redirect()->route('vehicles.index')

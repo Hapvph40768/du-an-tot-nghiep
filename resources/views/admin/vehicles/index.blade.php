@@ -10,7 +10,11 @@
             {{ session('success') }}
         </div>
     @endif
-
+    @if(session('error'))
+        <div class="alert alert-danger">
+        {{ session('error') }}
+        </div>
+    @endif
     {{-- nút thêm --}}
     <a href="{{ route('vehicles.create') }}" class="btn btn-primary mb-3">
         Thêm xe

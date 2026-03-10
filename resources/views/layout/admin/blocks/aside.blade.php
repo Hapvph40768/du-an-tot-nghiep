@@ -17,12 +17,7 @@
                             <span>Tổng quan</span>
                         </a>
                     </li>
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">
-                            <i class='bx bx-ticket'></i>
-                            <span>Quản lý đặt vé</span>
-                        </a>
-                    </li>
+                    
                     <li class="menu-item">
                 <a href="{{ route('vehicles.index') }}"
                    class="menu-link {{ request()->is('admin/vehicles*') ? 'active' : '' }}">
@@ -30,6 +25,13 @@
                     <span>Quản lý xe</span>
                 </a>
             </li>
+            <li class="menu-item">
+        <a href="{{ route('bookings.index') }}"
+           class="menu-link {{ request()->is('admin/bookings*') ? 'active' : '' }}">
+            <i class='bx bx-ticket'></i>
+            <span>Quản lý đặt vé</span>
+        </a>
+    </li>
                     <li class="menu-item">
                         <a href="#" class="menu-link">
                             <i class='bx bx-map-alt'></i>
