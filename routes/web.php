@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\SupportMessageController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+// use App\Http\Controllers\LocationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,12 +86,10 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // locations
-        Route::resource('locations', LocationController::class);
+        // Route::resource('locations',LocationController::class);
 
         // support tickets
         Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
