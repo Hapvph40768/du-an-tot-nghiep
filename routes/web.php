@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\LocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SupportController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
-// use App\Http\Controllers\LocationController;
 
 
 /*
@@ -90,9 +90,6 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-        // locations
-        // Route::resource('locations',LocationController::class);
-
         // support tickets
         Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
 
@@ -124,6 +121,9 @@ Route::middleware(['auth', 'role:admin'])
 
         //Tài xế
         Route::resource('drivers', DriverController::class);
+
+        //Địa điểm
+        Route::resource('locations', LocationController::class);
     });
 
 /*

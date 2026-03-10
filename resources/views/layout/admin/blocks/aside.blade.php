@@ -27,6 +27,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="{{ route('admin.locations.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.locations.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Địa điểm</span>
+                </a>
+            </li>
+
             {{-- <li class="menu-item">
                 <a href="{{ route('orders.index') }}" class="menu-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                     <i class='bx bx-cart'></i>

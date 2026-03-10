@@ -27,6 +27,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.locations.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.locations.*') ? 'active' : ''); ?>">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Địa điểm</span>
+                </a>
+            </li>
+
             
 
             
