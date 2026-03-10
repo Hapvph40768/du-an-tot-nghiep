@@ -13,11 +13,11 @@
                     <span>Hệ thống quản trị</span>
                 </div>
             </div>
-
+            
             <nav class="sidebar-menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a href="{{ url('/admin') }}" class="menu-link active">
+                        <a href="<?php echo e(url('/admin')); ?>" class="menu-link active">
                             <i class='bx bx-grid-alt'></i>
                             <span>Tổng quan</span>
                         </a>
@@ -35,7 +35,7 @@
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{ route('routes.index') }}" class="menu-link">
+                        <a href="<?php echo e(route('routes.index')); ?>" class="menu-link">
                             <i class='bx bx-map-alt'></i>
                             <span>Quản lý tuyến</span>
                         </a>
@@ -47,26 +47,14 @@
                         </a>
                     </li>
                     <li class="menu-item">
-<<<<<<< HEAD
-                        <a href="{{ route('admin.support-tickets.index') }}" class="menu-link">
-                            <i class='bx bx-support'></i>
-                            <span>Quản lý Support / Ticket</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="{{ route('admin.users.index') }}" class="menu-link">
-                            <i class='bx bx-user'></i>
-                            <span>Quản lý Người dùng</span>
-=======
-                        <a href="{{ route('admin.reviews.index') }}" class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.reviews.index')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.reviews.*') ? 'active' : ''); ?>">
                             <i class='bx bx-comment-detail'></i>
                             <span>Quản lý đánh giá</span>
->>>>>>> HPhuc
                         </a>
                     </li>
                 </ul>
             </nav>
-
+            
             <div class="sidebar-footer">
                 <div class="user-avatar">
                     <span>A</span>
@@ -76,9 +64,6 @@
                     <span>Quản trị viên</span>
                 </div>
             </div>
-<<<<<<< HEAD
-        </aside>
-=======
         </aside>
 =======
 <aside class="sidebar">
@@ -95,14 +80,14 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
             <li class="menu-item">
-                <a href="{{ route('admin.dashboard') }}" class="menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="menu-link <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                     <i class='bx bx-grid-alt'></i>
                     <span>Tổng quan</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('checkout.index') }}" class="menu-link {{ request()->routeIs('checkout.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('checkout.index')); ?>" class="menu-link <?php echo e(request()->routeIs('checkout.*') ? 'active' : ''); ?>">
                     <i class='bx bx-ticket'></i>
                     <span>Quản lý đặt vé (Checkout)</span>
                 </a>
@@ -123,14 +108,14 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('drivers.index') }}" class="menu-link {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('drivers.index')); ?>" class="menu-link <?php echo e(request()->routeIs('drivers.*') ? 'active' : ''); ?>">
                     <i class='bx bx-user-pin'></i>
                     <span>Quản lý tài xế</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('orders.index') }}" class="menu-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('orders.index')); ?>" class="menu-link <?php echo e(request()->routeIs('orders.*') ? 'active' : ''); ?>">
                     <i class='bx bx-cart'></i>
                     <span>Quản lý đơn hàng</span>
                 </a>
@@ -156,4 +141,4 @@
     </div>
 </aside>
 >>>>>>> 6e485c7 (Initial commit: Hoàn thiện chức năng quản lý tài xế và thanh toán)
->>>>>>> HPhuc
+<?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/blocks/aside.blade.php ENDPATH**/ ?>
