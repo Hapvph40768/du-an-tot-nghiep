@@ -249,7 +249,7 @@
                                     </td>
                                     <td>
                                         <span class="text-muted small">
-                                            {{ $location->created_at->format('d/m/Y') }}
+                                            {{ \Carbon\Carbon::parse($location->created_at)->format('d/m/Y') }}
                                         </span>
                                     </td>
                                     <td class="text-end pe-4">

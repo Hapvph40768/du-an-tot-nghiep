@@ -30,7 +30,7 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('admin.routes.index') }}"
+                <a href="#"
                    class="menu-link {{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">
                     <i class='bx bx-map-alt'></i>
                     <span>Tuyến đường</span>
@@ -46,12 +46,12 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('admin.bookings.index') }}"
+                <a href="#"
                    class="menu-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class='bx bx-ticket'></i>
                     <span>Đặt vé</span>
                 </a>
-            </li>
+            </li> 
 
             <li class="menu-item">
                 <a href="{{ route('admin.locations.index') }}"
@@ -62,7 +62,7 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('admin.reviews.index') }}"
+                <a href="#"
                    class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <i class='bx bx-comment-detail'></i>
                     <span>Đánh giá</span>

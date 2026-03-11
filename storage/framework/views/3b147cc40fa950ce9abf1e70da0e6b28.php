@@ -3,7 +3,6 @@
 <?php $__env->startSection('content-main'); ?>
 
     <style>
-        /* Giữ nguyên style từ trang index + bổ sung cho form */
         :root {
             --primary-color: #ff6b00;
             --primary-hover: #e65100;

@@ -176,13 +176,11 @@
             color: var(--primary-color);
         }
 
-        /* Style riêng cho nút xóa khi hover */
         .action-btn.delete-btn:hover {
             background-color: #fee2e2;
             color: #dc2626;
         }
 
-        /* Status Badge */
         .status-dot {
             display: inline-block;
             width: 8px;

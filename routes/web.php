@@ -1,27 +1,28 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\SupportMessageController;
-use App\Http\Controllers\DriverController;
+use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Admin\SupportTicketController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
 
 
 use App\Http\Controllers\Admin\SeatController;
-
+use App\Http\Controllers\Admin\VehiclesController;
 
 /*
 |--------------------------------------------------------------------------

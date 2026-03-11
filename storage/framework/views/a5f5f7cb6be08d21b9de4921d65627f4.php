@@ -250,7 +250,7 @@
                                     </td>
                                     <td>
                                         <span class="text-muted small">
-                                            <?php echo e($location->created_at->format('d/m/Y')); ?>
+                                            <?php echo e(\Carbon\Carbon::parse($location->created_at)->format('d/m/Y')); ?>
 
                                         </span>
                                     </td>

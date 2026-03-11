@@ -104,7 +104,7 @@
                             </td>
 
                             <td>
-                                {{ $vehicle->created_at ? $vehicle->created_at->format('d/m/Y') : 'N/A' }}
+                                {{ $vehicle->created_at ? \Carbon\Carbon::parse($vehicle->created_at)->format('d/m/Y') : 'N/A' }}
                             </td>
 
                             <td>
@@ -143,9 +143,9 @@
             </table>
         </div>
 
-        <div class="mt-3">
+        {{-- <div class="mt-3">
             {{ $vehicles->links() }}
-        </div>
+        </div> --}}
 
     </div>
 </div>
