@@ -1,47 +1,49 @@
-@extends('layout.admin.AdminLayout')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
     <div class="container py-4">
 
         <div class="card shadow">
 
             <div class="card-header bg-dark text-white">
 
-                Ticket #{{ $supportTicket->id }}
-                Khách: {{ $supportTicket->user->name }}
+                Ticket #<?php echo e($supportTicket->id); ?>
+
+                Khách: <?php echo e($supportTicket->user->name); ?>
+
 
             </div>
 
             <div class="card-body p-0">
 
-                {{-- CHAT AREA --}}
+                
                 <div class="chat-box" id="chatBox">
 
-                    @foreach ($supportTicket->messages as $msg)
-                        @if ($msg->sender_id == auth()->id())
+                    <?php $__currentLoopData = $supportTicket->messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($msg->sender_id == auth()->id()): ?>
                             <div class="msg-row right">
                                 <div class="msg admin">
-                                    {{ $msg->message }}
+                                    <?php echo e($msg->message); ?>
+
                                 </div>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="msg-row left">
                                 <div class="msg user">
-                                    <strong>{{ $msg->sender->name }}</strong><br>
-                                    {{ $msg->message }}
+                                    <strong><?php echo e($msg->sender->name); ?></strong><br>
+                                    <?php echo e($msg->message); ?>
+
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                 </div>
 
-                {{-- SEND MESSAGE --}}
+                
                 <div class="chat-input">
 
                     <form id="chatForm">
 
-                        @csrf
+                        <?php echo csrf_field(); ?>
 
                         <div class="input-group">
 
@@ -125,13 +127,13 @@
 
             let message = input.value
 
-            fetch("{{ route('admin.support.reply', $supportTicket->id) }}", {
+            fetch("<?php echo e(route('admin.support.reply', $supportTicket->id)); ?>", {
 
                     method: "POST",
 
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
                     },
 
                     body: JSON.stringify({
@@ -156,4 +158,6 @@
 
         })
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/support/chat.blade.php ENDPATH**/ ?>

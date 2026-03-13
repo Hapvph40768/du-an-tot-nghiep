@@ -1,6 +1,4 @@
-@extends('customer.home')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
 <div class="container py-4">
 
@@ -8,7 +6,7 @@
 
     <div class="row">
 
-        {{-- FORM TẠO TICKET --}}
+        
         <div class="col-md-4">
 
             <div class="card shadow-sm">
@@ -19,8 +17,8 @@
 
                 <div class="card-body">
 
-                    <form method="POST" action="{{ route('customer.support.store') }}">
-                        @csrf
+                    <form method="POST" action="<?php echo e(route('customer.support.store')); ?>">
+                        <?php echo csrf_field(); ?>
 
                         <div class="mb-3">
                             <label class="form-label">Loại hỗ trợ</label>
@@ -56,7 +54,7 @@
         </div>
 
 
-        {{-- DANH SÁCH TICKET --}}
+        
         <div class="col-md-8">
 
             <div class="card shadow-sm">
@@ -83,59 +81,60 @@
 
                         <tbody>
 
-                        @forelse($tickets as $ticket)
+                        <?php $__empty_1 = true; $__currentLoopData = $tickets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ticket): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
 
                             <tr>
 
-                                <td>#{{ $ticket->id }}</td>
+                                <td>#<?php echo e($ticket->id); ?></td>
 
                                 <td>
 
-                                    @switch($ticket->type)
+                                    <?php switch($ticket->type):
 
-                                        @case('payment')
+                                        case ('payment'): ?>
                                             <span class="badge bg-primary">Payment</span>
-                                            @break
+                                            <?php break; ?>
 
-                                        @case('ticket')
+                                        <?php case ('ticket'): ?>
                                             <span class="badge bg-info">Ticket</span>
-                                            @break
+                                            <?php break; ?>
 
-                                        @case('complaint')
+                                        <?php case ('complaint'): ?>
                                             <span class="badge bg-danger">Complaint</span>
-                                            @break
+                                            <?php break; ?>
 
-                                    @endswitch
+                                    <?php endswitch; ?>
 
                                 </td>
 
                                 <td>
 
-                                    @switch($ticket->status)
+                                    <?php switch($ticket->status):
 
-                                        @case('open')
+                                        case ('open'): ?>
                                             <span class="badge bg-danger">Open</span>
-                                            @break
+                                            <?php break; ?>
 
-                                        @case('processing')
+                                        <?php case ('processing'): ?>
                                             <span class="badge bg-warning text-dark">Processing</span>
-                                            @break
+                                            <?php break; ?>
 
-                                        @case('closed')
+                                        <?php case ('closed'): ?>
                                             <span class="badge bg-success">Closed</span>
-                                            @break
+                                            <?php break; ?>
 
-                                    @endswitch
+                                    <?php endswitch; ?>
 
                                 </td>
 
                                 <td>
-                                    {{ optional($ticket->created_at)->format('d/m/Y') }}
+                                    <?php echo e(optional($ticket->created_at)->format('d/m/Y')); ?>
+
                                 </td>
 
                                 <td>
 
-                                    <a href="{{ route('customer.support.show',$ticket->id) }}"
+                                    <a href="<?php echo e(route('customer.support.show',$ticket->id)); ?>"
                                        class="btn btn-sm btn-dark">
 
                                         💬 Chat
@@ -146,7 +145,7 @@
 
                             </tr>
 
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
 
                             <tr>
                                 <td colspan="5" class="text-center text-muted">
@@ -154,7 +153,7 @@
                                 </td>
                             </tr>
 
-                        @endforelse
+                        <?php endif; ?>
 
                         </tbody>
 
@@ -170,4 +169,5 @@
 
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('customer.home', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/support/index.blade.php ENDPATH**/ ?>

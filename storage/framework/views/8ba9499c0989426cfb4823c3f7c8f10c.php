@@ -1,6 +1,4 @@
-@extends('layout.admin.AdminLayout')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
 <div class="container-fluid py-4">
 
@@ -11,7 +9,7 @@
 </h3>
 
 <span class="badge bg-dark fs-6">
-{{ $tickets->count() }} Tickets
+<?php echo e($tickets->count()); ?> Tickets
 </span>
 
 </div>
@@ -42,12 +40,13 @@
 
 <tbody>
 
-@forelse($tickets as $ticket)
+<?php $__empty_1 = true; $__currentLoopData = $tickets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ticket): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
 
 <tr>
 
 <td class="fw-bold text-dark">
-#{{ $ticket->id }}
+#<?php echo e($ticket->id); ?>
+
 </td>
 
 <td>
@@ -57,18 +56,21 @@
 <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
 style="width:35px;height:35px">
 
-{{ strtoupper(substr($ticket->user->name,0,1)) }}
+<?php echo e(strtoupper(substr($ticket->user->name,0,1))); ?>
+
 
 </div>
 
 <div>
 
 <div class="fw-semibold">
-{{ $ticket->user->name }}
+<?php echo e($ticket->user->name); ?>
+
 </div>
 
 <small class="text-muted">
-{{ $ticket->user->email }}
+<?php echo e($ticket->user->email); ?>
+
 </small>
 
 </div>
@@ -79,75 +81,78 @@ style="width:35px;height:35px">
 
 <td>
 
-@if($ticket->type == 'payment')
+<?php if($ticket->type == 'payment'): ?>
 
 <span class="badge bg-primary">
 💳 Payment
 </span>
 
-@elseif($ticket->type == 'ticket')
+<?php elseif($ticket->type == 'ticket'): ?>
 
 <span class="badge bg-info text-dark">
 🎫 Ticket
 </span>
 
-@else
+<?php else: ?>
 
 <span class="badge bg-danger">
 ⚠ Complaint
 </span>
 
-@endif
+<?php endif; ?>
 
 </td>
 
 <td class="text-muted" style="max-width:250px">
 
-{{ \Illuminate\Support\Str::limit($ticket->description,70) }}
+<?php echo e(\Illuminate\Support\Str::limit($ticket->description,70)); ?>
+
 
 </td>
 
 <td>
 
-@if($ticket->status == 'open')
+<?php if($ticket->status == 'open'): ?>
 
 <span class="badge rounded-pill bg-danger">
 Open
 </span>
 
-@elseif($ticket->status == 'processing')
+<?php elseif($ticket->status == 'processing'): ?>
 
 <span class="badge rounded-pill bg-warning text-dark">
 Processing
 </span>
 
-@else
+<?php else: ?>
 
 <span class="badge rounded-pill bg-success">
 Closed
 </span>
 
-@endif
+<?php endif; ?>
 
 </td>
 
 <td>
 
 <small class="text-muted">
-{{ \Carbon\Carbon::parse($ticket->created_at)->format('d/m/Y') }}
+<?php echo e(\Carbon\Carbon::parse($ticket->created_at)->format('d/m/Y')); ?>
+
 </small>
 
 <br>
 
 <small class="text-secondary">
-{{ \Carbon\Carbon::parse($ticket->created_at)->format('d/m/Y H:i') }}
+<?php echo e(\Carbon\Carbon::parse($ticket->created_at)->format('d/m/Y H:i')); ?>
+
 </small>
 
 </td>
 
 <td class="text-center">
 
-<a href="{{ route('admin.support.chat',$ticket->id) }}"
+<a href="<?php echo e(route('admin.support.chat',$ticket->id)); ?>"
 class="btn btn-sm btn-dark px-3">
 
 💬 Chat
@@ -158,7 +163,7 @@ class="btn btn-sm btn-dark px-3">
 
 </tr>
 
-@empty
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
 
 <tr>
 
@@ -170,7 +175,7 @@ No support tickets found
 
 </tr>
 
-@endforelse
+<?php endif; ?>
 
 </tbody>
 
@@ -184,4 +189,5 @@ No support tickets found
 
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/support/index.blade.php ENDPATH**/ ?>

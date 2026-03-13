@@ -33,7 +33,7 @@
             @forelse ($reviews as $review)
                 <tr style="border-bottom: 1px solid #f0f2f5;">
                     <td style="padding: 16px;">{{ $review->id }}</td>
-                    <td style="padding: 16px;">{{ $review->user->name ?? ('#' . $review->user_id) }}</td>
+                    <td style="padding: 16px;">{{ optional($review->user)->name ?? '#' . $review->user_id }}</td>
                     <td style="padding: 16px;">{{ $review->booking_id }}</td>
                     <td style="padding: 16px;">{{ $review->trip_id }}</td>
                     <td style="padding: 16px;">{{ $review->rating }} / 5</td>
