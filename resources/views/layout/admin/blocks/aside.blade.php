@@ -62,10 +62,10 @@
             </li>
 
             <li class="menu-item">
-                <a href="#"
-                   class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
-                    <i class='bx bx-comment-detail'></i>
-                    <span>Đánh giá</span>
+                <a href="{{ route('admin.support.index') }}"
+                   class="menu-link {{ request()->routeIs('admin.support-tickets.*') ? 'active' : '' }}">
+                    <i class='bx bx-support'></i>
+                    <span>Hỗ trợ khách hàng</span>
                 </a>
             </li>
 

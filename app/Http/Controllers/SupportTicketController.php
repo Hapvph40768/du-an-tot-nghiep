@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\SupportTicket;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,48 +11,65 @@ class SupportTicketController extends Controller
 {
     public function index()
     {
-        $tickets = SupportTicket::with(['user', 'messages.sender'])
+        $tickets = SupportTicket::where('user_id', Auth::id())
+            ->with(['messages.sender'])
             ->latest()
             ->paginate(15);
 
-        return view('admin.support-tickets.index', compact('tickets'));
+        return view('customer.support.index', compact('tickets'));
     }
 
-    public function show(SupportTicket $supportTicket)
-    {
-        $supportTicket->load(['user', 'messages.sender']);
-
-        return view('admin.support-tickets.show', compact('supportTicket'));
-    }
-
-    public function reply(Request $request, SupportTicket $supportTicket)
+    public function store(Request $request)
     {
         $request->validate([
-            'message' => 'required|string|min:2|max:5000',
+            'type' => 'required|in:payment,ticket,complaint',
+            'description' => 'required|string|min:10|max:5000',
         ]);
 
-        $supportTicket->messages()->create([
+        $ticket = SupportTicket::create([
+            'user_id' => Auth::id(),
+            'type' => $request->type,
+            'description' => $request->description,
+            'status' => 'open'
+        ]);
+
+        // Tin nhắn đầu tiên
+        $ticket->messages()->create([
             'sender_id' => Auth::id(),
-            'message'   => $request->message,
+            'message' => $request->description,
         ]);
 
+        // Auto reply
+        $this->autoReply($ticket);
+
         return redirect()
-            ->route('support-tickets.show', $supportTicket)
-            ->with('success', 'Đã gửi phản hồi thành công.');
+            ->route('customer.support.show', $ticket->id)
+            ->with('success','Đã tạo yêu cầu hỗ trợ thành công.');
     }
 
-    public function updateStatus(Request $request, SupportTicket $supportTicket)
+    public function show($id)
     {
-        $request->validate([
-            'status' => 'required|in:open,processing,closed',
-        ]);
+        $ticket = SupportTicket::where('id',$id)
+            ->where('user_id',Auth::id())
+            ->with(['messages.sender'])
+            ->firstOrFail();
 
-        $supportTicket->update([
-            'status' => $request->status,
-        ]);
+        return view('customer.support.chat', compact('ticket'));
+    }
 
-        return redirect()
-            ->back()
-            ->with('success', 'Cập nhật trạng thái ticket thành công.');
+    private function autoReply(SupportTicket $ticket)
+    {
+        $admin = User::where('role','admin')->first();
+
+        $adminId = $admin ? $admin->id : null;
+
+        $aiService = new \App\Services\AiSupportService();
+
+        $reply = $aiService->generateReply($ticket,'');
+
+        $ticket->messages()->create([
+            'sender_id' => $adminId,
+            'message' => $reply,
+        ]);
     }
 }

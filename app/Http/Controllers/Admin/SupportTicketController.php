@@ -4,39 +4,60 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SupportTicket;
-use App\Models\SupportMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SupportTicketController extends Controller
 {
-
-    // admin/staff xem tất cả ticket
     public function index()
     {
-        $tickets = SupportTicket::with('user')->latest()->get();
+        $tickets = SupportTicket::with(['user', 'messages.sender'])
+            ->latest()
+            ->paginate(15);
 
         return view('admin.support.index', compact('tickets'));
     }
 
-    // mở chat
     public function show($id)
     {
-        $ticket = SupportTicket::with('messages.sender','user')->findOrFail($id);
-
-        return view('admin.support.chat', compact('ticket'));
+        $supportTicket = SupportTicket::with(['user', 'messages.sender'])->findOrFail($id);
+        return view('admin.support.chat', compact('supportTicket'));
     }
 
-    // trả lời
-    public function reply(Request $request, $ticketId)
+    public function reply(Request $request, $id)
     {
-        SupportMessage::create([
-            'support_ticket_id' => $ticketId,
-            'sender_id' => Auth::id(),
-            'message' => $request->message
+        $supportTicket = SupportTicket::findOrFail($id);
+
+        $request->validate([
+            'message' => 'required|string|min:2|max:5000',
         ]);
 
-        return back();
-    }
+        $message = $supportTicket->messages()->create([
+            'sender_id' => Auth::id(),
+            'message' => $request->message,
+        ]);
 
+        $message->load('sender');
+
+        return response()->json([
+            'name' => $message->sender->name,
+            'message' => $message->message,
+            'sender_id' => $message->sender_id
+        ]);
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $supportTicket = SupportTicket::findOrFail($id);
+        $request->validate([
+            'status' => 'required|in:open,processing,closed',
+        ]);
+
+        $supportTicket->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Cập nhật trạng thái ticket thành công.');
+    }
 }

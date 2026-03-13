@@ -1,6 +1,4 @@
-@extends('customer.home')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
 <div class="container py-4">
 
@@ -8,65 +6,70 @@
 
 <div class="card-header bg-primary text-white">
 
-🎧 Chat Support #{{ $ticket->id }}
+🎧 Chat Support #<?php echo e($ticket->id); ?>
+
 
 </div>
 
 <div class="card-body p-0">
 
-{{-- CHAT BOX --}}
+
 <div class="chat-box p-3" id="chatBox">
 
-@foreach($ticket->messages as $msg)
+<?php $__currentLoopData = $ticket->messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-@if($msg->sender_id == auth()->id())
+<?php if($msg->sender_id == auth()->id()): ?>
 
 <div class="d-flex justify-content-end mb-3">
 
 <div class="chat-bubble bg-primary text-white">
 
-{{ $msg->message }}
+<?php echo e($msg->message); ?>
+
 
 <div class="chat-time">
-{{ \Carbon\Carbon::parse($msg->created_at)->format('H:i') }}
-</div>
+<?php echo e(\Carbon\Carbon::parse($msg->created_at)->format('H:i')); ?>
 
 </div>
 
 </div>
 
-@else
+</div>
+
+<?php else: ?>
 
 <div class="d-flex justify-content-start mb-3">
 
 <div class="chat-bubble bg-light border">
 
-<strong>{{ $msg->sender->name }}</strong><br>
+<strong><?php echo e($msg->sender->name); ?></strong><br>
 
-{{ $msg->message }}
+<?php echo e($msg->message); ?>
+
 
 <div class="chat-time text-muted">
-{{ \Carbon\Carbon::parse($msg->created_at)->format('H:i') }}
-</div>
+<?php echo e(\Carbon\Carbon::parse($msg->created_at)->format('H:i')); ?>
 
 </div>
 
 </div>
 
-@endif
+</div>
 
-@endforeach
+<?php endif; ?>
+
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 </div>
 
 
-{{-- INPUT CHAT --}}
+
 <div class="border-top p-3 bg-light">
 
 <form method="POST"
-action="{{ route('customer.support.send',$ticket->id) }}">
+action="<?php echo e(route('customer.support.send',$ticket->id)); ?>">
 
-@csrf
+<?php echo csrf_field(); ?>
 
 <div class="input-group">
 
@@ -122,4 +125,5 @@ chat.scrollTop = chat.scrollHeight;
 
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('customer.home', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/support/chat.blade.php ENDPATH**/ ?>
