@@ -86,7 +86,7 @@ Route::middleware(['auth', 'role:customer'])
 
         Route::post('/support/{id}/send', [SupportController::class, 'sendMessage'])
             ->name('support.send');
-});
+    });
 
 
 /*
@@ -104,7 +104,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // support tickets
         Route::prefix('support-tickets')->name('support-tickets.')->group(function () {
-Route::get('/', [SupportTicketController::class, 'index'])
+            Route::get('/', [SupportTicketController::class, 'index'])
                 ->name('index');
 
             Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])
@@ -152,7 +152,7 @@ Route::get('/', [SupportTicketController::class, 'index'])
 Route::post('/lien-he', [ContactController::class, 'store'])
     ->name('contact.store');
 
-    // Nhóm các Route yêu cầu phải Đăng nhập và có quyền truy cập Session
+// Nhóm các Route yêu cầu phải Đăng nhập và có quyền truy cập Session
 Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
 
     // 1. Quản lý Xe (Resource chuẩn)
@@ -184,4 +184,3 @@ Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(funct
     // Xóa lẻ 1 ghế
     Route::delete('/seats/{seat}', [SeatController::class, 'destroy'])->name('seats.destroy');
 });
-
