@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -13,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()
-            ->where('id', '!=', auth()->id())  
+            ->where('id', '!=', Auth::id())  
             ->when(request('search'), function ($q) {
                 $q->where('name', 'like', '%' . request('search') . '%')
                     ->orWhere('email', 'like', '%' . request('search') . '%')
@@ -33,7 +34,7 @@ class UserController extends Controller
 
     public function toggleStatus(User $user)
     {
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             abort(403);
         }
 
