@@ -1,173 +1,61 @@
 @extends('customer.home')
 
 @section('content-main')
-
-<div class="container py-4">
-
-    <h3 class="mb-4">🎧 Hỗ trợ khách hàng</h3>
-
-    <div class="row">
-
-        {{-- FORM TẠO TICKET --}}
-        <div class="col-md-4">
-
-            <div class="card shadow-sm">
-
-                <div class="card-header bg-primary text-white">
-                    Tạo yêu cầu hỗ trợ
-                </div>
-
-                <div class="card-body">
-
-                    <form method="POST" action="{{ route('customer.support.store') }}">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label class="form-label">Loại hỗ trợ</label>
-
-                            <select name="type" class="form-select">
-                                <option value="payment">Thanh toán</option>
-                                <option value="ticket">Vé</option>
-                                <option value="complaint">Khiếu nại</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Mô tả</label>
-
-                            <textarea 
-                                name="description"
-                                class="form-control"
-                                rows="4"
-                                placeholder="Mô tả vấn đề của bạn..."
-                                required></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            Gửi yêu cầu
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        {{-- DANH SÁCH TICKET --}}
-        <div class="col-md-8">
-
-            <div class="card shadow-sm">
-
-                <div class="card-header bg-dark text-white">
-                    Danh sách yêu cầu
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table table-hover align-middle">
-
-                        <thead>
-
-                            <tr>
-                                <th>ID</th>
-                                <th>Loại</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày</th>
-                                <th></th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                        @forelse($tickets as $ticket)
-
-                            <tr>
-
-                                <td>#{{ $ticket->id }}</td>
-
-                                <td>
-
-                                    @switch($ticket->type)
-
-                                        @case('payment')
-                                            <span class="badge bg-primary">Payment</span>
-                                            @break
-
-                                        @case('ticket')
-                                            <span class="badge bg-info">Ticket</span>
-                                            @break
-
-                                        @case('complaint')
-                                            <span class="badge bg-danger">Complaint</span>
-                                            @break
-
-                                    @endswitch
-
-                                </td>
-
-                                <td>
-
-                                    @switch($ticket->status)
-
-                                        @case('open')
-                                            <span class="badge bg-danger">Open</span>
-                                            @break
-
-                                        @case('processing')
-                                            <span class="badge bg-warning text-dark">Processing</span>
-                                            @break
-
-                                        @case('closed')
-                                            <span class="badge bg-success">Closed</span>
-                                            @break
-
-                                    @endswitch
-
-                                </td>
-
-                                <td>
-                                    {{ optional($ticket->created_at)->format('d/m/Y') }}
-                                </td>
-
-                                <td>
-
-                                    <a href="{{ route('customer.support.show',$ticket->id) }}"
-                                       class="btn btn-sm btn-dark">
-
-                                        💬 Chat
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        @empty
-
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">
-                                    Chưa có ticket hỗ trợ
-                                </td>
-                            </tr>
-
-                        @endforelse
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Yêu cầu hỗ trợ của tôi</h2>
+        <a href="{{ route('customer.support.create') }}" class="btn btn-primary px-4 rounded-pill">
+            <i class='bx bx-plus'></i> Tạo yêu cầu mới
+        </a>
     </div>
 
-</div>
+    @if(session('success'))
+        <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('success') }}</div>
+    @endif
 
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted">
+                    <tr>
+                        <th class="ps-4">Mã</th>
+                        <th>Loại hỗ trợ</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($tickets as $ticket) {{-- BẮT BUỘC phải dùng $tickets ở đây --}}
+                    <tr>
+                        <td class="ps-4 text-muted">#{{ $ticket->id }}</td>
+                        <td>
+                            <span class="badge bg-primary-subtle text-primary px-2">
+                                {{ $ticket->type ?? 'Hỗ trợ' }}
+                            </span>
+                        </td>
+                        <td><div class="text-truncate" style="max-width: 250px;">{{ $ticket->description }}</div></td>
+                        <td>
+                            <span class="badge rounded-pill {{ $ticket->status == 'open' ? 'bg-success' : 'bg-secondary' }}">
+                                {{ $ticket->status == 'open' ? 'Đang mở' : 'Đã đóng' }}
+                            </span>
+                        </td>
+                        <td>{{ $ticket->created_at->format('d/m/Y') }}</td>
+                        <td class="text-end pe-4">
+                            <button onclick="Livewire.dispatch('selectTicket', { id: {{ $ticket->id }} })" class="btn btn-sm btn-light border">
+                                <i class='bx bx-chat'></i> Chat AI
+                            </button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">Bạn chưa có yêu cầu nào.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection

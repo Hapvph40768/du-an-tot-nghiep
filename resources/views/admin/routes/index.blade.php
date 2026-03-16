@@ -7,7 +7,8 @@
         <p>Danh sách tất cả các tuyến xe trong hệ thống</p>
     </div>
     <div style="display: flex; gap: 12px;">
-        <a href="{{ route('routes.create') }}" style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">+ Tạo tuyến xe</a>
+        {{-- Đã sửa: admin.routes.create --}}
+        <a href="{{ route('admin.routes.create') }}" style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">+ Tạo tuyến xe</a>
     </div>
 </div>
 
@@ -33,16 +34,18 @@
             @forelse ($routes as $route)
                 <tr style="border-bottom: 1px solid #f0f2f5;">
                     <td style="padding: 16px;">{{ $route->id }}</td>
-                    <td style="padding: 16px;">{{ $route->startLocation->name ?? '--' }}</td>
-                    <td style="padding: 16px;">{{ $route->endLocation->name ?? '--' }}</td>
+                    <td style="padding: 16px;">{{ $route->startLocation->name ?? 'N/A' }}</td>
+                    <td style="padding: 16px;">{{ $route->endLocation->name ?? 'N/A' }}</td>
                     <td style="padding: 16px;">{{ $route->distance_km }} km</td>
                     <td style="padding: 16px;">{{ $route->estimated_time }} phút</td>
                     <td style="padding: 16px; text-align: center;">
-                        <a href="{{ route('routes.show', $route->id) }}" style="display: inline-block; background-color: #e6f7ff; color: #1890ff; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Xem</a>
-                        <a href="{{ route('routes.edit', $route->id) }}" style="display: inline-block; background-color: #fff7e6; color: #ff7a45; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Sửa</a>
-                        <form action="{{ route('routes.destroy', $route->id) }}" method="POST" style="display: inline;">
+                        {{-- Đã sửa: Thêm admin. --}}
+                        <a href="{{ route('admin.routes.show', $route->id) }}" style="display: inline-block; background-color: #e6f7ff; color: #1890ff; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Xem</a>
+                        <a href="{{ route('admin.routes.edit', $route->id) }}" style="display: inline-block; background-color: #fff7e6; color: #ff7a45; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Sửa</a>
+                        
+                        <form action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" style="display: inline;">
                             @csrf @method('DELETE')
-                            <button type="submit" style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="return confirm('Bạn chắc chứ?')">Xóa</button>
+                            <button type="submit" style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="return confirm('Bạn chắc chắn muốn xóa tuyến này?')">Xóa</button>
                         </form>
                     </td>
                 </tr>
@@ -58,5 +61,4 @@
 <div style="margin-top: 20px; display: flex; justify-content: center;">
     {{ $routes->links() }}
 </div>
-
 @endsection

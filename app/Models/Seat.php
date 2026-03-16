@@ -4,26 +4,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seat extends Model
 {
-    protected $fillable = [
-        'vehicle_id',
-        'seat_number',
-        'type',
-        'status',
-        'user_id',
-    ];
-
-    public function vehicle(): BelongsTo
+    protected $fillable = ['vehicle_id', 'seat_number'];
+    public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
     }
-
-    public function currentLock(): HasOne
+    public function tickets()
     {
-        return $this->hasOne(SeatLock::class, 'seat_id')->latestOfMany();
+        return $this->hasMany(Ticket::class);
+    }
+    public function seatLocks()
+    {
+        return $this->hasMany(SeatLock::class);
     }
 }

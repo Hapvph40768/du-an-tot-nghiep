@@ -4,55 +4,48 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use Notifiable;
 
     protected $fillable = [
+        'role',
         'name',
         'email',
         'phone',
         'password',
         'avatar',
-        'role',
-        'status',
+        'status'
     ];
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'role'   => 'string',
-        'status' => 'string',
-    ];
-
-    public function isAdmin(): bool
+    // Relationships
+    public function bookings()
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Booking::class);
     }
-
-    public function isStaff(): bool
+    public function seatLocks()
     {
-        return $this->role === 'staff';
+        return $this->hasMany(SeatLock::class);
     }
-
-    public function isCustomer(): bool
+    public function reviews()
     {
-        return $this->role === 'customer';
+        return $this->hasMany(Review::class);
     }
-
-    public function isActive(): bool
+    public function orders()
     {
-        return $this->status === 'active';
+        return $this->hasMany(Order::class);
     }
-
-    public function getAvatarAttribute($value)
+    public function transactions()
     {
-        return $value ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random';
+        return $this->hasMany(Transaction::class);
+    }
+    public function supportTickets()
+    {
+        return $this->hasMany(SupportTicket::class);
     }
 }

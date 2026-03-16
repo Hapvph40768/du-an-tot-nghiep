@@ -13,25 +13,9 @@
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/boxchat.css') }}">
 </head>
 
-<a href="{{ route('customer.support.index') }}" class="support-float">
-    
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="28"
-         height="28"
-         fill="white"
-         viewBox="0 0 16 16">
-
-        <path d="M8 0C3.58 0 0 3.134 0 7c0 2.084 1.06 3.954 2.75 5.239
-        L2 16l3.101-1.588A8.9 8.9 0 0 0 8 15c4.42 0 8-3.134
-        8-7s-3.58-8-8-8z"/>
-
-    </svg>
-
-</a>
-
+</div>
 <body class="h-full bg-gray-50">
     <div id="app-wrapper" class="w-full h-full overflow-auto">
 
@@ -48,8 +32,9 @@
 
     </div>
 
-    <link rel="stylesheet" href="{{ asset('js/customer.js') }}">
-
+    
+<link rel="stylesheet" href="{{ asset('js/customer.js') }}">
+@livewire('chatbox')
+@livewireScripts
 </body>
-
 </html>

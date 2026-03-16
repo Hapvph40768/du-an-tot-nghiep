@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('pickup_points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('location_id')->constrained('locations');
-            $table->string('name');
+            $table->foreignId('location_id')->constrained('locations')->cascadeOnDelete();
+            $table->string('name')->nullable();
             $table->text('address')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
+
+            $table->unique(['location_id', 'name']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('pickup_points');

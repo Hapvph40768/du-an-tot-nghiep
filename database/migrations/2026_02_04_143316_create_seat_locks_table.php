@@ -6,28 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('seat_locks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('trip_id')->constrained('trips');
-            $table->foreignId('seat_id')->constrained('seats');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('booking_id')->nullable()->constrained('bookings');
-            $table->dateTime('locked_until');
+            $table->foreignId('trip_id')->nullable()->constrained('trips')->cascadeOnDelete();
+            $table->foreignId('seat_id')->nullable()->constrained('seats')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('booking_id')->nullable()->constrained('bookings')->nullOnDelete();
+            $table->dateTime('locked_until')->nullable();
+            $table->timestamps();
+
             $table->unique(['trip_id', 'seat_id']);
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('seat_locks');

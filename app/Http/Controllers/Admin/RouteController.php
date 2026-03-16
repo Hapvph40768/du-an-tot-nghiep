@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Route;
-use App\Models\Location;
-use App\Models\LocationModel;
 use Illuminate\Http\Request;
 
 class RouteController extends Controller
@@ -16,55 +14,33 @@ class RouteController extends Controller
         return view('admin.routes.index', compact('routes'));
     }
 
-    public function create()
-    {
-        $locations = LocationModel::all();
-        return view('admin.routes.create', compact('locations'));
-    }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
             'start_location_id' => 'required|exists:locations,id',
             'end_location_id' => 'required|exists:locations,id|different:start_location_id',
-            'distance_km' => 'required|integer|min:1',
-            'estimated_time' => 'required|integer|min:1'
+            'distance_km' => 'nullable|integer|min:1',
+            'estimated_time' => 'nullable|integer|min:1', 
         ]);
 
         Route::create($validated);
-
-        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được tạo thành công!');
-    }
-
-    public function show(Route $route)
-    {
-        $route->load(['startLocation', 'endLocation']);
-        return view('admin.routes.show', compact('route'));
-    }
-
-    public function edit(Route $route)
-    {
-        $locations = LocationModel::all();
-        return view('admin.routes.edit', compact('route', 'locations'));
+        return redirect()->route('admin.routes.index')->with('success', 'Tạo tuyến đường thành công');
     }
 
     public function update(Request $request, Route $route)
     {
         $validated = $request->validate([
-            'start_location_id' => 'required|exists:locations,id',
-            'end_location_id' => 'required|exists:locations,id|different:start_location_id',
-            'distance_km' => 'required|integer|min:1',
-            'estimated_time' => 'required|integer|min:1'
+            'distance_km' => 'nullable|integer|min:1',
+            'estimated_time' => 'nullable|integer|min:1',
         ]);
 
         $route->update($validated);
-
-        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được cập nhật thành công!');
+        return redirect()->route('admin.routes.index')->with('success', 'Cập nhật tuyến đường thành công');
     }
 
     public function destroy(Route $route)
     {
         $route->delete();
-        return redirect()->route('admin.routes.index')->with('success', 'Tuyến xe được xóa thành công!');
+        return redirect()->route('admin.routes.index')->with('success', 'Xóa tuyến đường thành công');
     }
 }
