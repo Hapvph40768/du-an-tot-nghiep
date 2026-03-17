@@ -4,41 +4,59 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
-// Các Model dưới đây sẽ được gọi sau khi chúng ta tạo xong
-// use App\Models\Trip;
-// use App\Models\Ticket;
-use Illuminate\Http\Request;
+use App\Models\Trip;
+use App\Models\Ticket;
+use App\Models\Payment;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Thống kê tổng quan
-        // Dữ liệu thật từ bảng drivers
-        $totalDrivers = Driver::count(); 
-        
-        // Dữ liệu giả lập tạm thời (Sẽ thay thế bằng query thật ở các bước sau)
-        $totalTrips = 150; 
-        $totalTickets = 1250; 
-        $totalRevenue = 45500000; 
+        // --- THỐNG KÊ 4 Ô CARD ---
+        $totalDrivers = Driver::count();
+        $totalTrips = Trip::count();
+        $totalTickets = Ticket::count();
+        $totalRevenue = Payment::where('status', 'success')->sum('amount');
 
-        // 2. Dữ liệu cho Biểu đồ (Giả lập 7 ngày qua)
-        $chartLabels = ['01/10', '02/10', '03/10', '04/10', '05/10', '06/10', '07/10'];
-        
-        // Biểu đồ Doanh thu (VNĐ)
-        $revenueData = [4500000, 6000000, 5500000, 8000000, 4000000, 9500000, 8000000];
-        
-        // Biểu đồ Số vé đặt
-        $ticketData = [20, 35, 30, 45, 15, 50, 42];
+        // --- DỮ LIỆU BIỂU ĐỒ DOANH THU & VÉ (7 NGÀY QUA) ---
+        $chartLabels = [];
+        $revenueData = [];
+        $ticketData = [];
 
-        // Biểu đồ Trạng thái chuyến xe
-        $tripStatusLabels = ['Đã hoàn thành', 'Đang chạy', 'Đã hủy'];
-        $tripStatusData = [110, 25, 15];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $chartLabels[] = Carbon::now()->subDays($i)->format('d/m');
 
-        return view('admin.dashboard', compact(
-            'totalDrivers', 'totalTrips', 'totalTickets', 'totalRevenue',
-            'chartLabels', 'revenueData', 'ticketData',
-            'tripStatusLabels', 'tripStatusData'
+            // Tính doanh thu theo ngày
+            $revenueData[] = Payment::where('status', 'success')
+                ->whereDate('created_at', $date)
+                ->sum('amount');
+
+            // Tính số vé đặt theo ngày
+            $ticketData[] = Ticket::whereDate('created_at', $date)->count();
+        }
+
+        // --- DỮ LIỆU BIỂU ĐỒ TRÒN (TRẠNG THÁI CHUYẾN XE) ---
+        $tripStatusLabels = ['Hoàn thành', 'Đang chạy', 'Đã hủy'];
+        $tripStatusData = [
+            Trip::where('status', 'completed')->count(),
+            Trip::where('status', 'active')->count(),
+            Trip::where('status', 'cancelled')->count(),
+        ];
+
+        // --- TRUYỀN TẤT CẢ BIẾN SANG VIEW ---
+        return view('admin.dashboard.index', compact(
+            'totalDrivers',
+            'totalTrips',
+            'totalTickets',
+            'totalRevenue',
+            'chartLabels',
+            'revenueData',
+            'ticketData',
+            'tripStatusLabels',
+            'tripStatusData'
         ));
     }
 }

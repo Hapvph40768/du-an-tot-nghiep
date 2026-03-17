@@ -6,25 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('support_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('booking_id')->nullable()->constrained('bookings')->nullOnDelete();
             $table->enum('type', ['payment', 'ticket', 'complaint'])->nullable();
-            $table->text('description'); 
+            $table->text('description')->nullable();
+            $table->foreignId('assigned_admin_id')->nullable()->constrained('users');
             $table->enum('status', ['open', 'processing', 'closed'])->default('open');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('support_tickets');

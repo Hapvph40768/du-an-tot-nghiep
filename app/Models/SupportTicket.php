@@ -2,50 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SupportTicket extends Model
 {
-    use HasFactory;
+    protected $fillable = ['user_id', 'booking_id', 'type', 'description', 'assigned_admin_id', 'status'];
 
-    public $timestamps = false;
-
-    protected $fillable = [
-        'user_id',
-        'type',
-        'description',
-        'status',
-    ];
-
-    protected $casts = [
-        'type'   => 'string',
-        'status' => 'string',
-    ];
-
-    // Ticket thuộc về user
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    // 1 ticket có nhiều message
-    public function messages(): HasMany
+    public function booking()
     {
-        return $this->hasMany(SupportMessage::class);
+        return $this->belongsTo(Booking::class);
     }
-
-    // Kiểm tra ticket còn mở
-    public function isOpen(): bool
+    public function assignedAdmin()
     {
-        return $this->status === 'open';
+        return $this->belongsTo(User::class, 'assigned_admin_id');
     }
-
-    // Lấy tin nhắn mới nhất
-    public function getLatestMessage()
-    {
-        return $this->messages()->latest('created_at')->first();
+    public function messages() {
+    return $this->hasMany(SupportMessage::class, 'support_ticket_id');
     }
 }

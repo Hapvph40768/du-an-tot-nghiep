@@ -3,145 +3,92 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Vehicle;
 use App\Models\Seat;
-use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\JsonResponse;
 
 class SeatController extends Controller
 {
-    /**
-     * HIỂN THỊ: Lấy danh sách ghế của một xe
-     */
-    public function index(Vehicle $vehicle): View
+    // Hiển thị danh sách ghế (Có thể lọc theo từng xe)
+    public function index(Request $request)
     {
-        $seats = $vehicle->seats()->orderBy('seat_number', 'asc')->get();
-        return view('admin.seats.index', compact('vehicle', 'seats'));
+        $query = Seat::with('vehicle')->orderBy('vehicle_id')->orderBy('seat_number');
+
+        // Nếu Admin bấm xem ghế của 1 xe cụ thể (truyền qua URL ?vehicle_id=1)
+        if ($request->has('vehicle_id')) {
+            $query->where('vehicle_id', $request->vehicle_id);
+        }
+
+        $seats = $query->paginate(50);
+        $vehicles = Vehicle::where('status', 'active')->get(); // Để làm bộ lọc trên View
+
+        return view('admin.seats.index', compact('seats', 'vehicles'));
     }
 
-    /**
-     * LOGIC SEAT LOCK: Khóa ghế khi click
-     * ĐÃ FIX: Lỗi "id on null" và "guard admin not defined"
-     */
-    public function selectSeat(Request $request, Seat $seat): JsonResponse
+    // Form thêm ghế mới thủ công (ví dụ thêm ghế súp/ghế phụ)
+    public function create()
     {
-        // 1. Lấy ID người dùng an toàn nhất (tự động nhận diện session hiện tại)
-        $userId = Auth::id();
-
-        // 2. Dự phòng: Nếu session API gặp trục trặc, lấy ID của Admin đầu tiên để thực hiện lệnh
-        if (!$userId) {
-            $admin = User::first(); 
-            $userId = $admin ? $admin->id : null;
-        }
-
-        // 3. Kiểm tra nếu hệ thống hoàn toàn không có User/Admin nào
-        if (!$userId) {
-            return response()->json(['error' => 'Không xác định được danh tính người khóa ghế!'], 401);
-        }
-
-        // 4. Kiểm tra trạng thái ghế trước khi khóa
-        if ($seat->status !== 'Trống') {
-            return response()->json(['error' => 'Ghế này đã được khóa hoặc có người chọn!'], 400);
-        }
-
-        // 5. Thực hiện khóa ghế (Seat Lock)
-        try {
-            $seat->update([
-                'status' => 'Đã đặt',
-                'user_id' => $userId
-            ]);
-
-            return response()->json([
-                'success' => 'Đã khóa ghế ' . $seat->seat_number . ' thành công!'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Lỗi Database: ' . $e->getMessage()], 500);
-        }
+        $vehicles = Vehicle::all();
+        return view('admin.seats.create', compact('vehicles'));
     }
 
-    /**
-     * TẠO TỰ ĐỘNG: Sinh sơ đồ ghế theo loại xe
-     */
-    public function generate(Vehicle $vehicle): RedirectResponse
+    public function store(Request $request)
     {
-        if($vehicle->seats()->count() > 0) {
-            return back()->with('error', 'Xe này đã có sơ đồ ghế!');
-        }
-
-        $total = (int) $vehicle->type; 
-
-        for ($i = 1; $i <= $total; $i++) {
-            $vehicle->seats()->create([
-                'seat_number' => 'A' . str_pad($i, 2, '0', STR_PAD_LEFT),
-                'type' => 'Thường',
-                'status' => 'Trống'
-            ]);
-        }
-
-        return back()->with('success', "Đã tạo sơ đồ $total ghế cho xe thành công!");
-    }
-
-    /**
-     * THÊM LẺ: Lưu 1 ghế thủ công
-     */
-    public function store(Request $request, Vehicle $vehicle): RedirectResponse
-    {
-        $data = $request->validate([
-            'seat_number' => 'required|string|max:10',
-            'type'        => 'required|in:Thường,VIP',
-            'status'      => 'required|in:Trống,Đã đặt,Bảo trì',
+        $validated = $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'seat_number' => 'required|string|max:20',
         ]);
 
-        $vehicle->seats()->create($data);
+        // Kiểm tra xem tên ghế này đã tồn tại trên xe này chưa (do bạn có UNIQUE(vehicle_id, seat_number))
+        $exists = Seat::where('vehicle_id', $validated['vehicle_id'])
+                      ->where('seat_number', $validated['seat_number'])
+                      ->exists();
 
-        return back()->with('success', 'Đã thêm ghế ' . $request->seat_number . ' thành công!');
-    }
-
-    /**
- * HỦY CHỌN GHẾ: Đưa ghế về trạng thái Trống
- */
-public function unlockSeat(Seat $seat): JsonResponse
-{
-    try {
-        // 1. Cập nhật trạng thái ghế về Trống và xóa user_id gắn kèm
-        $seat->update([
-            'status' => 'Trống',
-            'user_id' => null
-        ]);
-
-        // 2. Nếu bạn đã lỡ tạo bảng seat_locks, hãy xóa bản ghi liên quan để giải phóng hoàn toàn
-        \App\Models\SeatLock::where('seat_id', $seat->id)->delete();
-
-        return response()->json([
-            'success' => 'Đã hủy chọn ghế ' . $seat->seat_number . ' thành công!'
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Lỗi: ' . $e->getMessage()], 500);
-    }
-}
-
-    /**
-     * XÓA LẺ: Xóa 1 vị trí ghế
-     */
-    public function destroy(Seat $seat): RedirectResponse
-    {
-        if ($seat->status !== 'Trống') {
-            return back()->with('error', 'Không thể xóa ghế đang ở trạng thái khóa!');
+        if ($exists) {
+            return back()->with('error', 'Mã ghế này đã tồn tại trên xe được chọn!')->withInput();
         }
+
+        Seat::create($validated);
+        
+        return redirect()->route('admin.seats.index', ['vehicle_id' => $validated['vehicle_id']])
+                         ->with('success', 'Thêm ghế mới thành công!');
+    }
+
+    public function edit(Seat $seat)
+    {
+        $vehicles = Vehicle::all();
+        return view('admin.seats.edit', compact('seat', 'vehicles'));
+    }
+
+    public function update(Request $request, Seat $seat)
+    {
+        $validated = $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'seat_number' => 'required|string|max:20',
+        ]);
+
+        // Kiểm tra trùng lặp (trừ chính cái ghế đang sửa)
+        $exists = Seat::where('vehicle_id', $validated['vehicle_id'])
+                      ->where('seat_number', $validated['seat_number'])
+                      ->where('id', '!=', $seat->id)
+                      ->exists();
+
+        if ($exists) {
+            return back()->with('error', 'Mã ghế này đã tồn tại trên xe được chọn!')->withInput();
+        }
+
+        $seat->update($validated);
+        
+        return redirect()->route('admin.seats.index', ['vehicle_id' => $seat->vehicle_id])
+                         ->with('success', 'Cập nhật thông tin ghế thành công!');
+    }
+
+    public function destroy(Seat $seat)
+    {
+        $vehicleId = $seat->vehicle_id;
         $seat->delete();
-        return back()->with('success', 'Đã xóa ghế thành công.');
-    }
-
-    /**
-     * XÓA TẤT CẢ: Reset sạch sơ đồ ghế của xe
-     */
-    public function deleteAll(Vehicle $vehicle): RedirectResponse
-    {
-        $vehicle->seats()->delete();
-        return back()->with('success', 'Đã xóa toàn bộ sơ đồ ghế.');
+        
+        return redirect()->route('admin.seats.index', ['vehicle_id' => $vehicleId])
+                         ->with('success', 'Xóa ghế thành công!');
     }
 }

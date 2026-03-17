@@ -6,11 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class SeatLock extends Model
 {
-    // Thêm dòng này để báo cho Laravel biết bảng này không dùng timestamps
-    public $timestamps = false;
+    protected $fillable = ['trip_id', 'seat_id', 'user_id', 'booking_id', 'locked_until'];
+    protected $casts = ['locked_until' => 'datetime'];
 
-    protected $fillable = ['seat_id', 'user_id', 'trip_id', 'locked_until'];
-    protected $casts = [
-        'locked_until' => 'datetime',
-    ];
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class);
+    }
+    public function seat()
+    {
+        return $this->belongsTo(Seat::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 }

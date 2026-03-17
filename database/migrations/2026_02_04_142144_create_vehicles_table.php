@@ -6,27 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-
     public function up(): void
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('license_plate')->unique();
-            $table->string('type')->nullable();
-            $table->integer('total_seats');
+            $table->string('license_plate', 50)->unique()->nullable();
+            $table->string('type', 100)->nullable();
+            $table->unsignedInteger('total_seats')->nullable();
             $table->enum('status', ['active', 'maintenance'])->default('active');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('vehicles');

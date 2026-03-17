@@ -1,186 +1,140 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 
+// MIDDLEWARES
+use App\Http\Middleware\CheckCustomerRole;
+use App\Http\Middleware\CheckAdminRole;
+
+// AUTH CONTROLLER
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\VehicleController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\SupportController;
-use App\Http\Controllers\SupportMessageController;
-use App\Http\Controllers\Admin\DriverController;
-use App\Http\Controllers\Admin\LocationController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\TripController;
-use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\UserController;
+// CUSTOMER & PUBLIC CONTROLLERS
+use App\Http\Controllers\Customer\HomeController as CustomerHomeController;
+use App\Http\Controllers\Customer\TripController as CustomerTripController;
+use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
+use App\Http\Controllers\Customer\PaymentController as CustomerPaymentController;
+use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 
-use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
+// ADMIN CONTROLLERS
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\AdminOrderController;
-
-use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\Admin\SeatController;
-use App\Http\Controllers\Admin\VehiclesController;
+use App\Http\Controllers\Admin\PickupPointController;
+use App\Http\Controllers\Admin\TripController as AdminTripController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\SeatLockController;
+use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SupportTicketController as AdminSupportController;
+use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\SupportMessageController as AdminMessageController;
+use App\Http\Controllers\Customer\SupportTicketController;
 
 /*
 |--------------------------------------------------------------------------
-| PUBLIC ROUTES
+| 1. PUBLIC ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [CustomerHomeController::class, 'index'])->name('customer.home');
+Route::get('/trips/search', [CustomerTripController::class, 'search'])->name('customer.trips.search');
+Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('customer.trips.show');
+
+/*
+|--------------------------------------------------------------------------
+| 2. AUTH ROUTES (Đăng ký, Đăng nhập, Đăng xuất)
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
-Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
-
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware('auth')
-    ->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATED USERS (ALL ROLES)
+| 3. CUSTOMER ROUTES (Auth & Role Customer)
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [CustomerProfileController::class, 'edit'])->name('customer.profile.edit');
+        Route::put('/', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
+    });
 
-Route::middleware(['auth'])->group(function () {
+    Route::prefix('bookings')->group(function () {
+        Route::get('/', [CustomerBookingController::class, 'index'])->name('customer.bookings.index');
+        Route::post('/', [CustomerBookingController::class, 'store'])->name('customer.bookings.store');
+        Route::get('/{booking}', [CustomerBookingController::class, 'show'])->name('customer.bookings.show');
+    });
 
-    // gửi message trong ticket
-    Route::post(
-        'support_tickets/{support_ticket}/messages',
-        [SupportMessageController::class, 'store']
-    )->name('support_messages.store');
+    Route::prefix('payment')->group(function () {
+        Route::get('/checkout/{booking}', [CustomerPaymentController::class, 'checkout'])->name('customer.payment.checkout');
+        Route::post('/process/{booking}', [CustomerPaymentController::class, 'process'])->name('customer.payment.process');
+    });
+
+    Route::post('/reviews/{booking}', [CustomerReviewController::class, 'store'])->name('customer.reviews.store');
+
+    Route::prefix('support')->group(function () {
+    Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
+    Route::get('/create', [SupportTicketController::class, 'create'])->name('customer.support.create');
+    Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
+    Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
+});
 });
 
 /*
 |--------------------------------------------------------------------------
-| CUSTOMER
+| 4. ADMIN ROUTES (Auth & Role Admin/Staff)
 |--------------------------------------------------------------------------
 */
+Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::class])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-Route::middleware(['auth', 'role:customer'])
-    ->prefix('customer')
-    ->name('customer.')
-    ->group(function () {
+    // CRUD Cơ bản
+    Route::resource('users', UserController::class);
+    Route::resource('locations', LocationController::class)->except(['create', 'edit', 'show']);
+    Route::resource('routes', RouteController::class);
+    Route::resource('drivers', DriverController::class)->except(['show']);
+    Route::resource('vehicles', VehicleController::class)->except(['show']);
+    Route::resource('seats', SeatController::class)->except(['show']);
+    Route::resource('pickup-points', PickupPointController::class)->except(['show']);
 
-        Route::get('/home', function () {
-            return view('customer.home');
-        })->name('home');
+    // Vận hành
+    Route::resource('trips', AdminTripController::class)->except(['show']);
+    Route::resource('bookings', AdminBookingController::class)->only(['index', 'show', 'update']);
+    Route::resource('tickets', TicketController::class)->only(['index', 'show', 'update']);
 
-        // Support tickets
-        Route::get('/support', [SupportTicketController::class, 'index'])
-            ->name('support.index');
+    // Khóa ghế
+    Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
+    Route::resource('seat-locks', SeatLockController::class)->only(['index', 'create', 'store', 'destroy']);
 
-        Route::post('/support', [SupportTicketController::class, 'store'])
-            ->name('support.store');
+    // Tài chính
+    Route::resource('payments', AdminPaymentController::class)->only(['index', 'update']);
+    Route::resource('invoices', InvoiceController::class)->except(['destroy']);
+    Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('transactions/{transaction}', [TransactionController::class, 'showTransaction'])->name('transactions.show');
+    Route::get('orders', [TransactionController::class, 'orders'])->name('orders.index');
+    Route::put('orders/{order}/status', [TransactionController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 
-        Route::get('/support/{id}', [SupportTicketController::class, 'show'])
-            ->name('support.show');
+    // CSKH & Support
+    Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
+    Route::resource('support-tickets', AdminSupportController::class)->only(['index', 'show']);
+    Route::put('support-tickets/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('support_tickets.close');
 
-        Route::post('/support/{id}/send', [SupportMessageController::class, 'store'])
-            ->name('support.send');
-    });
-
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-        // support tickets
-        Route::prefix('support')->name('support.')->group(function () {
-            Route::get('/', [AdminSupportTicketController::class, 'index'])
-                ->name('index');
-
-            Route::get('/{supportTicket}', [AdminSupportTicketController::class, 'show'])
-                ->name('chat');
-
-            Route::post('/{supportTicket}/reply', [AdminSupportTicketController::class, 'reply'])
-                ->name('reply');
-
-            Route::patch('/{supportTicket}/status', [AdminSupportTicketController::class, 'updateStatus'])
-                ->name('update-status');
-        });
-
-        // users
-        Route::prefix('users')->name('users.')->group(function () {
-
-            Route::get('/', [UserController::class, 'index'])
-                ->name('index');
-
-            Route::get('/{user}', [UserController::class, 'show'])
-                ->name('show');
-
-            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])
-                ->name('toggle-status');
-        });
-
-        //Tài xế
-        Route::resource('drivers', DriverController::class);
-
-        //Địa điểm
-        Route::resource('locations', LocationController::class);
-
-        //Phương tiện
-        Route::resource('vehicles', VehiclesController::class);
-    });
-
-/*
-|--------------------------------------------------------------------------
-| CONTACT
-|--------------------------------------------------------------------------
-*/
-
-
-
-
-Route::post('/lien-he', [ContactController::class, 'store'])
-    ->name('contact.store');
-
-// Nhóm các Route yêu cầu phải Đăng nhập và có quyền truy cập Session
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
-
-    // 1. Quản lý Xe (Resource chuẩn)
-    Route::resource('vehicles', VehicleController::class);
-
-    // 2. Quản lý Sơ đồ ghế (Đi theo từng xe cụ thể)
-    Route::prefix('vehicles/{vehicle}')->name('vehicles.')->group(function () {
-
-        // Hiển thị sơ đồ ghế
-        Route::get('/seats', [SeatController::class, 'index'])->name('seats.index');
-
-        // Khởi tạo tự động số lượng ghế theo loại xe
-        Route::post('/generate-seats', [SeatController::class, 'generate'])->name('seats.generate');
-
-        // Xóa sạch sơ đồ ghế để làm lại từ đầu
-        Route::delete('/delete-all-seats', [SeatController::class, 'deleteAll'])->name('seats.deleteAll');
-
-        // Thêm lẻ 1 ghế thủ công
-        Route::post('/seats/store', [SeatController::class, 'store'])->name('seats.store');
-    });
-
-    // 3. Các thao tác trực tiếp trên từng Ghế (Dùng ID của Ghế)
-
-    // LOGIC QUAN TRỌNG: Khóa ghế (Seat Lock)
-    // URL sẽ là: /admin/seats/{id}/select
-    Route::post('/seats/{seat}/select', [SeatController::class, 'selectSeat'])->name('seats.select');
-    // Route để hủy ghế
-    Route::post('/seats/{seat}/unlock', [SeatController::class, 'unlockSeat'])->name('seats.unlock');
-    // Xóa lẻ 1 ghế
-    Route::delete('/seats/{seat}', [SeatController::class, 'destroy'])->name('seats.destroy');
+    // Phản hồi tin nhắn
+    Route::post('support-tickets/{supportTicket}/messages', [AdminMessageController::class, 'store'])->name('support_messages.store');
+    Route::delete('support-messages/{supportMessage}', [AdminMessageController::class, 'destroy'])->name('support_messages.destroy');
 });

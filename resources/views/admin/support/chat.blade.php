@@ -1,159 +1,43 @@
 @extends('layout.admin.AdminLayout')
 
 @section('content-main')
-    <div class="container py-4">
+<div class="chat-box">
 
-        <div class="card shadow">
+@foreach($ticket->messages as $msg)
 
-            <div class="card-header bg-dark text-white">
+@if($msg->sender_type=='user')
 
-                Ticket #{{ $supportTicket->id }}
-                Khách: {{ $supportTicket->user->name }}
+<div class="user">
+{{ $msg->message }}
+</div>
 
-            </div>
+@elseif($msg->sender_type=='ai')
 
-            <div class="card-body p-0">
+<div class="ai">
+🤖 {{ $msg->message }}
+</div>
 
-                {{-- CHAT AREA --}}
-                <div class="chat-box" id="chatBox">
+@else
 
-                    @foreach ($supportTicket->messages as $msg)
-                        @if ($msg->sender_id == auth()->id())
-                            <div class="msg-row right">
-                                <div class="msg admin">
-                                    {{ $msg->message }}
-                                </div>
-                            </div>
-                        @else
-                            <div class="msg-row left">
-                                <div class="msg user">
-                                    <strong>{{ $msg->sender->name }}</strong><br>
-                                    {{ $msg->message }}
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
+<div class="admin">
+Admin: {{ $msg->message }}
+</div>
 
-                </div>
+@endif
 
-                {{-- SEND MESSAGE --}}
-                <div class="chat-input">
+@endforeach
 
-                    <form id="chatForm">
+</div>
 
-                        @csrf
+<form method="POST" action="/support/send">
 
-                        <div class="input-group">
+@csrf
 
-                            <input type="text" id="messageInput" name="message" class="form-control"
-                                placeholder="Nhập tin nhắn..." required>
+<input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
 
-                            <button class="btn btn-primary">
-                                Gửi
-                            </button>
+<input type="text" name="message">
 
-                        </div>
+<button>Send</button>
 
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <style>
-        .chat-box {
-            height: 500px;
-            overflow-y: auto;
-            padding: 20px;
-            background: #f5f7fb;
-        }
-
-        .msg-row {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .left {
-            justify-content: flex-start;
-        }
-
-        .right {
-            justify-content: flex-end;
-        }
-
-        .msg {
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 60%;
-            font-size: 14px;
-        }
-
-        .user {
-            background: #e4e6eb;
-        }
-
-        .admin {
-            background: #0d6efd;
-            color: white;
-        }
-
-        .chat-input {
-            border-top: 1px solid #ddd;
-            padding: 10px;
-            background: white;
-        }
-    </style>
-
-
-    <script>
-        let chatBox = document.getElementById("chatBox")
-        let form = document.getElementById("chatForm")
-        let input = document.getElementById("messageInput")
-
-        if (chatBox) {
-            chatBox.scrollTop = chatBox.scrollHeight
-        }
-
-        form.addEventListener("submit", function(e) {
-
-            e.preventDefault()
-
-            let message = input.value
-
-            fetch("{{ route('admin.support.reply', $supportTicket->id) }}", {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-
-                    body: JSON.stringify({
-                        message: message
-                    })
-
-                })
-
-                .then(res => res.json())
-
-                .then(data => {
-
-                    let html = `<div class="msg-row right"><div class="msg admin">${data.message}</div></div>`
-
-                    chatBox.innerHTML += html
-
-                    input.value = ""
-
-                    chatBox.scrollTop = chatBox.scrollHeight
-
-                })
-
-        })
-    </script>
+</form>
 @endsection
