@@ -105,7 +105,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // CRUD Cơ bản
     Route::resource('users', UserController::class);
-    Route::resource('locations', LocationController::class)->except(['create', 'edit', 'show']);
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+    ->name('users.toggle-status');
+    Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
     Route::resource('drivers', DriverController::class)->except(['show']);
     Route::resource('vehicles', VehicleController::class)->except(['show']);

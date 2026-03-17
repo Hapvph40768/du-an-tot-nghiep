@@ -1,153 +1,107 @@
-<?php $__env->startSection('title', 'Quản lý Đội xe'); ?>
-
 <?php $__env->startSection('content-main'); ?>
-
-<div class="container-fluid py-4">
-
-    <div class="d-flex justify-content-between align-items-end mb-4">
-        <div>
-            <h5 class="text-muted mb-1 small text-uppercase fw-bold">Quản trị viên</h5>
-            <h2 class="fw-bold text-dark m-0">Danh sách Đội xe</h2>
-        </div>
-
-        <nav>
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item">
-                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-decoration-none text-muted">
-                        Trang chủ
-                    </a>
-                </li>
-                <li class="breadcrumb-item active text-primary">
-                    Đội xe
-                </li>
-            </ol>
-        </nav>
-    </div>
-
-    <div class="card shadow-sm p-4">
-
-        
-        <?php if(session('success')): ?>
-            <div class="alert alert-success">
-                <?php echo e(session('success')); ?>
-
-            </div>
-        <?php endif; ?>
-
-        <?php if(session('error')): ?>
-            <div class="alert alert-danger">
-                <?php echo e(session('error')); ?>
-
-            </div>
-        <?php endif; ?>
-
-        <div class="d-flex justify-content-between mb-3">
-
-            
-            <form action="<?php echo e(route('admin.vehicles.index')); ?>" method="GET" class="d-flex gap-2">
-                <input type="text"
-                       name="keyword"
-                       value="<?php echo e(request('keyword')); ?>"
-                       class="form-control"
-                       placeholder="Tìm biển số, loại xe...">
-
-                <select name="status" class="form-select">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>
-                        Hoạt động
-                    </option>
-                    <option value="maintenance" <?php echo e(request('status') == 'maintenance' ? 'selected' : ''); ?>>
-                        Bảo dưỡng
-                    </option>
-                </select>
-
-                <button class="btn btn-primary">Lọc</button>
-            </form>
-
-            
-            <a href="<?php echo e(route('admin.vehicles.create')); ?>" class="btn btn-success">
-                + Thêm Xe
+    <div class="top-header">
+        <div style="display: flex; gap: 12px;">
+            <a href="<?php echo e(route('admin.vehicles.create')); ?>"
+                style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                <i class="bx bx-plus" style="font-size: 16px;"></i> Thêm xe
             </a>
-
         </div>
+    </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #f0f2f5;">
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Phương tiện</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Loại xe / Số ghế</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Trạng thái</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Ngày tạo</th>
+                    <th style="padding: 16px; text-align: center; font-weight: 600; color: #666;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                    <tr style="border-bottom: 1px solid #f0f2f5;">
+                        <td style="padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div
+                                    style="width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #fff3e0, #ffe0b2); border: 1px solid #ffe8cc; flex-shrink: 0;">
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!empty($vehicle->image) && file_exists(public_path($vehicle->image))): ?>
+                                        <img src="<?php echo e(asset($vehicle->image)); ?>" alt="<?php echo e($vehicle->license_plate); ?>"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                    <?php else: ?>
+                                        <div
+                                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ff8c00; font-weight: bold; font-size: 18px;">
+                                            <?php echo e(strtoupper(substr($vehicle->license_plate ?? 'XE', 0, 2))); ?>
 
-                <thead class="table-light">
-                    <tr>
-                        <th>Biển số</th>
-                        <th>Loại xe</th>
-                        <th>Số ghế</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                        <th width="120">Hành động</th>
+                                        </div>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #333;"><?php echo e($vehicle->license_plate); ?></div>
+                                    <div style="color: #888; font-size: 12px;">ID: #<?php echo e($vehicle->id); ?></div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="padding: 16px; color: #333;">
+                            <?php echo e($vehicle->type ?? 'Chưa xác định'); ?>
+
+                            <div style="color: #888; font-size: 12px;"><?php echo e($vehicle->total_seats ?? '?'); ?> chỗ</div>
+                        </td>
+
+                        <td style="padding: 16px;">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($vehicle->status == 'active'): ?>
+                                <span
+                                    style="background: #f6ffed; color: #52c41a; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                    Hoạt động
+                                </span>
+                            <?php else: ?>
+                                <span
+                                    style="background: #fff7e6; color: #fa8c16; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                    Bảo dưỡng
+                                </span>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </td>
+
+                        <td style="padding: 16px; color: #666;">
+                            <?php echo e($vehicle->created_at ? $vehicle->created_at->format('d/m/Y') : 'N/A'); ?>
+
+                        </td>
+
+                        <td style="padding: 16px; text-align: center;">
+                            <a href="<?php echo e(route('admin.vehicles.edit', $vehicle->id)); ?>"
+                                style="display: inline-block; background-color: #fff7e6; color: #fa8c16; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 4px;">
+                                Sửa
+                            </a>
+
+                            <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>" method="POST"
+                                style="display: inline;">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
+                                <button type="submit"
+                                    style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;"
+                                    onclick="return confirm('Bạn chắc chắn muốn xóa xe <?php echo e(addslashes($vehicle->license_plate)); ?>?')">
+                                    Xóa
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                    <tr>
+                        <td colspan="5" style="padding: 40px 16px; text-align: center; color: #999; font-size: 15px;">
+                            Chưa có phương tiện nào trong hệ thống
+                        </td>
+                    </tr>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
-                <tbody>
-                    <?php $__empty_1 = true; $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <tr>
-
-                            <td><?php echo e($vehicle->license_plate); ?></td>
-
-                            <td><?php echo e($vehicle->type ?? 'Chưa xác định'); ?></td>
-
-                            <td><?php echo e($vehicle->total_seats); ?></td>
-
-                            <td>
-                                <?php if($vehicle->status == 'active'): ?>
-                                    <span class="badge bg-success">Hoạt động</span>
-                                <?php else: ?>
-                                    <span class="badge bg-warning text-dark">Bảo dưỡng</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <td>
-                                <?php echo e($vehicle->created_at ? \Carbon\Carbon::parse($vehicle->created_at)->format('d/m/Y') : 'N/A'); ?>
-
-                            </td>
-
-                            <td>
-
-                                <a href="<?php echo e(route('admin.vehicles.edit', $vehicle->id)); ?>"
-                                   class="btn btn-sm btn-warning">
-                                    Sửa
-                                </a>
-
-                                <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>"
-                                      method="POST"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
-
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-
-                                    <button class="btn btn-sm btn-danger">
-                                        Xóa
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                Không có dữ liệu
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-
-            </table>
-        </div>
-
-        
+    <div style="margin-top: 24px; display: flex; justify-content: center;">
+        <?php echo e($vehicles->appends(request()->query())->links()); ?>
 
     </div>
-</div>
-
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/admin/vehicles/index.blade.php ENDPATH**/ ?>

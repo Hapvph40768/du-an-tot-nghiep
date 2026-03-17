@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Location;
 use App\Models\Route;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,11 @@ class RouteController extends Controller
     {
         $routes = Route::with(['startLocation', 'endLocation'])->paginate(10);
         return view('admin.routes.index', compact('routes'));
+    }
+
+    public function create(){
+        $locations = Location::all();
+        return view('admin.routes.create',compact('locations'));
     }
 
     public function store(Request $request)
@@ -25,6 +31,12 @@ class RouteController extends Controller
 
         Route::create($validated);
         return redirect()->route('admin.routes.index')->with('success', 'Tạo tuyến đường thành công');
+    }
+
+    public function show($id){
+        $route = Route::find($id);
+        $locations = Location::all();
+        return view('admin.routes.edit',compact('route','locations'));
     }
 
     public function update(Request $request, Route $route)

@@ -4,199 +4,106 @@
 
 @section('content-main')
 
-    <style>
-        .form-control-custom {
-            background-color: #f8f9fa;
-            border: 1px solid transparent;
-            padding: 12px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control-custom:focus {
-            background-color: #fff;
-            border-color: #f97316;
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-
-        .upload-box {
-            border: 2px dashed #cbd5e1;
-            border-radius: 16px;
-            background: #f8fafc;
-            transition: all 0.3s;
-            cursor: pointer;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .upload-box:hover {
-            border-color: #f97316;
-        }
-    </style>
-
-    <div class="container-fluid py-4">
-
-        <div class="mb-4 d-flex justify-content-between align-items-center">
-            <div>
-                <a href="{{ route('admin.drivers.index') }}"
-                    class="text-decoration-none text-muted fw-bold small hover-orange">
-                    <i class='bx bx-arrow-back me-1'></i> Quay lại
-                </a>
-                <h3 class="fw-bold text-dark mt-2">Cập nhật: <span style="color: #f97316;">{{ $driver->name }}</span></h3>
-            </div>
-            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">ID: #{{ $driver->id }}</span>
-        </div>
+    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
 
         <form action="{{ route('admin.drivers.update', $driver->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <div class="row g-4">
-                <!-- Cột chính: Thông tin chi tiết -->
-                <div class="col-lg-8">
-                    <div class="card border-0 shadow-sm rounded-4 h-100">
-                        <div class="card-body p-4 p-lg-5">
-                            <h5 class="fw-bold mb-4" style="color: #f97316;">
-                                <i class='bx bx-edit me-2'></i>Chỉnh sửa thông tin
-                            </h5>
-
-                            <div class="mb-4">
-                                <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                <input type="text" name="name" class="form-control form-control-custom"
-                                    value="{{ old('name', $driver->name) }}" required>
-                                @error('name')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text border-0 bg-light text-muted rounded-start-3">
-                                            <i class='bx bx-phone'></i>
-                                        </span>
-                                        <input type="text" name="phone"
-                                            class="form-control form-control-custom rounded-end-3"
-                                            value="{{ old('phone', $driver->phone) }}" required>
-                                    </div>
-                                    @error('phone')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">Số bằng lái (GPLX) <span class="text-danger">*</span></label>
-                                    <input type="text" name="license_number" class="form-control form-control-custom"
-                                        value="{{ old('license_number', $driver->license_number) }}" required>
-                                    @error('license_number')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">Số năm kinh nghiệm</label>
-                                    <div class="input-group">
-                                        <input type="number" name="experience_years" min="0" max="50"
-                                            class="form-control form-control-custom"
-                                            value="{{ old('experience_years', $driver->experience_years ?? 0) }}">
-                                        <span class="input-group-text">Năm</span>
-                                    </div>
-                                    @error('experience_years')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">Trạng thái <span class="text-danger">*</span></label>
-                                    <select name="status" class="form-select form-control-custom" required>
-                                        <option value="active"
-                                            {{ old('status', $driver->status) == 'active' ? 'selected' : '' }}>🟢 Sẵn sàng
-                                            (Active)</option>
-                                        <option value="busy"
-                                            {{ old('status', $driver->status) == 'busy' ? 'selected' : '' }}>🟠 Đang
-                                            chạy (Busy)</option>
-                                        <option
-                                            value="inactive"{{ old('status', $driver->status) == 'inactive' ? 'selected' : '' }}>
-                                            ⚫ Ngừng hoạt động (Inactive)</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="text-danger small mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <label class="form-label">Thông tin cá nhân / Ghi chú</label>
-                                <textarea name="personal_info" rows="3" class="form-control form-control-custom">{{ old('personal_info', $driver->personal_info ?? '') }}</textarea>
-                                @error('personal_info')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Tên tài xế <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="name"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('name', $driver->name) }}" required autofocus>
+                    @error('name')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <!-- Cột phụ: Ảnh + Nút hành động -->
-                <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm rounded-4 mb-4">
-                        <div class="card-body p-4 text-center">
-                            <h5 class="fw-bold mb-4 text-start" style="color: #f97316;">
-                                <i class='bx bx-image me-2'></i>Ảnh đại diện
-                            </h5>
-
-                            <label for="imageUpload" class="upload-box d-block mx-auto" style="width: 100%; height: 240px;">
-                                <img id="preview-img"
-                                    src="{{ $driver->image ? asset($driver->image) : 'https://via.placeholder.com/300?text=Upload+Driver+Image' }}"
-                                    class="w-100 h-100 object-fit-cover">
-
-                                <div
-                                    class="position-absolute bottom-0 start-0 w-100 bg-dark bg-opacity-60 text-white py-2 small">
-                                    <i class='bx bx-camera me-1'></i> Nhấn để thay đổi ảnh
-                                </div>
-                            </label>
-
-                            <input type="file" name="image" id="imageUpload" class="d-none" accept="image/*"
-                                onchange="previewFile(this)">
-                            @error('image')
-                                <div class="text-danger small mt-2">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary py-3 fw-bold rounded-3 shadow"
-                            style="background: #f97316; border: none;">
-                            <i class='bx bx-check-double me-2'></i> CẬP NHẬT TÀI XẾ
-                        </button>
-                        <a href="{{ route('admin.drivers.index') }}"
-                            class="btn btn-outline-secondary py-3 fw-bold rounded-3">
-                            Hủy bỏ
-                        </a>
-                    </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số điện thoại <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="phone"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('phone', $driver->phone) }}" required>
+                    @error('phone')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số bằng lái <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="license_number"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('license_number', $driver->license_number) }}" required>
+                    @error('license_number')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số năm kinh nghiệm
+                    </label>
+                    <input type="number" name="experience_years"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('experience_years', $driver->experience_years ?? 0) }}" min="0">
+                    @error('experience_years')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Trạng thái <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="status"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        required>
+                        <option value="active" {{ old('status', $driver->status) == 'active' ? 'selected' : '' }}>
+                            Đang hoạt động
+                        </option>
+                        <option value="busy" {{ old('status', $driver->status) == 'busy' ? 'selected' : '' }}>
+                            Đang chạy
+                        </option>
+                        <option value="inactive" {{ old('status', $driver->status) == 'inactive' ? 'selected' : '' }}>
+                            Đã nghỉ
+                        </option>
+                    </select>
+                    @error('status')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    Thông tin cá nhân / Ghi chú (tùy chọn)
+                </label>
+                <textarea name="personal_info" rows="4"
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('personal_info', $driver->personal_info ?? '') }}</textarea>
+                @error('personal_info')
+                    <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-start;">
+                <button type="submit"
+                    style="background-color: #ff5b24; color: white; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                    Cập nhật tài xế
+                </button>
+                <a href="{{ route('admin.drivers.index') }}"
+                    style="display: inline-flex; align-items: center; background-color: #f0f2f5; color: #333; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">
+                    Hủy
+                </a>
             </div>
         </form>
     </div>
-
-    <script>
-        function previewFile(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-img').src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
 
 @endsection

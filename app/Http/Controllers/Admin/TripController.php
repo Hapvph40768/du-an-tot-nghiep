@@ -23,7 +23,6 @@ class TripController extends Controller
 
     public function create()
     {
-        // Truyền dữ liệu ra view để Admin chọn khi tạo chuyến mới
         $routes = Route::with(['startLocation', 'endLocation'])->get();
         $vehicles = Vehicle::where('status', 'active')->get();
         $drivers = Driver::where('status', 'active')->get();
@@ -39,13 +38,37 @@ class TripController extends Controller
             'driver_id' => 'required|exists:drivers,id',
             'trip_date' => 'required|date',
             'departure_time' => 'required|date_format:H:i',
-            'arrival_time' => 'required|date_format:H:i',
+            'arrival_time' => 'required|date_format:H:i|after:departure_time',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',
         ]);
 
+        $isConflict = Trip::where('trip_date', $validated['trip_date'])
+            ->where(function ($query) use ($validated) {
+                $query->where('driver_id', $validated['driver_id'])
+                    ->orWhere('vehicle_id', $validated['vehicle_id']);
+            })
+            ->where(function ($query) use ($validated) {
+                $query->whereBetween('departure_time', [$validated['departure_time'], $validated['arrival_time']])
+                    ->orWhereBetween('arrival_time', [$validated['departure_time'], $validated['arrival_time']])
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('departure_time', '<=', $validated['departure_time'])
+                            ->where('arrival_time', '>=', $validated['arrival_time']);
+                    });
+            })
+            ->exists();
+
+        if ($isConflict) {
+            return back()
+                ->withErrors(['conflict' => 'Xe hoặc tài xế đã có chuyến trong khoảng thời gian này!'])
+                ->withInput();
+        }
+
         Trip::create($validated);
-        return redirect()->route('admin.trips.index')->with('success', 'Lên lịch chuyến đi thành công!');
+
+        return redirect()
+            ->route('admin.trips.index')
+            ->with('success', 'Lên lịch chuyến đi thành công!');
     }
 
     public function edit(Trip $trip)
@@ -64,7 +87,7 @@ class TripController extends Controller
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
             'trip_date' => 'required|date',
-            'departure_time' => 'required|date_format:H:i', 
+            'departure_time' => 'required|date_format:H:i',
             'arrival_time' => 'required|date_format:H:i',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',

@@ -14,6 +14,10 @@ class LocationController extends Controller
         return view('admin.locations.index', compact('locations'));
     }
 
+    public function create(){
+        return view('admin.locations.create');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -22,6 +26,11 @@ class LocationController extends Controller
 
         Location::create($validated);
         return redirect()->route('admin.locations.index')->with('success', 'Thêm địa điểm thành công');
+    }
+
+    public function edit($id){
+        $location = Location::find($id);
+        return view('admin.locations.edit',compact('location'));
     }
 
     public function update(Request $request, Location $location)

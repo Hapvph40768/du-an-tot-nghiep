@@ -59,10 +59,10 @@
                 {{-- Cập nhật route Đặt vé --}}
                 <a href="{{ route('admin.bookings.index') }}"
                     class="menu-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                    <i class='bx bx-ticket'></i>
+                    <i class="fa-solid fa-ticket"></i>
                     <span>Đặt vé</span>
                 </a>
-            </li> 
+            </li>
 
             <li class="menu-item">
                 <a href="{{ route('admin.locations.index') }}"

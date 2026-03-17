@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">Dashboard</div>
                 <div class="card-body">
-                    Xin chào {{ Auth::user()->name }}!
+                    {{-- Xin chào {{ Auth::user()->name }} --}}
                 </div>
             </div>
         </div>

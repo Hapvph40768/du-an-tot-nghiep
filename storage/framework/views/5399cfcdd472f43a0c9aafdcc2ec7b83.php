@@ -15,15 +15,5 @@
             <div class="notif-badge"></div>
         </button>
 
-        <?php if(auth()->guard()->check()): ?>
-            <form action="<?php echo e(route('logout')); ?>" method="POST" onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
-                <?php echo csrf_field(); ?>
-                <button type="submit" class="logout-btn">
-                    <i class='bx bx-log-out'></i>
-                    Đăng xuất
-                </button>
-            </form>
-        <?php endif; ?>
-
     </div>
 </header><?php /**PATH D:\Code\Tuan\du-an-tot-nghiep\resources\views/layout/admin/blocks/header.blade.php ENDPATH**/ ?>

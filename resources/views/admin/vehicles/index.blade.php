@@ -1,153 +1,103 @@
 @extends('layout.admin.AdminLayout')
 
-@section('title', 'Quản lý Đội xe')
-
 @section('content-main')
-
-<div class="container-fluid py-4">
-
-    <div class="d-flex justify-content-between align-items-end mb-4">
-        <div>
-            <h5 class="text-muted mb-1 small text-uppercase fw-bold">Quản trị viên</h5>
-            <h2 class="fw-bold text-dark m-0">Danh sách Đội xe</h2>
-        </div>
-
-        <nav>
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item">
-                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">
-                        Trang chủ
-                    </a>
-                </li>
-                <li class="breadcrumb-item active text-primary">
-                    Đội xe
-                </li>
-            </ol>
-        </nav>
-    </div>
-
-    <div class="card shadow-sm p-4">
-
-        {{-- thông báo --}}
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <div class="d-flex justify-content-between mb-3">
-
-            {{-- search --}}
-            <form action="{{ route('admin.vehicles.index') }}" method="GET" class="d-flex gap-2">
-                <input type="text"
-                       name="keyword"
-                       value="{{ request('keyword') }}"
-                       class="form-control"
-                       placeholder="Tìm biển số, loại xe...">
-
-                <select name="status" class="form-select">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
-                        Hoạt động
-                    </option>
-                    <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>
-                        Bảo dưỡng
-                    </option>
-                </select>
-
-                <button class="btn btn-primary">Lọc</button>
-            </form>
-
-            {{-- thêm --}}
-            <a href="{{ route('admin.vehicles.create') }}" class="btn btn-success">
-                + Thêm Xe
+    <div class="top-header">
+        <div style="display: flex; gap: 12px;">
+            <a href="{{ route('admin.vehicles.create') }}"
+                style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                <i class="bx bx-plus" style="font-size: 16px;"></i> Thêm xe
             </a>
-
         </div>
-
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-
-                <thead class="table-light">
-                    <tr>
-                        <th>Biển số</th>
-                        <th>Loại xe</th>
-                        <th>Số ghế</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                        <th width="120">Hành động</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @forelse ($vehicles as $vehicle)
-                        <tr>
-
-                            <td>{{ $vehicle->license_plate }}</td>
-
-                            <td>{{ $vehicle->type ?? 'Chưa xác định' }}</td>
-
-                            <td>{{ $vehicle->total_seats }}</td>
-
-                            <td>
-                                @if ($vehicle->status == 'active')
-                                    <span class="badge bg-success">Hoạt động</span>
-                                @else
-                                    <span class="badge bg-warning text-dark">Bảo dưỡng</span>
-                                @endif
-                            </td>
-
-                            <td>
-                                {{ $vehicle->created_at ? \Carbon\Carbon::parse($vehicle->created_at)->format('d/m/Y') : 'N/A' }}
-                            </td>
-
-                            <td>
-
-                                <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                   class="btn btn-sm btn-warning">
-                                    Sửa
-                                </a>
-
-                                <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}"
-                                      method="POST"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button class="btn btn-sm btn-danger">
-                                        Xóa
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                Không có dữ liệu
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-
-            </table>
-        </div>
-
-        {{-- <div class="mt-3">
-            {{ $vehicles->links() }}
-        </div> --}}
-
     </div>
-</div>
 
+    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #f0f2f5;">
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Phương tiện</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Loại xe / Số ghế</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Trạng thái</th>
+                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Ngày tạo</th>
+                    <th style="padding: 16px; text-align: center; font-weight: 600; color: #666;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($vehicles as $vehicle)
+                    <tr style="border-bottom: 1px solid #f0f2f5;">
+                        <td style="padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div
+                                    style="width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #fff3e0, #ffe0b2); border: 1px solid #ffe8cc; flex-shrink: 0;">
+                                    @if (!empty($vehicle->image) && file_exists(public_path($vehicle->image)))
+                                        <img src="{{ asset($vehicle->image) }}" alt="{{ $vehicle->license_plate }}"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                    @else
+                                        <div
+                                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ff8c00; font-weight: bold; font-size: 18px;">
+                                            {{ strtoupper(substr($vehicle->license_plate ?? 'XE', 0, 2)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #333;">{{ $vehicle->license_plate }}</div>
+                                    <div style="color: #888; font-size: 12px;">ID: #{{ $vehicle->id }}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="padding: 16px; color: #333;">
+                            {{ $vehicle->type ?? 'Chưa xác định' }}
+                            <div style="color: #888; font-size: 12px;">{{ $vehicle->total_seats ?? '?' }} chỗ</div>
+                        </td>
+
+                        <td style="padding: 16px;">
+                            @if ($vehicle->status == 'active')
+                                <span
+                                    style="background: #f6ffed; color: #52c41a; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                    Hoạt động
+                                </span>
+                            @else
+                                <span
+                                    style="background: #fff7e6; color: #fa8c16; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                    Bảo dưỡng
+                                </span>
+                            @endif
+                        </td>
+
+                        <td style="padding: 16px; color: #666;">
+                            {{ $vehicle->created_at ? $vehicle->created_at->format('d/m/Y') : 'N/A' }}
+                        </td>
+
+                        <td style="padding: 16px; text-align: center;">
+                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
+                                style="display: inline-block; background-color: #fff7e6; color: #fa8c16; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 4px;">
+                                Sửa
+                            </a>
+
+                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
+                                style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;"
+                                    onclick="return confirm('Bạn chắc chắn muốn xóa xe {{ addslashes($vehicle->license_plate) }}?')">
+                                    Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" style="padding: 40px 16px; text-align: center; color: #999; font-size: 15px;">
+                            Chưa có phương tiện nào trong hệ thống
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 24px; display: flex; justify-content: center;">
+        {{ $vehicles->appends(request()->query())->links() }}
+    </div>
 @endsection

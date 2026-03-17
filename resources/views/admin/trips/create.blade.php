@@ -1,65 +1,120 @@
 @extends('layout.admin.AdminLayout')
 
-@section('title', 'Thêm Chuyến Xe')
-@section('header-title', 'QUẢN LÝ CHUYẾN XE')
-
 @section('content-main')
-<div class="container-fluid">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-warning text-dark py-3">
-            <h5 class="mb-0 fw-bold">Thêm Chuyến Xe Mới</h5>
-        </div>
-        <div class="card-body p-4">
-            <form action="{{ route('trips.store') }}" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Điểm đi <span class="text-danger">*</span></label>
-                        <input type="text" name="departure_location" class="form-control" value="{{ old('departure_location') }}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Điểm đến <span class="text-danger">*</span></label>
-                        <input type="text" name="destination_location" class="form-control" value="{{ old('destination_location') }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Ngày khởi hành <span class="text-danger">*</span></label>
-                        <input type="date" name="departure_date" class="form-control" value="{{ old('departure_date') }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Giờ khởi hành <span class="text-danger">*</span></label>
-                        <input type="time" name="departure_time" class="form-control" value="{{ old('departure_time') }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Giá vé (VNĐ) <span class="text-danger">*</span></label>
-                        <input type="number" name="price" class="form-control" value="{{ old('price') }}" required min="0">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Tài xế phụ trách</label>
-                        <select name="driver_id" class="form-select">
-                            <option value="">-- Chưa xếp tài xế --</option>
-                            @foreach($drivers as $driver)
-                                <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
-                                    {{ $driver->name }} (Bằng lái: {{ $driver->license_number }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select" required>
-                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Chờ chạy</option>
-                            <option value="running" {{ old('status') == 'running' ? 'selected' : '' }}>Đang chạy</option>
-                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
-                        </select>
-                    </div>
+    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
+
+        <form action="{{ route('admin.trips.store') }}" method="POST">
+            @csrf
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+
+                <div style="grid-column: span 2;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Tuyến đường <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="route_id"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px;" required>
+                        <option value="">-- Chọn tuyến đường --</option>
+                        @foreach ($routes as $route)
+                            <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
+                                {{ $route->startLocation->name }} → {{ $route->endLocation->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('route_id')
+                        <div style="color: #c33; font-size: 12px;">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div class="mt-4 text-end">
-                    <a href="{{ route('trips.index') }}" class="btn btn-light border px-4 me-2">Hủy</a>
-                    <button type="submit" class="btn btn-warning px-4 text-dark fw-bold">Lưu Chuyến Xe</button>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Xe <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="vehicle_id"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
+                        <option value="">-- Chọn xe --</option>
+                        @foreach ($vehicles as $vehicle)
+                            <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                {{ $vehicle->type }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-            </form>
-        </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Tài xế <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="driver_id" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
+                        required>
+                        <option value="">-- Chọn tài xế --</option>
+                        @foreach ($drivers as $driver)
+                            <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
+                                {{ $driver->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Ngày đi <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="date" name="trip_date" value="{{ old('trip_date') }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Giờ đi <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="time" name="departure_time" value="{{ old('departure_time') }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Giờ đến <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="time" name="arrival_time" value="{{ old('arrival_time') }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Giá vé (VNĐ) <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="number" name="price" value="{{ old('price') }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" min="0"
+                        required>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        Trạng thái <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
+                        required>
+                        <option value="active">Hoạt động</option>
+                        <option value="completed">Hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="submit"
+                    style="background-color: #ff5b24; color: white; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600;">
+                    Thêm chuyến đi
+                </button>
+
+                <a href="{{ route('admin.trips.index') }}"
+                    style="display: inline-flex; align-items: center; background-color: #f0f2f5; color: #333; padding: 10px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">
+                    Hủy
+                </a>
+            </div>
+
+        </form>
     </div>
-</div>
 @endsection

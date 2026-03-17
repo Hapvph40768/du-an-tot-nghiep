@@ -46,7 +46,7 @@ class UserController extends Controller
         ]);
 
         $user->update($validated);
-        
+
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật thành công');
     }
 
@@ -54,5 +54,13 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Xóa người dùng thành công');
+    }
+
+    public function toggleStatus(User $user)
+    {
+        $user->status = $user->status === 'active' ? 'blocked' : 'active';
+        $user->save();
+
+        return back()->with('success', 'Cập nhật trạng thái thành công');
     }
 }
