@@ -13,7 +13,6 @@ class VehicleController extends Controller
         $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(20);
         return view('admin.vehicles.index', compact('vehicles'));
     }
-
     public function create()
     {
         return view('admin.vehicles.create');
@@ -23,7 +22,7 @@ class VehicleController extends Controller
     {
         $validated = $request->validate([
             'license_plate' => 'required|string|max:50|unique:vehicles,license_plate',
-            'type' => 'required|string|max:100', // VD: Limousine 9 chỗ, Giường nằm 40 chỗ
+            'type' => 'required|string|max:100',
             'total_seats' => 'required|integer|min:1',
             'status' => 'required|in:active,maintenance',
         ]);

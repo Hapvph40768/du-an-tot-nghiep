@@ -3,20 +3,18 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckAdminRole
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
-        // Kiểm tra xem đã đăng nhập chưa và có phải role 'admin' hoặc 'staff' không
-        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'staff'])) {
+        // Chỉ khi đã đăng nhập (Auth::check) mới được đọc thuộc tính role
+        if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request);
         }
 
-        // Nếu là khách hàng hoặc chưa đăng nhập, đá về trang chủ hoặc login
-        return redirect('/')->with('error', 'Bạn không có quyền truy cập trang quản trị.');
+        // Nếu chưa đăng nhập hoặc sai role, đẩy về trang login
+        return redirect()->route('login')->with('error', 'Vui lòng đăng nhập với quyền Admin.');
     }
 }

@@ -3,21 +3,18 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckCustomerRole
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
-        // Kiểm tra xem đã đăng nhập chưa và có phải role 'customer' không
+        // Chỉ khi đã đăng nhập (Auth::check) mới được đọc thuộc tính role
         if (Auth::check() && Auth::user()->role === 'customer') {
             return $next($request);
         }
 
-        // Nếu là admin/staff hoặc chưa đăng nhập, đẩy về trang login kèm thông báo
-        Auth::logout();
-        return redirect()->route('login')->with('error', 'Bạn không có quyền truy cập khu vực khách hàng.');
+        // Nếu chưa đăng nhập hoặc sai role, đẩy về trang login
+        return redirect()->route('login')->with('error', 'Vui lòng đăng nhập với quyền Khách hàng.');
     }
 }

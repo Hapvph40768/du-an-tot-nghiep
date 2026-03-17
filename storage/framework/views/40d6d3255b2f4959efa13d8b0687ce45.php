@@ -1,8 +1,6 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Quản lý Địa điểm'); ?>
 
-@section('title', 'Quản lý Địa điểm')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
     <style>
         :root {
@@ -136,18 +134,19 @@
 
         <div class="card-box">
 
-            @if (session('success'))
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
+                    <i class='bx bx-check-circle me-1'></i> <?php echo e(session('success')); ?>
+
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
             <div class="toolbar-area">
                 <div class="text-muted small">
-                    Tổng cộng: <strong>{{ $locations->total() }}</strong> địa điểm
+                    Tổng cộng: <strong><?php echo e($locations->total()); ?></strong> địa điểm
                 </div>
-                <a href="{{ route('admin.locations.create') }}" class="btn btn-primary-custom">
+                <a href="<?php echo e(route('admin.locations.create')); ?>" class="btn btn-primary-custom">
                     <i class='bx bx-plus-circle'></i> Thêm mới
                 </a>
             </div>
@@ -163,28 +162,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($locations as $location)
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $locations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $location): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                             <tr>
-                                <td class="ps-4 text-muted">#{{ $location->id }}</td>
+                                <td class="ps-4 text-muted">#<?php echo e($location->id); ?></td>
                                 <td>
-                                    <div class="fw-bold text-dark">{{ $location->name }}</div>
+                                    <div class="fw-bold text-dark"><?php echo e($location->name); ?></div>
                                 </td>
                                 <td>
                                     <span class="text-muted small">
-                                        {{ $location->created_at->format('d/m/Y H:i') }}
+                                        <?php echo e($location->created_at->format('d/m/Y H:i')); ?>
+
                                     </span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="action-group">
-                                        <a href="{{ route('admin.locations.edit', $location->id) }}" class="action-btn"
+                                        <a href="<?php echo e(route('admin.locations.edit', $location->id)); ?>" class="action-btn"
                                             title="Chỉnh sửa">
                                             <i class='bx bx-edit fs-5'></i>
                                         </a>
 
-                                        <form action="{{ route('admin.locations.destroy', $location->id) }}" method="POST"
+                                        <form action="<?php echo e(route('admin.locations.destroy', $location->id)); ?>" method="POST"
                                             class="d-inline" onsubmit="return confirm('Xóa địa điểm này?');">
-                                            @csrf
-                                            @method('DELETE')
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="action-btn delete-btn" title="Xóa">
                                                 <i class='bx bx-trash fs-5'></i>
                                             </button>
@@ -192,22 +192,25 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-muted">
                                     Chưa có dữ liệu địa điểm.
                                 </td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="mt-4">
-                {{ $locations->links('pagination::bootstrap-5') }}
+                <?php echo e($locations->links('pagination::bootstrap-5')); ?>
+
             </div>
 
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/locations/index.blade.php ENDPATH**/ ?>

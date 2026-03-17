@@ -1,9 +1,6 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Quản lý Đội xe'); ?>
 
-{{-- Đặt tiêu đề cho tab trình duyệt --}}
-@section('title', 'Quản lý Đội xe')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 
     <style>
         /* --- CSS TÙY CHỈNH CHO TRANG NÀY (SaaS Style) --- */
@@ -216,22 +213,23 @@
 
         <div class="card-box">
 
-            {{-- Thông báo thành công --}}
-            @if(session('success'))
+            
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
+                    <i class='bx bx-check-circle me-1'></i> <?php echo e(session('success')); ?>
+
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
             <div class="toolbar-area">
-                <form action="{{ route('admin.drivers.index') }}" method="GET" class="d-flex gap-3 flex-grow-1">
+                <form action="<?php echo e(route('admin.drivers.index')); ?>" method="GET" class="d-flex gap-3 flex-grow-1">
                     
                     <div class="search-box">
                         <i class='bx bx-search'></i>
                         <input type="text" 
                                name="keyword" 
-                               value="{{ request('keyword') }}"
+                               value="<?php echo e(request('keyword')); ?>"
                                class="form-control" 
                                placeholder="Tìm tên, SĐT, bằng lái...">
                     </div>
@@ -239,22 +237,22 @@
                     <select name="status" class="form-select form-select-custom" style="width: 180px;" onchange="this.form.submit()">
                         <option value="">Tất cả trạng thái</option>
                         
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
+                        <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>
                             Đang hoạt động
                         </option>
                         
-                        <option value="busy" {{ request('status') == 'busy' ? 'selected' : '' }}>
+                        <option value="busy" <?php echo e(request('status') == 'busy' ? 'selected' : ''); ?>>
                             Đang chạy
                         </option>
                         
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                        <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>>
                             Đã nghỉ
                         </option>
                     </select>
                 </form>
 
-                {{-- NÚT THÊM MỚI --}}
-                <a href="{{ route('admin.drivers.create') }}" class="btn-primary-custom">
+                
+                <a href="<?php echo e(route('admin.drivers.create')); ?>" class="btn-primary-custom">
                     <i class='bx bx-plus-circle'></i> Thêm Tài xế
                 </a>
             </div>
@@ -272,22 +270,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if($drivers->count() > 0)
-                            @foreach($drivers as $driver)
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($drivers->count() > 0): ?>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $drivers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $driver): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                                 <tr>
                                     <td class="ps-4">
                                         <div class="driver-info">
                                             <div class="avatar-box">
-                                                @if($driver->image && file_exists(public_path($driver->image)))
-                                                    <img src="{{ asset($driver->image) }}" alt="{{ $driver->name }}">
-                                                @else
-                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->name) }}&background=random&color=fff&size=128&bold=true"
+                                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($driver->image && file_exists(public_path($driver->image))): ?>
+                                                    <img src="<?php echo e(asset($driver->image)); ?>" alt="<?php echo e($driver->name); ?>">
+                                                <?php else: ?>
+                                                    <img src="https://ui-avatars.com/api/?name=<?php echo e(urlencode($driver->name)); ?>&background=random&color=fff&size=128&bold=true"
                                                         alt="Avatar">
-                                                @endif
+                                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-bold text-dark">{{ $driver->name }}</h6>
-                                                <small class="text-muted">ID: #{{ $driver->id }}</small>
+                                                <h6 class="mb-0 fw-bold text-dark"><?php echo e($driver->name); ?></h6>
+                                                <small class="text-muted">ID: #<?php echo e($driver->id); ?></small>
                                             </div>
                                         </div>
                                     </td>
@@ -295,50 +293,53 @@
                                     <td>
                                         <div class="d-flex flex-column">
                                             <span class="fw-medium text-dark">
-                                                <i class='bx bx-phone text-muted me-1'></i> {{ $driver->phone }}
+                                                <i class='bx bx-phone text-muted me-1'></i> <?php echo e($driver->phone); ?>
+
                                             </span>
-                                            <span class="text-muted small mt-1">user{{$driver->id}}@example.com</span>
+                                            <span class="text-muted small mt-1">user<?php echo e($driver->id); ?>@example.com</span>
                                         </div>
                                     </td>
 
                                     <td>
                                         <span class="badge bg-light text-dark border px-3 py-2">
-                                            <i class='bx bx-id-card me-1'></i> {{ $driver->license_number }}
+                                            <i class='bx bx-id-card me-1'></i> <?php echo e($driver->license_number); ?>
+
                                         </span>
                                     </td>
 
                                     <td>
                                         <span class="fw-bold text-primary">
-                                            {{ $driver->experience_years ?? 0 }} năm
+                                            <?php echo e($driver->experience_years ?? 0); ?> năm
                                         </span>
                                     </td>
 
                                     <td>
-                                        @if($driver->status == 'active')
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($driver->status == 'active'): ?>
                                             <span class="bg-soft-success"><span class="status-dot bg-success"></span>Hoạt động</span>
-                                        @elseif($driver->status == 'busy')
+                                        <?php elseif($driver->status == 'busy'): ?>
                                             <span class="bg-soft-warning"><span class="status-dot bg-warning"></span>Đang chạy</span>
-                                        @else
+                                        <?php else: ?>
                                             <span class="bg-soft-secondary"><span class="status-dot bg-secondary"></span>Đã nghỉ</span>
-                                        @endif
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </td>
 
                                     <td>
                                         <span class="text-muted small">
-                                            {{ $driver->created_at ? $driver->created_at->format('d/m/Y') : 'N/A' }}
+                                            <?php echo e($driver->created_at ? $driver->created_at->format('d/m/Y') : 'N/A'); ?>
+
                                         </span>
                                     </td>
 
                                     <td class="text-end pe-4">
                                         <div class="action-group">
-                                            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="action-btn" title="Chỉnh sửa">
+                                            <a href="<?php echo e(route('admin.drivers.edit', $driver->id)); ?>" class="action-btn" title="Chỉnh sửa">
                                                 <i class='bx bx-edit fs-5'></i>
                                             </a>
 
-                                            <form action="{{ route('drivers.destroy', $driver->id) }}" method="POST" class="d-inline"
-                                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài xế {{ $driver->name }}?');">
-                                                @csrf
-                                                @method('DELETE')
+                                            <form action="<?php echo e(route('drivers.destroy', $driver->id)); ?>" method="POST" class="d-inline"
+                                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài xế <?php echo e($driver->name); ?>?');">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
                                                 
                                                 <button type="submit" class="action-btn delete-btn" title="Xóa" style="border: none;">
                                                     <i class='bx bx-trash fs-5'></i>
@@ -347,9 +348,9 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                        @else
-                            {{-- Hiển thị khi không tìm thấy kết quả nào --}}
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        <?php else: ?>
+                            
                             <tr>
                                 <td colspan="7" class="text-center py-5">
                                     <div class="text-muted">
@@ -358,19 +359,21 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-                <small class="text-muted">Đang hiển thị <strong>{{ $drivers->count() }}</strong> trên tổng số <strong>{{ $drivers->total() }}</strong> tài xế</small>
+                <small class="text-muted">Đang hiển thị <strong><?php echo e($drivers->count()); ?></strong> trên tổng số <strong><?php echo e($drivers->total()); ?></strong> tài xế</small>
 
                 <div>
-                    {{ $drivers->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    <?php echo e($drivers->appends(request()->query())->links('pagination::bootstrap-4')); ?>
+
                 </div>
             </div>
 
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/trips/index.blade.php ENDPATH**/ ?>

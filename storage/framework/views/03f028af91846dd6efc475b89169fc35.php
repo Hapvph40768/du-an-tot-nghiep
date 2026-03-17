@@ -1,8 +1,6 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Quản lý Người dùng'); ?>
 
-@section('title', 'Quản lý Người dùng')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
 <style>
     :root { --primary-color: #ff6b00; --primary-hover: #e65100; }
     .card-box { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
@@ -22,15 +20,16 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-dark m-0">Quản lý tài khoản</h2>
-            <p class="text-muted small mb-0">Hệ thống có tổng cộng {{ $users->total() }} thành viên</p>
+            <p class="text-muted small mb-0">Hệ thống có tổng cộng <?php echo e($users->total()); ?> thành viên</p>
         </div>
     </div>
 
-    @if (session('success'))
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
         <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-            <i class='bx bx-check-circle'></i> {{ session('success') }}
+            <i class='bx bx-check-circle'></i> <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     <div class="card-box">
         <div class="table-responsive">
@@ -46,33 +45,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                         <tr>
                             <td class="ps-4">
-                                <div class="fw-bold text-dark">{{ $user->name }}</div>
-                                <div class="text-muted small">{{ $user->email }}</div>
+                                <div class="fw-bold text-dark"><?php echo e($user->name); ?></div>
+                                <div class="text-muted small"><?php echo e($user->email); ?></div>
                             </td>
-                            <td>{{ $user->phone ?? '—' }}</td>
+                            <td><?php echo e($user->phone ?? '—'); ?></td>
                             <td>
-                                <span class="badge-role role-{{ $user->role }}">
-                                    {{ ucfirst($user->role) }}
+                                <span class="badge-role role-<?php echo e($user->role); ?>">
+                                    <?php echo e(ucfirst($user->role)); ?>
+
                                 </span>
                             </td>
                             <td>
-                                @if($user->status == 'active')
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($user->status == 'active'): ?>
                                     <span class="text-success small fw-bold"><span class="status-dot bg-success"></span>Hoạt động</span>
-                                @else
+                                <?php else: ?>
                                     <span class="text-danger small fw-bold"><span class="status-dot bg-danger"></span>Đã khóa</span>
-                                @endif
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </td>
-                            <td class="text-muted small">{{ $user->created_at->format('d/m/Y') }}</td>
+                            <td class="text-muted small"><?php echo e($user->created_at->format('d/m/Y')); ?></td>
                             <td class="text-end pe-4">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-light border" title="Sửa">
+                                    <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>" class="btn btn-sm btn-light border" title="Sửa">
                                         <i class='bx bx-edit'></i>
                                     </a>
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
-                                        @csrf @method('DELETE')
+                                    <form action="<?php echo e(route('admin.users.destroy', $user->id)); ?>" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
+                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                         <button class="btn btn-sm btn-light border text-danger" title="Xóa">
                                             <i class='bx bx-trash'></i>
                                         </button>
@@ -80,13 +80,15 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                 </tbody>
             </table>
         </div>
         <div class="mt-4">
-            {{ $users->links('pagination::bootstrap-5') }}
+            <?php echo e($users->links('pagination::bootstrap-5')); ?>
+
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/users/index.blade.php ENDPATH**/ ?>

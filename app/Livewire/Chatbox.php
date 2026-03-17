@@ -6,23 +6,36 @@ use Livewire\Component;
 use App\Models\SupportTicket;
 use App\Models\SupportMessage;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http; 
-use Illuminate\Support\Facades\Log;  
 use Livewire\Attributes\On;
+
 class Chatbox extends Component
 {
     public $isOpen = false;
-    public $step = 'list';
+    public $step = 'list'; // list hoặc chat
     public $selectedTicketId = null;
     public $newMessage = '';
 
     protected $listeners = ['selectTicket' => 'selectTicket'];
 
-    #[On('toggle-chat-force')]
-    public function forceOpenChat($state) {
-        $this->isOpen = $state;
-    }
+    #[On('toggle-chat')]
+    public function toggleChat()
+    {
+        $this->isOpen = !$this->isOpen;
 
+        // Nếu mở chat và đang ở vai trò Customer
+        if ($this->isOpen && Auth::check() && Auth::user()->role !== 'admin') {
+            $lastTicket = \App\Models\SupportTicket::where('user_id', Auth::id())
+                ->where('status', '!=', 'closed') // Chỉ lấy ticket chưa đóng
+                ->latest()
+                ->first();
+
+            if ($lastTicket) {
+                $this->selectedTicketId = $lastTicket->id;
+                $this->step = 'chat';
+                $this->dispatch('scroll-to-bottom');
+            }
+        }
+    }
     public function selectTicket($id)
     {
         $this->selectedTicketId = $id;
@@ -30,73 +43,53 @@ class Chatbox extends Component
         $this->dispatch('scroll-to-bottom');
     }
 
+    public function backToList()
+    {
+        $this->step = 'list';
+        $this->selectedTicketId = null;
+    }
+
     public function sendMessage()
     {
-        if (empty(trim($this->newMessage))) return;
+        if (empty(trim($this->newMessage)) || !$this->selectedTicketId) return;
 
         SupportMessage::create([
             'support_ticket_id' => $this->selectedTicketId,
             'sender_id' => Auth::id(),
-            'sender_type' => 'user',
+            'sender_type' => Auth::user()->role === 'admin' ? 'admin' : 'user',
             'message' => $this->newMessage
         ]);
 
-        $userPrompt = $this->newMessage;
+        // Nếu là Admin nhắn, tự động chuyển ticket sang trạng thái 'processing'
+        if (Auth::user()->role === 'admin') {
+            SupportTicket::find($this->selectedTicketId)->update([
+                'status' => 'processing',
+                'assigned_admin_id' => Auth::id()
+            ]);
+        }
+
         $this->newMessage = '';
         $this->dispatch('scroll-to-bottom');
-
-        $this->askGemini($userPrompt);
-    }
-
-    protected function askGemini($prompt)
-    {
-        $apiKey = config('services.gemini.key');
-
-        try {
-            // Http::withoutVerifying() là BẮT BUỘC trên Laragon để không lỗi SSL
-            $response = Http::withoutVerifying()
-                ->timeout(30)
-                ->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
-                    'contents' => [
-                        ['parts' => [['text' => "Bạn là trợ lý ảo nhà xe Mạnh Hùng. Trả lời ngắn: " . $prompt]]]
-                    ]
-                ]);
-
-            $aiReply = 'Xin lỗi, AI đang gặp sự cố kết nối.';
-
-            if ($response->successful()) {
-                $result = $response->json();
-                // Kiểm tra kỹ cấu trúc trước khi lấy text
-                if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-                    $aiReply = $result['candidates'][0]['content']['parts'][0]['text'];
-                }
-            } else {
-                Log::error('Gemini API Error: ' . $response->body());
-                $aiReply = "Hệ thống AI đang bận (Mã: " . $response->status() . ")";
-            }
-
-            SupportMessage::create([
-                'support_ticket_id' => $this->selectedTicketId,
-                'sender_type' => 'ai',
-                'message' => $aiReply
-            ]);
-
-            $this->dispatch('scroll-to-bottom');
-
-        } catch (\Exception $e) {
-            Log::error('Lỗi nghiêm trọng Chatbox: ' . $e->getMessage());
-        }
     }
 
     public function render()
     {
-        $tickets = SupportTicket::where('user_id', Auth::id())->latest()->get();
+        $user = Auth::user();
+        if (!$user) return view('livewire.chatbox', ['tickets' => collect(), 'chatHistory' => collect()]);
 
-        return view('livewire.chatbox', [
-            'tickets' => $tickets,
-            'chatHistory' => $this->selectedTicketId ? 
-                SupportMessage::where('support_ticket_id', $this->selectedTicketId)->orderBy('created_at', 'asc')->get() : 
-                collect()
-        ]);
+        // Lấy danh sách ticket của khách
+        $tickets = \App\Models\SupportTicket::where('user_id', $user->id)->latest()->get();
+
+        // Tự động chọn ticket mới nhất nếu chưa chọn cái nào
+        if (!$this->selectedTicketId && $tickets->isNotEmpty()) {
+            $this->selectedTicketId = $tickets->first()->id;
+            $this->step = 'chat';
+        }
+
+        $chatHistory = $this->selectedTicketId
+            ? \App\Models\SupportMessage::where('support_ticket_id', $this->selectedTicketId)->orderBy('created_at', 'asc')->get()
+            : collect();
+
+        return view('livewire.chatbox', compact('tickets', 'chatHistory'));
     }
 }

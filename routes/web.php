@@ -35,7 +35,6 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
-use App\Http\Controllers\Admin\SupportMessageController as AdminMessageController;
 use App\Http\Controllers\Customer\SupportTicketController;
 
 /*
@@ -43,6 +42,7 @@ use App\Http\Controllers\Customer\SupportTicketController;
 | 1. PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [CustomerHomeController::class, 'index'])->name('customer.home');
 Route::get('/trips/search', [CustomerTripController::class, 'search'])->name('customer.trips.search');
 Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('customer.trips.show');
@@ -56,7 +56,7 @@ Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('cust
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-    
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -88,11 +88,11 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
     Route::post('/reviews/{booking}', [CustomerReviewController::class, 'store'])->name('customer.reviews.store');
 
     Route::prefix('support')->group(function () {
-    Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
-    Route::get('/create', [SupportTicketController::class, 'create'])->name('customer.support.create');
-    Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
-    Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
-});
+        Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
+        Route::get('/create', [SupportTicketController::class, 'create'])->name('customer.support.create');
+        Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
+        Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
+    });
 });
 
 /*
@@ -105,7 +105,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // CRUD Cơ bản
     Route::resource('users', UserController::class);
-    Route::resource('locations', LocationController::class)->except(['create', 'edit', 'show']);
+    Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
     Route::resource('drivers', DriverController::class)->except(['show']);
     Route::resource('vehicles', VehicleController::class)->except(['show']);
@@ -131,10 +131,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // CSKH & Support
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
-    Route::resource('support-tickets', AdminSupportController::class)->only(['index', 'show']);
-    Route::put('support-tickets/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('support_tickets.close');
-
-    // Phản hồi tin nhắn
-    Route::post('support-tickets/{supportTicket}/messages', [AdminMessageController::class, 'store'])->name('support_messages.store');
-    Route::delete('support-messages/{supportMessage}', [AdminMessageController::class, 'destroy'])->name('support_messages.destroy');
+    // Quản lý Ticket (Dùng danh sách cụ thể thay vì resource để kiểm soát tên)
+    Route::get('support-tickets', [AdminSupportController::class, 'index'])->name('support_tickets.index');
+    Route::get('support-tickets/{supportTicket}', [AdminSupportController::class, 'show'])->name('support_tickets.show');
+    Route::post('support-tickets/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('support_tickets.reply');
+    Route::patch('support-tickets/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('support_tickets.close');
 });
