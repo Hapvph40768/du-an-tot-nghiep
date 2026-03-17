@@ -22,6 +22,8 @@
                 </nav>
 
                 <div class="flex items-center gap-3">
+
+                    {{-- Hotline --}}
                     <div class="hidden sm:flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
                         <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -29,7 +31,7 @@
                         </svg>
                         <span id="hotline" class="font-semibold text-amber-300">1900 6868</span>
                     </div>
-                    <!-- Logout -->
+
                     @auth
                         <form action="{{ route('logout') }}" method="POST"
                             onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
@@ -40,6 +42,19 @@
                             </button>
                         </form>
                     @endauth
+
+                    @guest
+                        <a href="{{ route('login') }}"
+                            style="padding:8px 16px; border-radius:8px; background:#ff5b24; text-decoration:none; font-weight:500;">
+                            Đăng nhập
+                        </a>
+
+                        <a href="{{ route('register') }}"
+                            style="padding:8px 16px; border-radius:8px; background:#ff5b24; color:white; text-decoration:none; font-weight:600;">
+                            Đăng ký
+                        </a>
+                    @endguest
+
                 </div>
             </div>
         </div>
