@@ -5,60 +5,54 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Trip;
 use App\Models\PickupPoint;
-use App\Models\Location;
 use Illuminate\Http\Request;
 
 class TripPickupPointController extends Controller
 {
-    // Hiển thị danh sách để gán vào Trip
+    /**
+     * Giao diện Checkbox để gán các bến xe từ kho vào chuyến đi
+     */
     public function index(Trip $trip)
     {
-        $trip->load('pickupPoints');
+        $trip->load(['pickupPoints.location', 'route.departureLocation', 'route.destinationLocation']);
+        
+        // Lấy toàn bộ danh mục điểm đón để Admin tích chọn
         $allPickupPoints = PickupPoint::with('location')->get();
 
         return view('admin.trips.pickup_points.index', compact('trip', 'allPickupPoints'));
     }
 
-    // Form tạo mới một điểm đón (Vẫn cần $trip để biết sau khi tạo xong thì quay về đâu)
-    public function create(Trip $trip)
-    {
-        $locations = Location::all();
-        return view('admin.trips.pickup_points.create', compact('trip', 'locations'));
-    }
-
-    // Lưu điểm đón mới vào DATABASE và gán luôn vào TRIP này
-    public function storeNew(Request $request, Trip $trip)
-    {
-        $validated = $request->validate([
-            'location_id' => 'required|exists:locations,id',
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string',
-        ]);
-
-        // 1. Tạo điểm đón mới vào bảng pickup_points
-        $newPoint = \App\Models\PickupPoint::create($validated);
-
-        // 2. Gán ngay điểm này vào chuyến xe hiện tại
-        $trip->pickupPoints()->attach($newPoint->id);
-
-        return redirect()->route('admin.trips.pickup_points.index', $trip->id)
-            ->with('success', 'Đã tạo và thêm điểm đón mới!');
-    }
-    // Cập nhật danh sách điểm đón (Checkbox)
+    /**
+     * Xử lý gán danh sách điểm đón (Checkbox Sync)
+     */
     public function store(Request $request, Trip $trip)
     {
-        $request->validate([
-            'pickup_point_ids' => 'required|array',
-            'pickup_point_ids.*' => 'exists:pickup_points,id'
-        ]);
+        // Nhận mảng ID từ các checkbox
+        $pickupPointIds = $request->input('pickup_point_ids', []);
 
-        $trip->pickupPoints()->sync($request->pickup_point_ids);
-        return back()->with('success', 'Cập nhật lộ trình thành công!');
+        // Đồng bộ dữ liệu bảng trung gian
+        $trip->pickupPoints()->sync($pickupPointIds);
+
+        return redirect()->route('admin.trips.pickup_points.index', $trip->id)
+            ->with('success', 'Đã cập nhật lộ trình dừng đón cho chuyến xe!');
     }
 
+    /**
+     * Cho phép Admin "tạo nhanh" bến mới ngay khi đang chỉnh trip
+     * Nút này sẽ dẫn về trang Create của PickupPointController kèm theo biến redirect
+     */
+    public function create(Trip $trip)
+    {
+        // Gợi ý: Bạn có thể redirect sang trang tạo gốc
+        return redirect()->route('admin.pickup_points.create', ['from_trip' => $trip->id]);
+    }
+
+    /**
+     * Gỡ gán một điểm đón cụ thể
+     */
     public function destroy(Trip $trip, $pickupPointId)
     {
         $trip->pickupPoints()->detach($pickupPointId);
-        return back()->with('success', 'Đã gỡ điểm đón khỏi chuyến xe.');
+        return back()->with('success', 'Đã gỡ điểm dừng này khỏi chuyến xe.');
     }
 }

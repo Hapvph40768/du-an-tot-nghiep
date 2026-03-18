@@ -25,7 +25,7 @@ class TicketController extends Controller
         return view('admin.tickets.show', compact('ticket'));
     }
 
-    // Soát vé: Cập nhật trạng thái vé (VD: pending -> confirmed -> used -> cancelled)
+    // Soát vé: Cập nhật trạng thái vé
     public function update(Request $request, Ticket $ticket)
     {
         $validated = $request->validate([

@@ -19,15 +19,15 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Ngày khởi hành</label>
-                            <input type="date" name="trip_date" class="form-control rounded-3" required>
+                            <input type="date" name="trip_date" class="form-control rounded-3" >
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Giờ xuất bến</label>
-                            <input type="time" name="departure_time" class="form-control rounded-3" required>
+                            <input type="time" name="departure_time" class="form-control rounded-3" >
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-bold">Giờ đến dự kiến</label>
-                            <input type="time" name="arrival_time" class="form-control rounded-3" required>
+                            <input type="time" name="arrival_time" class="form-control rounded-3" >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Chọn Xe</label>

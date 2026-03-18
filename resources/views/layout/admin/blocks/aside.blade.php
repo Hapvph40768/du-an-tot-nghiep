@@ -12,29 +12,38 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
 
+            {{-- Tổng quan --}}
             <li class="menu-item">
-                {{-- Sửa admin.dashboard -> admin.dashboard.index --}}
                 <a href="{{ route('admin.dashboard.index') }}"
-                    class="menu-link {{ request()->routeIs('admin.dashboard.index') ? 'active' : '' }}">
+                    class="menu-link {{ request()->routeIs('admin.dashboard.*') ? 'active' : '' }}">
                     <i class='bx bx-grid-alt'></i>
                     <span>Tổng quan</span>
                 </a>
             </li>
 
+            {{-- Vận hành chính --}}
+            <li class="menu-item">
+                <a href="{{ route('admin.trips.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.trips.*') ? 'active' : '' }}">
+                    <i class='bx bx-git-repo-forked'></i>
+                    <span>Chuyến đi</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('admin.bookings.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                    <i class='bx bx-ticket'></i>
+                    <span>Đặt vé</span>
+                </a>
+            </li>
+
+            {{-- Quản lý tài nguyên --}}
             <li class="menu-item">
                 <a href="{{ route('admin.vehicles.index') }}"
                     class="menu-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-bus"></i>
                     <span>Phương tiện</span>
-                </a>
-            </li>
-
-            <li class="menu-item">
-                {{-- Cập nhật route Tuyến đường --}}
-                <a href="{{ route('admin.routes.index') }}"
-                    class="menu-link {{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">
-                    <i class='bx bx-map-alt'></i>
-                    <span>Tuyến đường</span>
                 </a>
             </li>
 
@@ -46,23 +55,22 @@
                 </a>
             </li>
 
+            {{-- Quản lý Tuyến & Điểm dừng --}}
             <li class="menu-item">
-                {{-- Cập nhật route Chuyến đi --}}
-                <a href="{{ route('admin.trips.index') }}"
-                    class="menu-link {{ request()->routeIs('admin.trips.*') ? 'active' : '' }}">
-                    <i class='bx bx-git-repo-forked'></i>
-                    <span>Chuyến đi</span>
+                <a href="{{ route('admin.routes.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">
+                    <i class='bx bx-map-alt'></i>
+                    <span>Tuyến đường</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                {{-- Cập nhật route Đặt vé --}}
-                <a href="{{ route('admin.bookings.index') }}"
-                    class="menu-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                    <i class='bx bx-ticket'></i>
-                    <span>Đặt vé</span>
+                <a href="{{ route('admin.pickup-points.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.pickup-points.*') ? 'active' : '' }}">
+                    <i class='bx bx-map-pin'></i>
+                    <span>Danh mục Điểm đón</span>
                 </a>
-            </li> 
+            </li>
 
             <li class="menu-item">
                 <a href="{{ route('admin.locations.index') }}"
@@ -72,9 +80,10 @@
                 </a>
             </li>
 
+            {{-- Hệ thống --}}
             <li class="menu-item">
                 <a href="{{ route('admin.support_tickets.index') }}"
-                    class="menu-link {{ request()->routeIs('admin.support-tickets.*') ? 'active' : '' }}">
+                    class="menu-link {{ request()->routeIs('admin.support_tickets.*') ? 'active' : '' }}">
                     <i class='bx bx-support'></i>
                     <span>Hỗ trợ khách hàng</span>
                 </a>
@@ -99,10 +108,9 @@
             <h4>{{ Auth::user()->name }}</h4>
             <span>{{ ucfirst(Auth::user()->role) }}</span>
         </div>
-        {{-- Thêm nút đăng xuất nhanh --}}
         <form action="{{ route('logout') }}" method="POST" style="margin-left: auto;">
             @csrf
-            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">
+            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Đăng xuất">
                 <i class='bx bx-log-out fs-4'></i>
             </button>
         </form>

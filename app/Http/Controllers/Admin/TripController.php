@@ -67,9 +67,9 @@ class TripController extends Controller
             'route_id' => 'required|exists:routes,id',
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
-            'trip_date' => 'required|date',
-            'departure_time' => 'required|date_format:H:i',
-            'arrival_time' => 'required|date_format:H:i',
+            'trip_date' => 'nullable|date',
+            'departure_time' => 'nullable|date_format:H:i',
+            'arrival_time' => 'nullable|date_format:H:i',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',
         ]);

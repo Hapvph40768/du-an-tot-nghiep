@@ -13,6 +13,12 @@ class DriverController extends Controller
         $drivers = Driver::orderBy('created_at', 'desc')->paginate(20);
         return view('admin.drivers.index', compact('drivers'));
     }
+    public function show(Driver $driver)
+    {
+        // Load thêm các chuyến xe nếu bạn có quan hệ 'trips' trong Model Driver
+        $driver->load('trips.route');
+        return view('admin.drivers.show', compact('driver'));
+    }
 
     public function create()
     {

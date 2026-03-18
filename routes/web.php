@@ -104,32 +104,39 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // CRUD Cơ bản
+    // --- QUẢN LÝ DANH MỤC GỐC (KHO DỮ LIỆU) ---
     Route::resource('users', UserController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
     Route::resource('drivers', DriverController::class);
     Route::resource('vehicles', VehicleController::class);
     Route::resource('seats', SeatController::class);
+    
+    // Quản lý tổng kho các bến xe/điểm dừng
     Route::resource('pickup-points', PickupPointController::class);
 
-    Route::prefix('trips/{trip}/pickup-points')->name('trips.pickup_points.')->group(function () {
-        Route::get('/', [TripPickupPointController::class, 'index'])->name('index');
-        Route::get('/create', [TripPickupPointController::class, 'create'])->name('create');
-        Route::post('/store-new', [TripPickupPointController::class, 'storeNew'])->name('store_new');
-        Route::post('/sync', [TripPickupPointController::class, 'store'])->name('store');
-        Route::delete('/{pickup_point}', [TripPickupPointController::class, 'destroy'])->name('destroy');
-    });
-    // Vận hành
+    // --- VẬN HÀNH CHUYẾN XE (TRIPS) ---
+    // Đặt Resource lên trước để tránh xung đột prefix
     Route::resource('trips', AdminTripController::class);
+
+    // Group quản lý điểm đón RIÊNG cho từng chuyến
+    Route::prefix('trips/{trip}/pickup-points')->name('trips.pickup_points.')->group(function () {
+        Route::get('/', [TripPickupPointController::class, 'index'])->name('index');         // Trang tích chọn (Sync)
+        Route::get('/create', [TripPickupPointController::class, 'create'])->name('create');   // Trang tạo mới nhanh
+        Route::post('/store-new', [TripPickupPointController::class, 'storeNew'])->name('store_new'); // Xử lý tạo mới
+        Route::post('/sync', [TripPickupPointController::class, 'store'])->name('store');     // Xử lý lưu checkbox
+        Route::delete('/{pickup_point}', [TripPickupPointController::class, 'destroy'])->name('destroy'); // Gỡ điểm khỏi chuyến
+    });
+
+    // --- ĐẶT VÉ & KHÁCH HÀNG ---
     Route::resource('bookings', AdminBookingController::class);
     Route::resource('tickets', TicketController::class);
-
+    
     // Khóa ghế
     Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
     Route::resource('seat-locks', SeatLockController::class);
 
-    // Tài chính
+    // --- TÀI CHÍNH ---
     Route::resource('payments', AdminPaymentController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
@@ -137,11 +144,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::get('orders', [TransactionController::class, 'orders'])->name('orders.index');
     Route::put('orders/{order}/status', [TransactionController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 
-    // CSKH & Support
+    // --- CSKH & SUPPORT ---
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
-    // Quản lý Ticket (Dùng danh sách cụ thể thay vì resource để kiểm soát tên)
-    Route::get('support-tickets', [AdminSupportController::class, 'index'])->name('support_tickets.index');
-    Route::get('support-tickets/{supportTicket}', [AdminSupportController::class, 'show'])->name('support_tickets.show');
-    Route::post('support-tickets/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('support_tickets.reply');
-    Route::patch('support-tickets/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('support_tickets.close');
+    
+    // Quản lý Support Ticket
+    Route::prefix('support-tickets')->name('support_tickets.')->group(function () {
+        Route::get('/', [AdminSupportController::class, 'index'])->name('index');
+        Route::get('/{supportTicket}', [AdminSupportController::class, 'show'])->name('show');
+        Route::post('/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('reply');
+        Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
+    });
 });
