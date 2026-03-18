@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
 
 /*
@@ -107,23 +108,30 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::resource('users', UserController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
-    Route::resource('drivers', DriverController::class)->except(['show']);
-    Route::resource('vehicles', VehicleController::class)->except(['show']);
-    Route::resource('seats', SeatController::class)->except(['show']);
-    Route::resource('pickup-points', PickupPointController::class)->except(['show']);
+    Route::resource('drivers', DriverController::class);
+    Route::resource('vehicles', VehicleController::class);
+    Route::resource('seats', SeatController::class);
+    Route::resource('pickup-points', PickupPointController::class);
 
+    Route::prefix('trips/{trip}/pickup-points')->name('trips.pickup_points.')->group(function () {
+        Route::get('/', [TripPickupPointController::class, 'index'])->name('index');
+        Route::get('/create', [TripPickupPointController::class, 'create'])->name('create');
+        Route::post('/store-new', [TripPickupPointController::class, 'storeNew'])->name('store_new');
+        Route::post('/sync', [TripPickupPointController::class, 'store'])->name('store');
+        Route::delete('/{pickup_point}', [TripPickupPointController::class, 'destroy'])->name('destroy');
+    });
     // Vận hành
-    Route::resource('trips', AdminTripController::class)->except(['show']);
-    Route::resource('bookings', AdminBookingController::class)->only(['index', 'show', 'update']);
-    Route::resource('tickets', TicketController::class)->only(['index', 'show', 'update']);
+    Route::resource('trips', AdminTripController::class);
+    Route::resource('bookings', AdminBookingController::class);
+    Route::resource('tickets', TicketController::class);
 
     // Khóa ghế
     Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
-    Route::resource('seat-locks', SeatLockController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::resource('seat-locks', SeatLockController::class);
 
     // Tài chính
-    Route::resource('payments', AdminPaymentController::class)->only(['index', 'update']);
-    Route::resource('invoices', InvoiceController::class)->except(['destroy']);
+    Route::resource('payments', AdminPaymentController::class);
+    Route::resource('invoices', InvoiceController::class);
     Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('transactions/{transaction}', [TransactionController::class, 'showTransaction'])->name('transactions.show');
     Route::get('orders', [TransactionController::class, 'orders'])->name('orders.index');

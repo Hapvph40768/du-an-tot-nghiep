@@ -1,64 +1,51 @@
 @extends('layout.admin.AdminLayout')
 @section('content-main')
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0 rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold m-0">Quản lý Tuyến đường</h3>
+            <a href="{{ route('admin.routes.create') }}" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">
+                <i class='bx bx-plus-circle'></i> Thêm Tuyến mới
+            </a>
+        </div>
 
-<div class="top-header">
-    <div class="header-title">
-        <h1>Quản lý Tuyến Xe</h1>
-        <p>Danh sách tất cả các tuyến xe trong hệ thống</p>
+        <div class="table-responsive">
+            <table class="table align-middle" style="table-layout: fixed;">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th style="width: 10%;">ID</th>
+                        <th style="width: 35%;">Điểm đi -> Điểm đến</th>
+                        <th style="width: 20%;">Khoảng cách</th>
+                        <th style="width: 20%;">Thời gian dự kiến</th>
+                        <th style="width: 15%; text-align: right;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($routes as $route)
+                    <tr>
+                        <td>#{{ $route->id }}</td>
+                        <td>
+                            <div class="fw-bold text-dark">
+                                {{ $route->departureLocation->name }} 
+                                <i class='bx bx-right-arrow-alt text-primary'></i> 
+                                {{ $route->destinationLocation->name }}
+                            </div>
+                        </td>
+                        <td>{{ $route->distance_km }} km</td>
+                        <td>{{ $route->estimated_time }} giờ</td>
+                        <td class="text-end">
+                            <a href="{{ route('admin.routes.edit', $route->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
+                            <form action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" class="d-inline">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-light border text-danger"><i class='bx bx-trash'></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">{{ $routes->links() }}</div>
     </div>
-    <div style="display: flex; gap: 12px;">
-        {{-- Đã sửa: admin.routes.create --}}
-        <a href="{{ route('admin.routes.create') }}" style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">+ Tạo tuyến xe</a>
-    </div>
-</div>
-
-@if ($message = Session::get('success'))
-    <div style="background-color: #f6ffed; border: 1px solid #b7eb8f; color: #52c41a; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;">
-        {{ $message }}
-    </div>
-@endif
-
-<div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
-    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-        <thead>
-            <tr style="border-bottom: 2px solid #f0f2f5;">
-                <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">ID</th>
-                <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Điểm bắt đầu</th>
-                <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Điểm đến</th>
-                <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Khoảng cách</th>
-                <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Thời gian</th>
-                <th style="padding: 16px; text-align: center; font-weight: 600; color: #666;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($routes as $route)
-                <tr style="border-bottom: 1px solid #f0f2f5;">
-                    <td style="padding: 16px;">{{ $route->id }}</td>
-                    <td style="padding: 16px;">{{ $route->startLocation->name ?? 'N/A' }}</td>
-                    <td style="padding: 16px;">{{ $route->endLocation->name ?? 'N/A' }}</td>
-                    <td style="padding: 16px;">{{ $route->distance_km }} km</td>
-                    <td style="padding: 16px;">{{ $route->estimated_time }} phút</td>
-                    <td style="padding: 16px; text-align: center;">
-                        {{-- Đã sửa: Thêm admin. --}}
-                        <a href="{{ route('admin.routes.show', $route->id) }}" style="display: inline-block; background-color: #e6f7ff; color: #1890ff; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Xem</a>
-                        <a href="{{ route('admin.routes.edit', $route->id) }}" style="display: inline-block; background-color: #fff7e6; color: #ff7a45; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin-right: 6px;">Sửa</a>
-                        
-                        <form action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" style="display: inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="return confirm('Bạn chắc chắn muốn xóa tuyến này?')">Xóa</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" style="padding: 32px; text-align: center; color: #999;">Chưa có tuyến xe nào</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
-<div style="margin-top: 20px; display: flex; justify-content: center;">
-    {{ $routes->links() }}
 </div>
 @endsection

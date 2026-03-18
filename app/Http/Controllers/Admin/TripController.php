@@ -11,20 +11,50 @@ use Illuminate\Http\Request;
 
 class TripController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $trips = Trip::with(['route.startLocation', 'route.endLocation', 'vehicle', 'driver'])
-            ->orderBy('trip_date', 'desc')
-            ->orderBy('departure_time', 'desc')
-            ->paginate(20);
+        $query = Trip::with(['route.departureLocation', 'route.destinationLocation', 'vehicle', 'driver', 'pickupPoints']);
+
+        // Tìm kiếm theo biển số xe hoặc tên tài xế
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('vehicle', function ($q) use ($search) {
+                $q->where('license_plate', 'like', "%{$search}%");
+            })->orWhereHas('driver', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
+
+        // Lọc theo ngày khởi hành
+        if ($request->filled('date_from')) {
+            $query->where('trip_date', '>=', $request->date_from);
+        }
+
+        // Lọc theo trạng thái
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $trips = $query->orderBy('trip_date', 'desc')->paginate(15);
 
         return view('admin.trips.index', compact('trips'));
+    }
+    public function show(Trip $trip)
+    {
+        $trip->load([
+            'route.departureLocation',
+            'route.destinationLocation',
+            'vehicle.seats',
+            'driver',
+            'pickupPoints'
+        ]);
+        return view('admin.trips.show', compact('trip'));
     }
 
     public function create()
     {
         // Truyền dữ liệu ra view để Admin chọn khi tạo chuyến mới
-        $routes = Route::with(['startLocation', 'endLocation'])->get();
+        $routes = Route::with(['departureLocation', 'destinationLocation'])->get();
         $vehicles = Vehicle::where('status', 'active')->get();
         $drivers = Driver::where('status', 'active')->get();
 
@@ -50,7 +80,7 @@ class TripController extends Controller
 
     public function edit(Trip $trip)
     {
-        $routes = Route::with(['startLocation', 'endLocation'])->get();
+        $routes = Route::with(['departureLocation', 'destinationLocation'])->get();
         $vehicles = Vehicle::where('status', 'active')->get();
         $drivers = Driver::where('status', 'active')->get();
 
@@ -63,8 +93,8 @@ class TripController extends Controller
             'route_id' => 'required|exists:routes,id',
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
-            'trip_date' => 'required|date',
-            'departure_time' => 'required|date_format:H:i', 
+            'trip_date' => 'required|date|after_or_equal:today',
+            'departure_time' => 'required|date_format:H:i',
             'arrival_time' => 'required|date_format:H:i',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',

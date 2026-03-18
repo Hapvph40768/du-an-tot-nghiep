@@ -1,71 +1,103 @@
 @extends('layout.admin.AdminLayout')
+
+@section('title', 'Chỉnh sửa Tuyến đường')
+
 @section('content-main')
+<style>
+    :root { --primary-color: #ff6b00; --primary-hover: #e65100; }
+    .card-box { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03); border: 1px solid #f0f0f0; }
+    .form-label { font-weight: 600; color: #374151; font-size: 14px; }
+    .btn-primary-custom { background-color: var(--primary-color); border: none; color: white; padding: 10px 25px; border-radius: 10px; font-weight: 600; transition: 0.3s; }
+    .btn-primary-custom:hover { background-color: var(--primary-hover); transform: translateY(-2px); color: white; }
+    .input-group-text { border-radius: 0 10px 10px 0; border-left: none; }
+    .form-control-custom { border-radius: 10px !important; }
+</style>
 
-<div class="top-header">
-    <div class="header-title">
-        <h1>Sửa Tuyến Xe</h1>
-        <p>Cập nhật thông tin tuyến xe #{{ $route->id }}</p>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <a href="{{ route('admin.routes.index') }}" class="text-decoration-none text-muted small fw-bold">
+                    <i class='bx bx-left-arrow-alt'></i> QUAY LẠI DANH SÁCH
+                </a>
+                <h2 class="fw-bold text-dark m-0 mt-2">Chỉnh sửa Tuyến đường #{{ $route->id }}</h2>
+            </div>
+
+            <div class="card-box shadow-sm">
+                {{-- Hiển thị thông báo lỗi tổng quát nếu có --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger border-0 shadow-sm mb-4">
+                        <ul class="mb-0 small">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.routes.update', $route->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row g-4">
+                        {{-- Điểm khởi hành --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Điểm khởi hành</label>
+                            <select name="departure_location_id" class="form-select rounded-3 @error('departure_location_id') is-invalid @enderror">
+                                @foreach($locations as $loc)
+                                    <option value="{{ $loc->id }}" {{ old('departure_location_id', $route->departure_location_id) == $loc->id ? 'selected' : '' }}>
+                                        {{ $loc->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('departure_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        {{-- Điểm kết thúc --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Điểm kết thúc</label>
+                            <select name="destination_location_id" class="form-select rounded-3 @error('destination_location_id') is-invalid @enderror">
+                                @foreach($locations as $loc)
+                                    <option value="{{ $loc->id }}" {{ old('destination_location_id', $route->destination_location_id) == $loc->id ? 'selected' : '' }}>
+                                        {{ $loc->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('destination_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        {{-- Khoảng cách --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Khoảng cách (km)</label>
+                            <div class="input-group">
+                                <input type="number" name="distance_km" value="{{ old('distance_km', $route->distance_km) }}" 
+                                       class="form-control rounded-3 @error('distance') is-invalid @enderror" placeholder="Ví dụ: 350">
+                                <span class="input-group-text bg-light text-muted">km</span>
+                            </div>
+                            @error('distance_km') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                        </div>
+
+                        {{-- Thời gian dự kiến --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Thời gian dự kiến (giờ)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" name="estimated_time" value="{{ old('estimated_time', $route->estimated_time) }}" 
+                                       class="form-control rounded-3 @error('estimated_time') is-invalid @enderror" placeholder="Ví dụ: 6.5">
+                                <span class="input-group-text bg-light text-muted">giờ</span>
+                            </div>
+                            @error('estimated_time') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary-custom px-4">
+                            <i class='bx bx-save'></i> Lưu thay đổi
+                        </button>
+                        <a href="{{ route('admin.routes.index') }}" class="btn btn-light px-4 border" style="border-radius: 10px;">Hủy bỏ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
-
-<div style="max-width: 800px;">
-    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
-        @if ($errors->any())
-            <div style="background-color: #fee; border: 1px solid #fcc; color: #c33; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;">
-                <strong>Lỗi:</strong>
-                <ul style="margin: 8px 0 0; padding-left: 20px;">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('routes.update', $route->id) }}" method="POST">
-            @csrf @method('PUT')
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Điểm bắt đầu <span style="color: #ff5b24;">*</span></label>
-                    <select name="start_location_id" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;" required>
-                        <option value="">-- Chọn điểm --</option>
-                        @forelse($locations as $location)
-                            <option value="{{ $location->id }}" @selected($route->start_location_id == $location->id)>{{ $location->name }}</option>
-                        @empty
-                            <option value="" disabled>Chưa có địa điểm</option>
-                        @endforelse
-                    </select>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Điểm đến <span style="color: #ff5b24;">*</span></label>
-                    <select name="end_location_id" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;" required>
-                        <option value="">-- Chọn điểm --</option>
-                        @forelse($locations as $location)
-                            <option value="{{ $location->id }}" @selected($route->end_location_id == $location->id)>{{ $location->name }}</option>
-                        @empty
-                            <option value="" disabled>Chưa có địa điểm</option>
-                        @endforelse
-                    </select>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Khoảng cách (km) <span style="color: #ff5b24;">*</span></label>
-                    <input type="number" name="distance_km" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;" value="{{ old('distance_km', $route->distance_km) }}" min="1" required>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Thời gian dự kiến (phút) <span style="color: #ff5b24;">*</span></label>
-                    <input type="number" name="estimated_time" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;" value="{{ old('estimated_time', $route->estimated_time) }}" min="1" required>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 12px;">
-                <button type="submit" style="background-color: #ff5b24; color: white; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">Cập nhật</button>
-                <a href="{{ route('routes.index') }}" style="display: inline-flex; align-items: center; background-color: #f0f2f5; color: #333; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">Hủy</a>
-            </div>
-        </form>
-    </div>
-</div>
-
 @endsection

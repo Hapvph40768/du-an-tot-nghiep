@@ -13,6 +13,11 @@ class VehicleController extends Controller
         $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(20);
         return view('admin.vehicles.index', compact('vehicles'));
     }
+    public function show(Vehicle $vehicle)
+    {
+        $vehicle->load('seats');
+        return view('admin.vehicles.show', compact('vehicle'));
+    }
     public function create()
     {
         return view('admin.vehicles.create');

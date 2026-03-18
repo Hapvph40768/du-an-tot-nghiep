@@ -8,11 +8,12 @@ class Route extends Model
 {
     protected $fillable = ['start_location_id', 'end_location_id', 'distance_km', 'estimated_time'];
 
-    public function startLocation()
+    public function departureLocation()
     {
         return $this->belongsTo(Location::class, 'start_location_id');
     }
-    public function endLocation()
+
+    public function destinationLocation()
     {
         return $this->belongsTo(Location::class, 'end_location_id');
     }

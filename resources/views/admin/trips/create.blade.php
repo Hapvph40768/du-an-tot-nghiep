@@ -1,64 +1,73 @@
 @extends('layout.admin.AdminLayout')
 
-@section('title', 'Thêm Chuyến Xe')
-@section('header-title', 'QUẢN LÝ CHUYẾN XE')
-
 @section('content-main')
-<div class="container-fluid">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-warning text-dark py-3">
-            <h5 class="mb-0 fw-bold">Thêm Chuyến Xe Mới</h5>
-        </div>
-        <div class="card-body p-4">
-            <form action="{{ route('trips.store') }}" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Điểm đi <span class="text-danger">*</span></label>
-                        <input type="text" name="departure_location" class="form-control" value="{{ old('departure_location') }}" required>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h3 class="fw-bold mb-4">Lên lịch Chuyến xe mới</h3>
+                <form action="{{ route('admin.trips.store') }}" method="POST">
+                    @csrf
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Chọn Tuyến đường</label>
+                            <select name="route_id" class="form-select rounded-3 shadow-sm">
+                                @foreach($routes as $route)
+                                    <option value="{{ $route->id }}">{{ $route->departureLocation->name }} → {{ $route->destinationLocation->name }} ({{ $route->distance_km }}km)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ngày khởi hành</label>
+                            <input type="date" name="trip_date" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Giờ xuất bến</label>
+                            <input type="time" name="departure_time" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Giờ đến dự kiến</label>
+                            <input type="time" name="arrival_time" class="form-control rounded-3" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Chọn Xe</label>
+                            <select name="vehicle_id" class="form-select rounded-3">
+                                <option value="">-- Chọn điểm xe --</option>
+                                @foreach($vehicles as $vehicle)
+                                    <option value="{{ $vehicle->id }}">{{ $vehicle->license_plate }} - {{ $vehicle->type }} ({{ $vehicle->total_seats }} ghế  )</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Tài xế phụ trách</label>
+                            <select name="driver_id" class="form-select rounded-3">
+                                <option value="">-- Chọn tài xế --</option>
+                                @foreach($drivers as $driver)
+                                    <option value="{{ $driver->id }}">{{ $driver->name }} (SĐT: {{ $driver->phone }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giá vé (VNĐ)</label>
+                            <div class="input-group">
+                                <input type="number" name="price" class="form-control rounded-3" placeholder="Ví dụ: 250000" required>
+                                <span class="input-group-text">đ</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Trạng thái ban đầu</label>
+                            <select name="status" class="form-select rounded-3">
+                                <option value="active">Mở bán (Active)</option>
+                                <option value="cancelled">Hủy chuyến</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Điểm đến <span class="text-danger">*</span></label>
-                        <input type="text" name="destination_location" class="form-control" value="{{ old('destination_location') }}" required>
+                    <div class="mt-5 pt-3 border-top">
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold" style="background: #ff6b00; border:none; border-radius: 10px;">Xác nhận tạo chuyến</button>
+                        <a href="{{ route('admin.trips.index') }}" class="btn btn-light px-4 border ms-2" style="border-radius: 10px;">Hủy bỏ</a>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Ngày khởi hành <span class="text-danger">*</span></label>
-                        <input type="date" name="departure_date" class="form-control" value="{{ old('departure_date') }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Giờ khởi hành <span class="text-danger">*</span></label>
-                        <input type="time" name="departure_time" class="form-control" value="{{ old('departure_time') }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Giá vé (VNĐ) <span class="text-danger">*</span></label>
-                        <input type="number" name="price" class="form-control" value="{{ old('price') }}" required min="0">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Tài xế phụ trách</label>
-                        <select name="driver_id" class="form-select">
-                            <option value="">-- Chưa xếp tài xế --</option>
-                            @foreach($drivers as $driver)
-                                <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
-                                    {{ $driver->name }} (Bằng lái: {{ $driver->license_number }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select" required>
-                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Chờ chạy</option>
-                            <option value="running" {{ old('status') == 'running' ? 'selected' : '' }}>Đang chạy</option>
-                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-4 text-end">
-                    <a href="{{ route('trips.index') }}" class="btn btn-light border px-4 me-2">Hủy</a>
-                    <button type="submit" class="btn btn-warning px-4 text-dark fw-bold">Lưu Chuyến Xe</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
