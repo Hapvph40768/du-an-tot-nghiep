@@ -71,7 +71,7 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="price-total">{{ number_format($booking->total_price) }}đ</span>
+                                <span class="price-total">{{ number_format($booking->total_amount) }}đ</span>
                             </td>
                             <td>
                                 <span class="badge-booking status-{{ $booking->status }}">

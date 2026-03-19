@@ -56,8 +56,7 @@
                                     Chào, {{ Auth::user()->name }}
                                 </a>
 
-                                <form action="{{ route('logout') }}" method="POST"
-                                    onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit"
                                         class="flex items-center gap-2 text-sm font-bold bg-white/10 hover:bg-red-500/20 text-white px-4 py-2 rounded-lg border border-white/20 transition-all">

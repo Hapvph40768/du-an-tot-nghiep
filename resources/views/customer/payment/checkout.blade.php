@@ -34,11 +34,15 @@
                 <div class="space-y-4">
                     <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
                         <input type="radio" name="payment_method" value="vnpay" required class="text-amber-500 focus:ring-amber-500 w-5 h-5">
-                        <span class="font-medium text-gray-800">Thanh toán VNPay (Bản thật)</span>
+                        <span class="font-medium text-gray-800">Thanh toán bằng thẻ VNPay</span>
                     </label>
                     <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
                         <input type="radio" name="payment_method" value="momo" required class="text-amber-500 focus:ring-amber-500 w-5 h-5">
-                        <span class="font-medium text-gray-800">Ví điện tử MoMo (Bản thật)</span>
+                        <span class="font-medium text-gray-800">Thanh toán qua Ví điện tử MoMo</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                        <input type="radio" name="payment_method" value="cash" required class="text-amber-500 focus:ring-amber-500 w-5 h-5">
+                        <span class="font-medium text-gray-800">Thanh toán tiền mặt (Tại văn phòng / Nhà xe)</span>
                     </label>
                 </div>
             </div>

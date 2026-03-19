@@ -19,7 +19,7 @@
             <!-- Search Form -->
             <div class="bg-white rounded-2xl card-shadow p-6 max-w-4xl mx-auto">
                 <form id="search-form" action="{{ route('customer.trips.search') }}" method="GET" class="space-y-4">
-                    <div class="grid md:grid-cols-2 gap-4">
+                    <div class="grid md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-gray-700 font-medium mb-2 text-sm">Điểm đi</label>
                             <div class="relative">
@@ -55,6 +55,18 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2 text-sm">Ngày đi</label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                                    fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                                </svg>
+                                <input type="date" name="trip_date" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required
+                                    class="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none input-search text-gray-700">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex justify-center mt-6">
@@ -80,6 +92,14 @@
                 <div class="w-16 h-1 bg-amber-500 mx-auto rounded-full"></div>
             </div>
             
+            @php
+                $hanoiId = $locations->firstWhere('name', 'Hà Nội')?->id ?? 1;
+                $danangId = $locations->firstWhere('name', 'Đà Nẵng')?->id ?? 3;
+                $hcmId = $locations->firstWhere('name', 'TP. Hồ Chí Minh')?->id ?? 2;
+                $dalatId = $locations->firstWhere('name', 'Đà Lạt')?->id ?? 7;
+                $nhatrangId = $locations->firstWhere('name', 'Nha Trang')?->id ?? 6;
+                $sapaId = $locations->firstWhere('name', 'Sapa')?->id ?? 1; // Sapa isn't seeded but as fallback
+            @endphp
             <div class="grid md:grid-cols-4 gap-6">
                 <!-- Route Card -->
                 <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all group">
@@ -91,7 +111,7 @@
                             <span class="font-bold text-lg">Đà Nẵng</span>
                         </div>
                         <p class="text-gray-500 text-sm mb-4">Từ 350.000đ • 14 chuyến/ngày</p>
-                        <a href="{{ route('customer.home') }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
+                        <a href="{{ route('customer.trips.search', ['start_location_id' => $hanoiId, 'end_location_id' => $danangId, 'trip_date' => date('Y-m-d')]) }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
                             Đặt ngay <i class='bx bx-right-arrow-alt'></i>
                         </a>
                     </div>
@@ -107,7 +127,7 @@
                             <span class="font-bold text-lg">Đà Lạt</span>
                         </div>
                         <p class="text-gray-500 text-sm mb-4">Từ 250.000đ • 20 chuyến/ngày</p>
-                        <a href="{{ route('customer.home') }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
+                        <a href="{{ route('customer.trips.search', ['start_location_id' => $hcmId, 'end_location_id' => $dalatId, 'trip_date' => date('Y-m-d')]) }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
                             Đặt ngay <i class='bx bx-right-arrow-alt'></i>
                         </a>
                     </div>
@@ -123,7 +143,7 @@
                             <span class="font-bold text-lg">Sapa</span>
                         </div>
                         <p class="text-gray-500 text-sm mb-4">Từ 300.000đ • 10 chuyến/ngày</p>
-                        <a href="{{ route('customer.home') }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
+                        <a href="{{ route('customer.trips.search', ['start_location_id' => $hanoiId, 'end_location_id' => $sapaId, 'trip_date' => date('Y-m-d')]) }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
                             Đặt ngay <i class='bx bx-right-arrow-alt'></i>
                         </a>
                     </div>
@@ -139,7 +159,7 @@
                             <span class="font-bold text-lg">Nha Trang</span>
                         </div>
                         <p class="text-gray-500 text-sm mb-4">Từ 280.000đ • 15 chuyến/ngày</p>
-                        <a href="{{ route('customer.home') }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
+                        <a href="{{ route('customer.trips.search', ['start_location_id' => $hcmId, 'end_location_id' => $nhatrangId, 'trip_date' => date('Y-m-d')]) }}" class="text-amber-600 font-medium hover:text-amber-700 flex items-center gap-1">
                             Đặt ngay <i class='bx bx-right-arrow-alt'></i>
                         </a>
                     </div>

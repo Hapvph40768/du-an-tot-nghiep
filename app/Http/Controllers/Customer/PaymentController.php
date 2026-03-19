@@ -27,18 +27,41 @@ class PaymentController extends Controller
     public function process(Request $request, Booking $booking)
     {
         $request->validate([
-            'payment_method' => 'required|in:vnpay,momo',
+            'payment_method' => 'required|in:vnpay,momo,cash',
         ]);
 
         if ($request->payment_method === 'vnpay') {
             return $this->vnpayProcess($booking);
         }
 
-        if ($request->payment_method === 'momo') {
-            return $this->momoProcess($booking);
+        if ($request->payment_method === 'cash') {
+            return $this->cashProcess($booking);
         }
 
         return back()->with('error', 'Phương thức thanh toán không hợp lệ.');
+    }
+
+    private function cashProcess(Booking $booking)
+    {
+        DB::beginTransaction();
+        try {
+            // Vé phải được xuất để giữ chỗ vĩnh viễn
+            Ticket::where('booking_id', $booking->id)->update([
+                'status' => 'confirmed'
+            ]);
+
+            // Extend lock to ensure the seat is not released
+            \App\Models\SeatLock::where('booking_id', $booking->id)->update([
+                'locked_until' => now()->addYears(100)
+            ]);
+
+            DB::commit();
+            return redirect()->route('customer.bookings.show', $booking->id)
+                ->with('success', 'Đặt vé thành công! Vui lòng thanh toán tiền mặt tại quầy / nhà xe trước giờ khởi hành.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('customer.bookings.show', $booking->id)->with('error', 'Lỗi lưu dữ liệu: ' . $e->getMessage());
+        }
     }
 
     private function vnpayProcess(Booking $booking)
@@ -144,16 +167,13 @@ class PaymentController extends Controller
 
                     $booking->update(['status' => 'paid']);
 
-                    $seatLocks = $booking->seatLocks;
-                    foreach ($seatLocks as $lock) {
-                        Ticket::create([
-                            'booking_id' => $booking->id,
-                            'trip_id' => $booking->trip_id,
-                            'seat_id' => $lock->seat_id,
-                            'ticket_code' => 'TKT-' . strtoupper(Str::random(8)),
-                            'status' => 'confirmed',
-                        ]);
-                    }
+                    Ticket::where('booking_id', $booking->id)->update([
+                        'status' => 'confirmed'
+                    ]);
+
+                    \App\Models\SeatLock::where('booking_id', $booking->id)->update([
+                        'locked_until' => now()->addYears(100)
+                    ]);
 
                     DB::commit();
                     return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán VNPay thành công. Vé của bạn đã xuất!');
@@ -162,7 +182,7 @@ class PaymentController extends Controller
                     return redirect()->route('customer.bookings.show', $booking->id)->with('error', 'Lỗi lưu dữ liệu: ' . $e->getMessage());
                 }
             } else {
-                return redirect()->route('customer.payment.checkout', $booking->id)->with('error', 'Thanh toán VNPay bị hủy hoặc thất bại.');
+                return redirect()->route('customer.bookings.show', $booking->id)->with('error', 'Thanh toán VNPay bị hủy hoặc không thành công.');
             }
         } else {
             return redirect()->route('customer.payment.checkout', $booking->id)->with('error', 'Chữ ký phản hồi VNPay không hợp lệ.');
@@ -245,16 +265,13 @@ class PaymentController extends Controller
 
                 $booking->update(['status' => 'paid']);
 
-                $seatLocks = $booking->seatLocks;
-                foreach ($seatLocks as $lock) {
-                    Ticket::create([
-                        'booking_id' => $booking->id,
-                        'trip_id' => $booking->trip_id,
-                        'seat_id' => $lock->seat_id,
-                        'ticket_code' => 'TKT-' . strtoupper(Str::random(8)),
-                        'status' => 'confirmed',
-                    ]);
-                }
+                Ticket::where('booking_id', $booking->id)->update([
+                    'status' => 'confirmed'
+                ]);
+
+                \App\Models\SeatLock::where('booking_id', $booking->id)->update([
+                    'locked_until' => now()->addYears(100)
+                ]);
 
                 DB::commit();
                 return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán qua Ví MoMo thành công. Vé của bạn đã được xuất.');
