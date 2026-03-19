@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Customer;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +9,7 @@ class ProfileController extends Controller
 {
     public function edit()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         // Lấy lịch sử đặt vé để hiển thị cùng trang profile
         $bookings = $user->bookings()
@@ -22,6 +22,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $validated = $request->validate([

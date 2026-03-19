@@ -1,8 +1,6 @@
-@extends('layout.admin.AdminLayout')
+<?php $__env->startSection('title', 'Quản lý Xe'); ?>
 
-@section('title', 'Quản lý Xe')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
     <style>
         :root {
             --primary-color: #ff6b00;
@@ -88,16 +86,17 @@
                 <h2 class="fw-bold text-dark m-0">Danh sách Xe</h2>
                 <p class="text-muted small mb-0">Quản lý đội xe và sơ đồ ghế</p>
             </div>
-            <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary-custom">
+            <a href="<?php echo e(route('admin.vehicles.create')); ?>" class="btn btn-primary-custom">
                 <i class='bx bx-plus-circle fs-5'></i> Thêm Xe mới
             </a>
         </div>
 
-        @if (session('success'))
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
             <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-                <i class='bx bx-check-circle'></i> {{ session('success') }}
+                <i class='bx bx-check-circle'></i> <?php echo e(session('success')); ?>
+
             </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
         <div class="card-box">
             <div class="table-responsive">
@@ -107,67 +106,43 @@
                             <th class="ps-4" style="width: 20%;">Biển số</th>
                             <th style="width: 25%;">Loại xe</th>
                             <th style="width: 15%;">Số ghế</th>
-                            <th style="width: 20%;">Số điện thoại</th>
                             <th style="width: 20%;">Trạng thái</th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($vehicles as $vehicle)
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                             <tr>
                                 <td class="ps-4">
-                                    <div class="fw-bold text-dark">{{ $vehicle->license_plate }}</div>
+                                    <div class="fw-bold text-dark"><?php echo e($vehicle->license_plate); ?></div>
                                 </td>
-
                                 <td>
-                                    <span class="text-muted small fw-bold">{{ $vehicle->type }}</span>
+                                    <span class="text-muted small fw-bold"><?php echo e($vehicle->type); ?></span>
                                 </td>
-
                                 <td>
-                                    <span class="badge bg-light text-dark border">
-                                        {{ $vehicle->total_seats }} ghế
-                                    </span>
+                                    <span class="badge bg-light text-dark border"><?php echo e($vehicle->total_seats); ?> ghế</span>
                                 </td>
-
-                               
                                 <td>
-                                    @if($vehicle->phone_vehicles)
-                                        <i class='bx bxs-phone-call text-success me-1'></i>
-                                        {{ $vehicle->phone_vehicles }}
-                                    @else
-                                        <span class="text-muted">N/A</span>
-                                    @endif
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($vehicle->status == 'active'): ?>
+                                        <span class="status-active"><i class='bx bxs-circle fs-6 me-1'></i>Sẵn sàng</span>
+                                    <?php else: ?>
+                                        <span class="status-maintenance"><i class='bx bxs-wrench fs-6 me-1'></i>Bảo
+                                            trì</span>
+                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </td>
-
-                                <td>
-                                    @if ($vehicle->status == 'active')
-                                        <span class="status-active">
-                                            <i class='bx bxs-circle fs-6 me-1'></i>Sẵn sàng
-                                        </span>
-                                    @else
-                                        <span class="status-maintenance">
-                                            <i class='bx bxs-wrench fs-6 me-1'></i>Bảo trì
-                                        </span>
-                                    @endif
-                                </td>
-
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                           class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
+                                        <a href="<?php echo e(route('admin.vehicles.show', $vehicle->id)); ?>"
+                                            class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
                                             <i class='bx bx-show text-info'></i>
                                         </a>
-
-                                        <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                           class="btn btn-sm btn-light border" title="Sửa">
+                                        <a href="<?php echo e(route('admin.vehicles.edit', $vehicle->id)); ?>"
+                                            class="btn btn-sm btn-light border" title="Sửa">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
-
-                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
-                                            @csrf
-                                            @method('DELETE')
+                                        <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>" method="POST"
+                                            onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
+                                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                             <button class="btn btn-sm btn-light border text-danger" title="Xóa">
                                                 <i class='bx bx-trash'></i>
                                             </button>
@@ -175,20 +150,20 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                           
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
-                                    Chưa có xe nào trong danh sách.
-                                </td>
+                                <td colspan="5" class="text-center py-5 text-muted">Chưa có xe nào trong danh sách.</td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </tbody>
                 </table>
             </div>
             <div class="mt-4">
-                {{ $vehicles->links('pagination::bootstrap-5') }}
+                <?php echo e($vehicles->links('pagination::bootstrap-5')); ?>
+
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/vehicles/index.blade.php ENDPATH**/ ?>
