@@ -1,6 +1,6 @@
-@extends('layout.customer.CustomerLayout')
 
-@section('content-main')
+
+<?php $__env->startSection('content-main'); ?>
     <section id="search" class="gradient-hero bus-pattern text-white py-12 md:py-16">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-8 slide-in">
@@ -116,4 +116,6 @@
         </div>
     </section>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.customer.CustomerLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/home/index.blade.php ENDPATH**/ ?>

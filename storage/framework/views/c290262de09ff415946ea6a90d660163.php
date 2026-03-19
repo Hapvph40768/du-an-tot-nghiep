@@ -18,7 +18,7 @@
                     <a href="#search" class="hover:text-amber-300 transition-colors">Đặt vé</a>
                     <a href="#routes" class="hover:text-amber-300 transition-colors">Tuyến đường</a>
                     <a href="#features" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
-                    {{-- <a href="{{ route('customer.support.index') }}" class="hover:text-amber-300 transition-colors @yield('active-support-index')">Liên hệ</a> --}}
+                    
                 </nav>
 
                 <div class="flex items-center gap-3">
@@ -32,30 +32,31 @@
 
                     <!-- Logout -->
                     <div class="flex items-center gap-3">
-                        {{-- Hiển thị khi CHƯA đăng nhập --}}
-                        @guest
+                        
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('login') }}"
+                                <a href="<?php echo e(route('login')); ?>"
                                     class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Đăng nhập
                                 </a>
-                                <a href="{{ route('register') }}"
+                                <a href="<?php echo e(route('register')); ?>"
                                     class="text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5">
                                     Đăng ký
                                 </a>
                             </div>
-                        @endguest
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                        {{-- Hiển thị khi ĐÃ đăng nhập --}}
-                        @auth
+                        
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                             <div class="flex items-center gap-4">
                                 <span class="hidden lg:block text-sm font-medium text-amber-100">
-                                    Chào, {{ Auth::user()->name }}
+                                    Chào, <?php echo e(Auth::user()->name); ?>
+
                                 </span>
 
-                                <form action="{{ route('logout') }}" method="POST"
+                                <form action="<?php echo e(route('logout')); ?>" method="POST"
                                     onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
-                                    @csrf
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit"
                                         class="flex items-center gap-2 text-sm font-bold bg-white/10 hover:bg-red-500/20 text-white px-4 py-2 rounded-lg border border-white/20 transition-all">
                                         <i class='bx bx-log-out text-lg'></i>
@@ -63,9 +64,10 @@
                                     </button>
                                 </form>
                             </div>
-                        @endauth
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+<?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/layout/customer/blocks/header.blade.php ENDPATH**/ ?>
