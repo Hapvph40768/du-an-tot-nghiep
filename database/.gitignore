@@ -1,0 +1,5 @@
+*.sqlite*
+/storage/*.key
+/storage/app/*
+/storage/framework/*
+/storage/logs/*
