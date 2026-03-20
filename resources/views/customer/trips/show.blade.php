@@ -57,7 +57,7 @@
                             
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Chọn ngày đi <span class="text-red-500">*</span></label>
-                                <input type="date" name="selected_departure_date" readonly value="{{ $trip->trip_date }}" class="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed focus:outline-none">
+                                <input type="date" name="selected_departure_date" value="{{ $trip->trip_date }}" class="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-500">
                             </div>
                             
                             <div class="mb-2">

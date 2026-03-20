@@ -1,34 +1,35 @@
-@extends('layout.customer.CustomerLayout')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
     <section class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Chi tiết đơn đặt vé #{{ $booking->id }}</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Chi tiết đơn đặt vé #<?php echo e($booking->id); ?></h2>
 
-            @if (session('success'))
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">
-                    {{ session('success') }}</div>
-            @endif
+                    <?php echo e(session('success')); ?></div>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Thông tin chuyến đi</h3>
                     <div class="space-y-3 text-sm">
                         <p class="flex justify-between"><span class="text-gray-500">Tuyến:</span> <span
-                                class="font-bold text-gray-800 text-right">{{ $booking->trip->route->departureLocation->name ?? '...' }}
-                                → {{ $booking->trip->route->destinationLocation->name ?? '...' }}</span></p>
+                                class="font-bold text-gray-800 text-right"><?php echo e($booking->trip->route->departureLocation->name ?? '...'); ?>
+
+                                → <?php echo e($booking->trip->route->destinationLocation->name ?? '...'); ?></span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Khởi hành:</span> <span
-                                class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }}
-                                lúc {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}</span></p>
+                                class="font-medium text-gray-800"><?php echo e(\Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y')); ?>
+
+                                lúc <?php echo e(\Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i')); ?></span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Số điện thoại xe:</span> <span
                                 class="font-medium text-gray-800"><a
-                                    href="tel:{{ $booking->trip->vehicle->phone_vehicles ?? '' }}"
-                                    class="text-indigo-700">{{ $booking->trip->vehicle->phone_vehicles ?? 'Chưa có' }}</a></span>
+                                    href="tel:<?php echo e($booking->trip->vehicle->phone_vehicles ?? ''); ?>"
+                                    class="text-indigo-700"><?php echo e($booking->trip->vehicle->phone_vehicles ?? 'Chưa có'); ?></a></span>
                         </p>
                         <p class="flex justify-between border-t pt-3"><span class="text-gray-500">Điểm đón:</span> <span
-                                class="font-medium text-indigo-700 text-right">{{ $booking->pickupPoint->name ?? 'Không có thông tin' }}
+                                class="font-medium text-indigo-700 text-right"><?php echo e($booking->pickupPoint->name ?? 'Không có thông tin'); ?>
+
                                 <br><span
-                                    class="text-xs text-gray-500">({{ $booking->pickupPoint->address ?? '' }})</span></span>
+                                    class="text-xs text-gray-500">(<?php echo e($booking->pickupPoint->address ?? ''); ?>)</span></span>
                         </p>
                     </div>
                 </div>
@@ -37,84 +38,85 @@
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Thông tin khách hàng & Thanh toán</h3>
                     <div class="space-y-3 text-sm">
                         <p class="flex justify-between"><span class="text-gray-500">Người đặt:</span> <span
-                                class="font-medium text-gray-800">{{ $booking->contact_name }}</span></p>
+                                class="font-medium text-gray-800"><?php echo e($booking->contact_name); ?></span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Điện thoại:</span> <span
-                                class="font-medium text-gray-800">{{ $booking->contact_phone }}</span></p>
+                                class="font-medium text-gray-800"><?php echo e($booking->contact_phone); ?></span></p>
                         <p class="flex justify-between items-center"><span class="text-gray-500">Trạng thái:</span>
-                            @if ($booking->status == 'pending')
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->status == 'pending'): ?>
                                 <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Chờ thanh
                                     toán</span>
-                            @elseif($booking->status == 'paid')
+                            <?php elseif($booking->status == 'paid'): ?>
                                 <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Đã thanh
                                     toán</span>
-                            @else
+                            <?php else: ?>
                                 <span
-                                    class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold">{{ $booking->status }}</span>
-                            @endif
+                                    class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold"><?php echo e($booking->status); ?></span>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </p>
                         <p class="flex justify-between items-center border-t pt-3">
                             <span class="text-gray-500">Tổng tiền:</span>
                             <span
-                                class="font-bold text-amber-600 text-xl">{{ number_format($booking->total_amount, 0, ',', '.') }}
+                                class="font-bold text-amber-600 text-xl"><?php echo e(number_format($booking->total_amount, 0, ',', '.')); ?>
+
                                 đ</span>
                         </p>
 
-                        @if ($booking->status == 'pending')
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->status == 'pending'): ?>
                             <div class="mt-4">
-                                <a href="{{ route('customer.payment.checkout', $booking->id) }}"
+                                <a href="<?php echo e(route('customer.payment.checkout', $booking->id)); ?>"
                                     class="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-all duration-200">
                                     <i class="fas fa-credit-card mr-2"></i> Thanh toán đơn hàng này
                                 </a>
                             </div>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm p-6 mt-6 border border-gray-100">
                 <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Danh sách vé</h3>
-                @if ($booking->tickets->isEmpty())
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->tickets->isEmpty()): ?>
                     <div class="text-center py-6 bg-gray-50 rounded-lg">
                         <p class="text-gray-500 mb-4">Chưa có vé điện tử được xuất (Đơn hàng đang chờ thanh toán).</p>
-                        @if ($booking->status == 'pending')
-                            <a href="{{ route('customer.payment.checkout', $booking->id) }}"
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->status == 'pending'): ?>
+                            <a href="<?php echo e(route('customer.payment.checkout', $booking->id)); ?>"
                                 class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-lg font-bold shadow-sm transition-colors inline-block">
                                 Thanh toán ngay để nhận vé
                             </a>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach ($booking->tickets as $ticket)
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $booking->tickets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ticket): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                             <div
                                 class="border rounded-xl p-4 bg-gradient-to-br from-indigo-50 to-blue-50 relative overflow-hidden shadow-sm">
                                 <div
                                     class="absolute top-0 right-0 bg-green-500 text-white text-[10px] uppercase tracking-wider px-2 py-1 rounded-bl-lg font-bold">
                                     Xác nhận</div>
                                 <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Mã vé điện tử</p>
-                                <p class="font-mono font-bold text-lg text-gray-800 mb-2">{{ $ticket->ticket_code }}</p>
+                                <p class="font-mono font-bold text-lg text-gray-800 mb-2"><?php echo e($ticket->ticket_code); ?></p>
                                 <div class="flex items-end justify-between border-t border-indigo-100 pt-2 mt-2">
                                     <span class="text-xs text-gray-600">Ghế ngồi</span>
-                                    <span class="font-bold text-2xl text-amber-600">{{ $ticket->seat->seat_number }}</span>
+                                    <span class="font-bold text-2xl text-amber-600"><?php echo e($ticket->seat->seat_number); ?></span>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                     </div>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-            @php
+            <?php
                 $vehicle = $booking->trip->vehicle ?? null;
                 $currentSlot = $vehicle ? $vehicle->parkingSlot : null;
                 $parking = $currentSlot ? $currentSlot->parking : null;
-            @endphp
+            ?>
 
-            @if ($parking && $parking->slots && $parking->slots->count() > 0)
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($parking && $parking->slots && $parking->slots->count() > 0): ?>
                 <div class="bg-white rounded-xl shadow-sm p-6 mt-6 border border-gray-100">
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Sơ đồ bãi đỗ xe hiện tại:
-                        {{ $parking->name }}</h3>
+                        <?php echo e($parking->name); ?></h3>
                     <p class="text-sm text-gray-500 mb-6"><i class="fas fa-map-marker-alt text-amber-500 mr-2"></i>
-                        {{ $parking->location ?? '' }} - {{ $parking->description ?? '' }}</p>
+                        <?php echo e($parking->location ?? ''); ?> - <?php echo e($parking->description ?? ''); ?></p>
 
                     <!-- Map Legend -->
                     <div class="flex flex-wrap items-center gap-4 mb-8 text-sm bg-gray-50 p-4 rounded-lg">
@@ -136,22 +138,22 @@
                         </div>
                     </div>
 
-                    @php
+                    <?php
                         // Group by zone, then by row and column
                         // If zone is null, group by 'Khu vực chung'
                         $zones = $parking->slots->groupBy(function ($slot) {
                             return $slot->zone ? 'Khu vực ' . $slot->zone : 'Khu vực chung';
                         });
-                    @endphp
+                    ?>
 
-                    @foreach ($zones as $zoneName => $zoneSlots)
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $zones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zoneName => $zoneSlots): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                         <div class="mb-8 last:mb-0">
                             <h4
                                 class="font-bold text-md mb-4 text-indigo-700 bg-indigo-50 inline-block px-4 py-1.5 rounded-full">
-                                {{ $zoneName }}</h4>
+                                <?php echo e($zoneName); ?></h4>
 
                             <div class="overflow-x-auto pb-4">
-                                @php
+                                <?php
                                     $zoneMinRow = $zoneSlots->min('row');
                                     $zoneMaxRow = $zoneSlots->max('row');
                                     $zoneMinCol = $zoneSlots->min('column');
@@ -161,15 +163,15 @@
                                     foreach ($zoneSlots as $slot) {
                                         $grid[$slot->row][$slot->column] = $slot;
                                     }
-                                @endphp
+                                ?>
 
                                 <table class="border-collapse border-spacing-2 mx-auto">
-                                    @for ($r = $zoneMinRow; $r <= $zoneMaxRow; $r++)
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php for($r = $zoneMinRow; $r <= $zoneMaxRow; $r++): ?>
                                         <tr>
-                                            @for ($c = $zoneMinCol; $c <= $zoneMaxCol; $c++)
+                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php for($c = $zoneMinCol; $c <= $zoneMaxCol; $c++): ?>
                                                 <td class="p-1">
-                                                    @if (isset($grid[$r][$c]))
-                                                        @php
+                                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($grid[$r][$c])): ?>
+                                                        <?php
                                                             $slot = $grid[$r][$c];
                                                             $isMyCar = $vehicle && $slot->vehicle_id == $vehicle->id;
 
@@ -188,40 +190,42 @@
                                                                         'bg-yellow-100 border-yellow-300 text-yellow-800';
                                                                 }
                                                             }
-                                                        @endphp
-                                                        <div class="w-16 h-16 sm:w-24 sm:h-24 flex flex-col items-center justify-center border-2 rounded-xl shadow-sm {{ $bgColor }} transition-all"
-                                                            title="Vị trí: {{ $slot->slot_code }} - Trạng thái: {{ ucfirst($slot->status) }}">
+                                                        ?>
+                                                        <div class="w-16 h-16 sm:w-24 sm:h-24 flex flex-col items-center justify-center border-2 rounded-xl shadow-sm <?php echo e($bgColor); ?> transition-all"
+                                                            title="Vị trí: <?php echo e($slot->slot_code); ?> - Trạng thái: <?php echo e(ucfirst($slot->status)); ?>">
                                                             <span
-                                                                class="text-[10px] sm:text-xs {{ $isMyCar ? 'text-blue-100' : 'text-gray-500' }} block mb-1 uppercase font-semibold">{{ $slot->slot_type }}</span>
+                                                                class="text-[10px] sm:text-xs <?php echo e($isMyCar ? 'text-blue-100' : 'text-gray-500'); ?> block mb-1 uppercase font-semibold"><?php echo e($slot->slot_type); ?></span>
                                                             <span
-                                                                class="font-mono text-sm sm:text-lg">{{ $slot->slot_code }}</span>
-                                                            @if ($isMyCar)
+                                                                class="font-mono text-sm sm:text-lg"><?php echo e($slot->slot_code); ?></span>
+                                                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($isMyCar): ?>
                                                                 <i
                                                                     class="fas fa-bus-alt mt-1 sm:mt-2 text-sm sm:text-base"></i>
                                                                 <!-- Sửa lại icon xe bus hợp với hành khách -->
-                                                            @endif
+                                                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                                         </div>
-                                                    @else
+                                                    <?php else: ?>
                                                         <!-- Empty space for grid gaps -->
                                                         <div class="w-16 h-16 sm:w-24 sm:h-24 bg-transparent"></div>
-                                                    @endif
+                                                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                                 </td>
-                                            @endfor
+                                            <?php endfor; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                         </tr>
-                                    @endfor
+                                    <?php endfor; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </table>
                             </div>
                         </div>
-                    @endforeach
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                 </div>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
             <div class="mt-8 text-center">
-                <a href="{{ route('customer.bookings.index') }}"
+                <a href="<?php echo e(route('customer.bookings.index')); ?>"
                     class="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">
                     ← Quay lại Lịch sử đặt vé
                 </a>
             </div>
         </div>
     </section>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.customer.CustomerLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/bookings/show.blade.php ENDPATH**/ ?>
