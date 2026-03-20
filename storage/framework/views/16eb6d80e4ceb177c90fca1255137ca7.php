@@ -46,6 +46,6 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+<?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/layout/admin/AdminLayout.blade.php ENDPATH**/ ?>
