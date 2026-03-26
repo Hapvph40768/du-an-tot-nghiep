@@ -17,7 +17,19 @@ class SupportTicketController extends Controller
 
     public function create()
     {
-        return view('customer.support.create');
+        // Lấy danh sách vé đã đặt của khách để họ chọn nhanh trong dropdown
+        $bookings = \App\Models\Booking::where('user_id', Auth::id())
+            ->with('trip.route')
+            ->latest()
+            ->get();
+
+
+            
+        $tickets = SupportTicket::where('user_id', Auth::id())
+            ->latest()
+            ->get(); // 👈 THÊM DÒNG NÀY
+
+        return view('customer.support.create', compact('bookings'));
     }
 
     public function store(Request $request)

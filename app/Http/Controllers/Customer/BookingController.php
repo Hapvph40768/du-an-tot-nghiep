@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Trip;
+use App\Models\Ticket;
 use App\Models\SeatLock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,13 @@ class BookingController extends Controller
             abort(403, 'Không có quyền truy cập');
         }
 
-        $booking->load(['trip.route', 'tickets.seat', 'pickupPoint']);
+        $booking->load([
+            'trip.route', 
+            'tickets.seat', 
+            'tickets.trip', 
+            'pickupPoint',
+            'trip.vehicle.parkingSlot.parking.slots'
+        ]);
         return view('customer.bookings.show', compact('booking'));
     }
 
@@ -63,7 +70,7 @@ class BookingController extends Controller
                 'status' => 'pending',
             ]);
 
-            // 2. Khóa ghế (SeatLock)
+            // 2. Khóa ghế (SeatLock) và tạo vé (Ticket) cho mỗi ghế
             foreach ($request->seat_ids as $seatId) {
                 // Kiểm tra lại lần cuối xem ghế có bị ai nẫng tay trên không
                 $isLocked = SeatLock::where('trip_id', $trip->id)->where('seat_id', $seatId)->exists();
@@ -77,6 +84,14 @@ class BookingController extends Controller
                     'user_id' => Auth::id(),
                     'booking_id' => $booking->id,
                     'locked_until' => now()->addMinutes(15), // Khóa tạm 15 phút chờ thanh toán
+                ]);
+
+                // Tạo vé với mã vé ngẫu nhiên
+                Ticket::create([
+                    'booking_id' => $booking->id,
+                    'trip_id' => $trip->id,
+                    'seat_id' => $seatId,
+                    'status' => 'pending',
                 ]);
             }
 

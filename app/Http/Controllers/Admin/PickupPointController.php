@@ -11,7 +11,12 @@ class PickupPointController extends Controller
 {
     public function index()
     {
-        $pickupPoints = PickupPoint::with('location')->paginate(20);
+        // Thêm sắp xếp theo Tỉnh để Admin dễ quản lý danh mục
+        $pickupPoints = PickupPoint::with('location')
+            ->orderBy('location_id')
+            ->orderBy('name')
+            ->paginate(20);
+            
         return view('admin.pickup_points.index', compact('pickupPoints'));
     }
 
@@ -29,8 +34,17 @@ class PickupPointController extends Controller
             'address' => 'nullable|string',
         ]);
 
+        // Kiểm tra tránh trùng lặp điểm đón trong cùng một tỉnh
+        $exists = PickupPoint::where('location_id', $validated['location_id'])
+            ->where('name', $validated['name'])
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['name' => 'Điểm đón này đã tồn tại ở tỉnh này!'])->withInput();
+        }
+
         PickupPoint::create($validated);
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Thêm điểm đón thành công!');
+        return redirect()->route('admin.pickup_points.index')->with('success', 'Đã thêm điểm đón vào danh mục hệ thống!');
     }
 
     public function edit(PickupPoint $pickupPoint)
@@ -48,12 +62,13 @@ class PickupPointController extends Controller
         ]);
 
         $pickupPoint->update($validated);
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Cập nhật điểm đón thành công!');
+        return redirect()->route('admin.pickup_points.index')->with('success', 'Cập nhật danh mục điểm đón thành công!');
     }
 
     public function destroy(PickupPoint $pickupPoint)
     {
+        // Kiểm tra xem điểm đón này có đang được gán cho chuyến xe nào không trước khi xóa (Nếu cần)
         $pickupPoint->delete();
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Xóa điểm đón thành công!');
+        return redirect()->route('admin.pickup_points.index')->with('success', 'Xóa điểm đón khỏi danh mục thành công!');
     }
 }

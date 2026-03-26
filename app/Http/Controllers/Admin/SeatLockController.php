@@ -45,7 +45,7 @@ class SeatLockController extends Controller
             'trip_id' => 'required|exists:trips,id',
             'seat_id' => 'required|exists:seats,id',
             'user_id' => 'nullable|exists:users,id',
-            'lock_minutes' => 'required|integer|min:1', // Nhập số phút muốn khóa (VD: 15, 60, 120)
+            'lock_minutes' => 'required|integer|min:1', 
         ]);
 
         // Tính toán thời gian hết hạn khóa ghế

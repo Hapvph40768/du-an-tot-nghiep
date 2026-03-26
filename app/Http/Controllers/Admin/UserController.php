@@ -11,7 +11,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(20);
+        $users = User::where('role', 'customer')
+            ->latest()
+            ->paginate(20);
         return view('admin.users.index', compact('users'));
     }
 
@@ -36,6 +38,11 @@ class UserController extends Controller
     {
         return view('admin.users.show', compact('user'));
     }
+    public function edit(User $user)
+    {
+        // Trả về view edit mà mình đã gửi cho bạn ở câu trước
+        return view('admin.users.edit', compact('user'));
+    }
 
     public function update(Request $request, User $user)
     {
@@ -54,13 +61,5 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Xóa người dùng thành công');
-    }
-
-    public function toggleStatus(User $user)
-    {
-        $user->status = $user->status === 'active' ? 'blocked' : 'active';
-        $user->save();
-
-        return back()->with('success', 'Cập nhật trạng thái thành công');
     }
 }

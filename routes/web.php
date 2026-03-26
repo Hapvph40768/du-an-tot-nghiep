@@ -35,7 +35,7 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
-use App\Http\Controllers\Admin\SupportMessageController as AdminMessageController;
+use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
 
 /*
@@ -43,6 +43,7 @@ use App\Http\Controllers\Customer\SupportTicketController;
 | 1. PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [CustomerHomeController::class, 'index'])->name('customer.home');
 Route::get('/trips/search', [CustomerTripController::class, 'search'])->name('customer.trips.search');
 Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('customer.trips.show');
@@ -56,7 +57,7 @@ Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('cust
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-    
+
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -83,16 +84,18 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
     Route::prefix('payment')->group(function () {
         Route::get('/checkout/{booking}', [CustomerPaymentController::class, 'checkout'])->name('customer.payment.checkout');
         Route::post('/process/{booking}', [CustomerPaymentController::class, 'process'])->name('customer.payment.process');
+        Route::get('/vnpay/return', [CustomerPaymentController::class, 'vnpayReturn'])->name('customer.payment.vnpayReturn');
+        Route::get('/momo/return', [CustomerPaymentController::class, 'momoReturn'])->name('customer.payment.momoReturn');
     });
 
     Route::post('/reviews/{booking}', [CustomerReviewController::class, 'store'])->name('customer.reviews.store');
 
     Route::prefix('support')->group(function () {
-    Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
-    Route::get('/create', [SupportTicketController::class, 'create'])->name('customer.support.create');
-    Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
-    Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
-});
+        Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
+        Route::get('/create', [SupportTicketController::class, 'create'])->name('customer.support.create');
+        Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
+        Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
+    });
 });
 
 /*
@@ -103,40 +106,54 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // CRUD Cơ bản
+    // --- QUẢN LÝ DANH MỤC GỐC (KHO DỮ LIỆU) ---
     Route::resource('users', UserController::class);
-    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
-    ->name('users.toggle-status');
     Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
-    Route::resource('drivers', DriverController::class)->except(['show']);
-    Route::resource('vehicles', VehicleController::class)->except(['show']);
-    Route::resource('seats', SeatController::class)->except(['show']);
-    Route::resource('pickup-points', PickupPointController::class)->except(['show']);
+    Route::resource('drivers', DriverController::class);
+    Route::resource('vehicles', VehicleController::class);
+    Route::resource('seats', SeatController::class);
 
-    // Vận hành
-    Route::resource('trips', AdminTripController::class)->except(['show']);
-    Route::resource('bookings', AdminBookingController::class)->only(['index', 'show', 'update']);
-    Route::resource('tickets', TicketController::class)->only(['index', 'show', 'update']);
+    // Quản lý tổng kho các bến xe/điểm dừng
+    Route::resource('pickup-points', PickupPointController::class);
+
+    // --- VẬN HÀNH CHUYẾN XE (TRIPS) ---
+    // Đặt Resource lên trước để tránh xung đột prefix
+    Route::resource('trips', AdminTripController::class);
+
+    // Group quản lý điểm đón RIÊNG cho từng chuyến
+    Route::prefix('trips/{trip}/pickup-points')->name('trips.pickup_points.')->group(function () {
+        Route::get('/', [TripPickupPointController::class, 'index'])->name('index');         // Trang tích chọn (Sync)
+        Route::get('/create', [TripPickupPointController::class, 'create'])->name('create');   // Trang tạo mới nhanh
+        Route::post('/store-new', [TripPickupPointController::class, 'storeNew'])->name('store_new'); // Xử lý tạo mới
+        Route::post('/sync', [TripPickupPointController::class, 'store'])->name('store');     // Xử lý lưu checkbox
+        Route::delete('/{pickup_point}', [TripPickupPointController::class, 'destroy'])->name('destroy'); // Gỡ điểm khỏi chuyến
+    });
+
+    // --- ĐẶT VÉ & KHÁCH HÀNG ---
+    Route::resource('bookings', AdminBookingController::class);
+    Route::resource('tickets', TicketController::class);
 
     // Khóa ghế
     Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
-    Route::resource('seat-locks', SeatLockController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::resource('seat-locks', SeatLockController::class);
 
-    // Tài chính
-    Route::resource('payments', AdminPaymentController::class)->only(['index', 'update']);
-    Route::resource('invoices', InvoiceController::class)->except(['destroy']);
+    // --- TÀI CHÍNH ---
+    Route::resource('payments', AdminPaymentController::class);
+    Route::resource('invoices', InvoiceController::class);
     Route::get('transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('transactions/{transaction}', [TransactionController::class, 'showTransaction'])->name('transactions.show');
     Route::get('orders', [TransactionController::class, 'orders'])->name('orders.index');
     Route::put('orders/{order}/status', [TransactionController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 
-    // CSKH & Support
+    // --- CSKH & SUPPORT ---
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
-    Route::resource('support-tickets', AdminSupportController::class)->only(['index', 'show']);
-    Route::put('support-tickets/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('support_tickets.close');
 
-    // Phản hồi tin nhắn
-    Route::post('support-tickets/{supportTicket}/messages', [AdminMessageController::class, 'store'])->name('support_messages.store');
-    Route::delete('support-messages/{supportMessage}', [AdminMessageController::class, 'destroy'])->name('support_messages.destroy');
+    // Quản lý Support Ticket
+    Route::prefix('support-tickets')->name('support_tickets.')->group(function () {
+        Route::get('/', [AdminSupportController::class, 'index'])->name('index');
+        Route::get('/{supportTicket}', [AdminSupportController::class, 'show'])->name('show');
+        Route::post('/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('reply');
+        Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
+    });
 });

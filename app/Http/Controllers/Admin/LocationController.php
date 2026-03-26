@@ -10,11 +10,12 @@ class LocationController extends Controller
 {
     public function index()
     {
-        $locations = Location::all();
+        $locations = Location::latest()->paginate(10);
         return view('admin.locations.index', compact('locations'));
     }
 
-    public function create(){
+    public function create()
+    {
         return view('admin.locations.create');
     }
 
@@ -27,12 +28,10 @@ class LocationController extends Controller
         Location::create($validated);
         return redirect()->route('admin.locations.index')->with('success', 'Thêm địa điểm thành công');
     }
-
-    public function edit($id){
-        $location = Location::find($id);
-        return view('admin.locations.edit',compact('location'));
+    public function edit(Location $location)
+    {
+        return view('admin.locations.edit', compact('location'));
     }
-
     public function update(Request $request, Location $location)
     {
         $validated = $request->validate([

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Customer;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,12 +9,20 @@ class ProfileController extends Controller
 {
     public function edit()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
-        return view('customer.profile.edit', compact('user'));
+        // Lấy lịch sử đặt vé để hiển thị cùng trang profile
+        $bookings = $user->bookings()
+                         ->with(['trip.route.departureLocation', 'trip.route.destinationLocation'])
+                         ->latest()
+                         ->get();
+                         
+        return view('customer.profile.edit', compact('user', 'bookings'));
     }
 
     public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $validated = $request->validate([

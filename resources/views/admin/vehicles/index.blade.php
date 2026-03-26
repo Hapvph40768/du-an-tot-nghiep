@@ -1,103 +1,193 @@
 @extends('layout.admin.AdminLayout')
 
+@section('title', 'Quản lý Xe')
+
 @section('content-main')
-    <div class="top-header">
-        <div style="display: flex; gap: 12px;">
-            <a href="{{ route('admin.vehicles.create') }}"
-                style="background-color: #ff5b24; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-                <i class="bx bx-plus" style="font-size: 16px;"></i> Thêm xe
+    <style>
+        :root {
+            --primary-color: #ff6b00;
+            --primary-hover: #e65100;
+        }
+
+        .card-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f0f0f0;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+        }
+
+        .custom-table thead th {
+            background-color: #f9fafb;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 16px;
+            border-bottom: 2px solid #edf2f7;
+            text-align: left;
+        }
+
+        .custom-table td {
+            padding: 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f3f4f6;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-hover);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .status-active {
+            color: #059669;
+            background: #ecfdf5;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status-maintenance {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+    </style>
+
+    <div class="container-fluid py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark m-0">Danh sách Xe</h2>
+                <p class="text-muted small mb-0">Quản lý đội xe và sơ đồ ghế</p>
+            </div>
+            <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary-custom">
+                <i class='bx bx-plus-circle fs-5'></i> Thêm Xe mới
             </a>
         </div>
-    </div>
 
-    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-            <thead>
-                <tr style="border-bottom: 2px solid #f0f2f5;">
-                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Phương tiện</th>
-                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Loại xe / Số ghế</th>
-                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Trạng thái</th>
-                    <th style="padding: 16px; text-align: left; font-weight: 600; color: #666;">Ngày tạo</th>
-                    <th style="padding: 16px; text-align: center; font-weight: 600; color: #666;">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($vehicles as $vehicle)
-                    <tr style="border-bottom: 1px solid #f0f2f5;">
-                        <td style="padding: 16px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div
-                                    style="width: 48px; height: 48px; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #fff3e0, #ffe0b2); border: 1px solid #ffe8cc; flex-shrink: 0;">
-                                    @if (!empty($vehicle->image) && file_exists(public_path($vehicle->image)))
-                                        <img src="{{ asset($vehicle->image) }}" alt="{{ $vehicle->license_plate }}"
-                                            style="width: 100%; height: 100%; object-fit: cover;">
+        @if (session('success'))
+            <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
+                <i class='bx bx-check-circle'></i> {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="custom-table w-100">
+                    <thead>
+                        <tr>
+                            <th class="ps-4" style="width: 20%;">Biển số</th>
+                            <th style="width: 25%;">Loại xe</th>
+                            <th style="width: 15%;">Số ghế</th>
+                            <th style="width: 20%;">Số điện thoại</th>
+                            <th style="width: 20%;">Trạng thái</th>
+                            <th class="text-end pe-4" style="width: 20%;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($vehicles as $vehicle)
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ $vehicle->license_plate }}</div>
+                                </td>
+
+                                <td>
+                                    <span class="text-muted small fw-bold">{{ $vehicle->type }}</span>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ $vehicle->total_seats }} ghế
+                                    </span>
+                                </td>
+
+
+                                <td>
+                                    @if ($vehicle->phone_vehicles)
+                                        <i class='bx bxs-phone-call text-success me-1'></i>
+                                        {{ $vehicle->phone_vehicles }}
                                     @else
-                                        <div
-                                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ff8c00; font-weight: bold; font-size: 18px;">
-                                            {{ strtoupper(substr($vehicle->license_plate ?? 'XE', 0, 2)) }}
-                                        </div>
+                                        <span class="text-muted">N/A</span>
                                     @endif
-                                </div>
-                                <div>
-                                    <div style="font-weight: 600; color: #333;">{{ $vehicle->license_plate }}</div>
-                                    <div style="color: #888; font-size: 12px;">ID: #{{ $vehicle->id }}</div>
-                                </div>
-                            </div>
-                        </td>
+                                </td>
 
-                        <td style="padding: 16px; color: #333;">
-                            {{ $vehicle->type ?? 'Chưa xác định' }}
-                            <div style="color: #888; font-size: 12px;">{{ $vehicle->total_seats ?? '?' }} chỗ</div>
-                        </td>
+                                <td>
+                                    @if ($vehicle->status == 'active')
+                                        <span class="status-active">
+                                            <i class='bx bxs-circle fs-6 me-1'></i>Sẵn sàng
+                                        </span>
+                                    @else
+                                        <span class="status-maintenance">
+                                            <i class='bx bxs-wrench fs-6 me-1'></i>Bảo trì
+                                        </span>
+                                    @endif
+                                </td>
 
-                        <td style="padding: 16px;">
-                            @if ($vehicle->status == 'active')
-                                <span
-                                    style="background: #f6ffed; color: #52c41a; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
-                                    Hoạt động
-                                </span>
-                            @else
-                                <span
-                                    style="background: #fff7e6; color: #fa8c16; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;">
-                                    Bảo dưỡng
-                                </span>
-                            @endif
-                        </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
+                                            class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
+                                            <i class='bx bx-show text-info'></i>
+                                        </a>
 
-                        <td style="padding: 16px; color: #666;">
-                            {{ $vehicle->created_at ? $vehicle->created_at->format('d/m/Y') : 'N/A' }}
-                        </td>
+                                        <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
+                                            class="btn btn-sm btn-light border" title="Sửa">
+                                            <i class='bx bx-edit text-primary'></i>
+                                        </a>
 
-                        <td style="padding: 16px; text-align: center;">
-                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                style="display: inline-block; background-color: #fff7e6; color: #fa8c16; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 4px;">
-                                Sửa
-                            </a>
+                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
+                                            onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-light border text-danger" title="Xóa">
+                                                <i class='bx bx-trash'></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
 
-                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
-                                style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    style="background-color: #fee; color: #c33; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;"
-                                    onclick="return confirm('Bạn chắc chắn muốn xóa xe {{ addslashes($vehicle->license_plate) }}?')">
-                                    Xóa
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" style="padding: 40px 16px; text-align: center; color: #999; font-size: 15px;">
-                            Chưa có phương tiện nào trong hệ thống
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    <div style="margin-top: 24px; display: flex; justify-content: center;">
-        {{ $vehicles->appends(request()->query())->links() }}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    Chưa có xe nào trong danh sách.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4">
+                {{ $vehicles->links('pagination::bootstrap-5') }}
+            </div>
+        </div>
     </div>
 @endsection

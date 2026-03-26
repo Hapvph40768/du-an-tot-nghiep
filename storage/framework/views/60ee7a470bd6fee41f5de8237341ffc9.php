@@ -12,29 +12,38 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
 
+            
             <li class="menu-item">
-                
                 <a href="<?php echo e(route('admin.dashboard.index')); ?>"
-                    class="menu-link <?php echo e(request()->routeIs('admin.dashboard.index') ? 'active' : ''); ?>">
+                    class="menu-link <?php echo e(request()->routeIs('admin.dashboard.*') ? 'active' : ''); ?>">
                     <i class='bx bx-grid-alt'></i>
                     <span>Tổng quan</span>
                 </a>
             </li>
 
+            
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.trips.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.trips.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-git-repo-forked'></i>
+                    <span>Chuyến đi</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.bookings.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.bookings.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-ticket'></i>
+                    <span>Đặt vé</span>
+                </a>
+            </li>
+
+            
             <li class="menu-item">
                 <a href="<?php echo e(route('admin.vehicles.index')); ?>"
                     class="menu-link <?php echo e(request()->routeIs('admin.vehicles.*') ? 'active' : ''); ?>">
                     <i class="fa-solid fa-bus"></i>
                     <span>Phương tiện</span>
-                </a>
-            </li>
-
-            <li class="menu-item">
-                
-                <a href="<?php echo e(route('admin.routes.index')); ?>"
-                    class="menu-link <?php echo e(request()->routeIs('admin.routes.*') ? 'active' : ''); ?>">
-                    <i class='bx bx-map-alt'></i>
-                    <span>Tuyến đường</span>
                 </a>
             </li>
 
@@ -46,21 +55,20 @@
                 </a>
             </li>
 
+            
             <li class="menu-item">
-                
-                <a href="<?php echo e(route('admin.trips.index')); ?>"
-                    class="menu-link <?php echo e(request()->routeIs('admin.trips.*') ? 'active' : ''); ?>">
-                    <i class='bx bx-git-repo-forked'></i>
-                    <span>Chuyến đi</span>
+                <a href="<?php echo e(route('admin.routes.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.routes.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-map-alt'></i>
+                    <span>Tuyến đường</span>
                 </a>
             </li>
 
             <li class="menu-item">
-                
-                <a href="<?php echo e(route('admin.bookings.index')); ?>"
-                    class="menu-link <?php echo e(request()->routeIs('admin.bookings.*') ? 'active' : ''); ?>">
-                    <i class="fa-solid fa-ticket"></i>
-                    <span>Đặt vé</span>
+                <a href="<?php echo e(route('admin.pickup-points.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.pickup-points.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-map-pin'></i>
+                    <span>Danh mục Điểm đón</span>
                 </a>
             </li>
 
@@ -72,9 +80,10 @@
                 </a>
             </li>
 
+            
             <li class="menu-item">
-                <a href="<?php echo e(route('admin.support-tickets.index')); ?>"
-                    class="menu-link <?php echo e(request()->routeIs('admin.support-tickets.*') ? 'active' : ''); ?>">
+                <a href="<?php echo e(route('admin.support_tickets.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.support_tickets.*') ? 'active' : ''); ?>">
                     <i class='bx bx-support'></i>
                     <span>Hỗ trợ khách hàng</span>
                 </a>
@@ -99,10 +108,10 @@
             <h4><?php echo e(Auth::user()->name); ?></h4>
             <span><?php echo e(ucfirst(Auth::user()->role)); ?></span>
         </div>
-        
         <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin-left: auto;">
             <?php echo csrf_field(); ?>
-            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">
+            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;"
+                title="Đăng xuất">
                 <i class='bx bx-log-out fs-4'></i>
             </button>
         </form>

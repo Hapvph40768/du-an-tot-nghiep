@@ -3,21 +3,21 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckCustomerRole
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
-        // Kiểm tra xem đã đăng nhập chưa và có phải role 'customer' không
-        if (Auth::check() && Auth::user()->role === 'customer') {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để tiếp tục.');
+        }
+
+        // Cho phép cả admin và staff thực hiện chức năng booking để test
+        if (in_array(Auth::user()->role, ['customer', 'admin', 'staff'])) {
             return $next($request);
         }
 
-        // Nếu là admin/staff hoặc chưa đăng nhập, đẩy về trang login kèm thông báo
-        Auth::logout();
-        return redirect()->route('login')->with('error', 'Bạn không có quyền truy cập khu vực khách hàng.');
+        return redirect('/')->with('error', 'Tài khoản của bạn không có quyền truy cập.');
     }
 }

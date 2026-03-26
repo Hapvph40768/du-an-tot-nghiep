@@ -1,120 +1,156 @@
 @extends('layout.admin.AdminLayout')
 
+@section('title', 'Lên lịch Chuyến xe mới')
+
 @section('content-main')
-    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                {{-- Điều hướng nhanh --}}
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.trips.index') }}"
+                                class="text-decoration-none">Danh sách chuyến</a></li>
+                        <li class="breadcrumb-item active">Tạo chuyến mới</li>
+                    </ol>
+                </nav>
 
-        <form action="{{ route('admin.trips.store') }}" method="POST">
-            @csrf
+                <div class="card shadow-sm border-0 rounded-4 p-4">
+                    <h3 class="fw-bold mb-4 text-dark"><i class='bx bx-calendar-plus text-primary'></i> Lên lịch Chuyến xe
+                        mới</h3>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <form action="{{ route('admin.trips.store') }}" method="POST">
+                        @csrf
+                        <div class="row g-4">
+                            {{-- Chọn Tuyến đường --}}
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold small text-muted">Chọn Tuyến đường <span
+                                        class="text-danger">*</span></label>
+                                <select name="route_id"
+                                    class="form-select rounded-3 shadow-sm @error('route_id') is-invalid @enderror">
+                                    <option value="">-- Chọn tuyến đường vận hành --</option>
+                                    @foreach ($routes as $route)
+                                        <option value="{{ $route->id }}"
+                                            {{ old('route_id') == $route->id ? 'selected' : '' }}>
+                                            {{ $route->departureLocation->name }} → {{ $route->destinationLocation->name }}
+                                            ({{ $route->distance_km }}km)
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('route_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                <div style="grid-column: span 2;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
-                        Tuyến đường <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <select name="route_id"
-                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px;" required>
-                        <option value="">-- Chọn tuyến đường --</option>
-                        @foreach ($routes as $route)
-                            <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
-                                {{ $route->startLocation->name }} → {{ $route->endLocation->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('route_id')
-                        <div style="color: #c33; font-size: 12px;">{{ $message }}</div>
-                    @enderror
+                            {{-- Ngày khởi hành --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Ngày khởi hành (Không bắt buộc)</label>
+                                <input type="date" name="trip_date" value="{{ old('trip_date') }}"
+                                    class="form-control rounded-3 @error('trip_date') is-invalid @enderror">
+                                @error('trip_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Giờ xuất bến --}}
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Giờ xuất bến</label>
+                                <input type="time" name="departure_time" value="{{ old('departure_time') }}"
+                                    class="form-control rounded-3 @error('departure_time') is-invalid @enderror">
+                                @error('departure_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Giờ đến dự kiến --}}
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-muted">Giờ đến dự kiến</label>
+                                <input type="time" name="arrival_time" value="{{ old('arrival_time') }}"
+                                    class="form-control rounded-3 @error('arrival_time') is-invalid @enderror">
+                                @error('arrival_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Chọn Xe --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Chọn Xe vận hành <span
+                                        class="text-danger">*</span></label>
+                                <select name="vehicle_id"
+                                    class="form-select rounded-3 @error('vehicle_id') is-invalid @enderror">
+                                    <option value="">-- Chọn xe --</option>
+                                    @foreach ($vehicles as $vehicle)
+                                        <option value="{{ $vehicle->id }}"
+                                            {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                            {{ $vehicle->license_plate }} - {{ $vehicle->type }}
+                                            ({{ $vehicle->total_seats }} ghế)
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('vehicle_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Tài xế --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Tài xế phụ trách <span
+                                        class="text-danger">*</span></label>
+                                <select name="driver_id"
+                                    class="form-select rounded-3 @error('driver_id') is-invalid @enderror">
+                                    <option value="">-- Chọn tài xế --</option>
+                                    @foreach ($drivers as $driver)
+                                        <option value="{{ $driver->id }}"
+                                            {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
+                                            {{ $driver->name }} (SĐT: {{ $driver->phone }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('driver_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Giá vé --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Giá vé niêm yết (VNĐ) <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="number" name="price" value="{{ old('price') }}"
+                                        class="form-control rounded-3 @error('price') is-invalid @enderror"
+                                        placeholder="Ví dụ: 250000">
+                                    <span class="input-group-text">đ</span>
+                                    @error('price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Trạng thái --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Trạng thái ban đầu</label>
+                                <select name="status" class="form-select rounded-3">
+                                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Mở bán
+                                        (Active)</option>
+                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Tạm
+                                        dừng/Hủy</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-3 border-top d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold"
+                                style="background: #ff6b00; border:none; border-radius: 10px;">
+                                <i class='bx bx-check-double'></i> Xác nhận tạo chuyến
+                            </button>
+                            <a href="{{ route('admin.trips.index') }}" class="btn btn-light px-4 border"
+                                style="border-radius: 10px;">
+                                Hủy bỏ
+                            </a>
+                        </div>
+                    </form>
                 </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Xe <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <select name="vehicle_id"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
-                        <option value="">-- Chọn xe --</option>
-                        @foreach ($vehicles as $vehicle)
-                            <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                                {{ $vehicle->type }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Tài xế <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <select name="driver_id" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
-                        required>
-                        <option value="">-- Chọn tài xế --</option>
-                        @foreach ($drivers as $driver)
-                            <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
-                                {{ $driver->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Ngày đi <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <input type="date" name="trip_date" value="{{ old('trip_date') }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Giờ đi <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <input type="time" name="departure_time" value="{{ old('departure_time') }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Giờ đến <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <input type="time" name="arrival_time" value="{{ old('arrival_time') }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Giá vé (VNĐ) <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <input type="number" name="price" value="{{ old('price') }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" min="0"
-                        required>
-                </div>
-
-                <div style="grid-column: span 2;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                        Trạng thái <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <select name="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
-                        required>
-                        <option value="active">Hoạt động</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="cancelled">Đã hủy</option>
-                    </select>
-                </div>
-
             </div>
-
-            <div style="display: flex; gap: 12px;">
-                <button type="submit"
-                    style="background-color: #ff5b24; color: white; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600;">
-                    Thêm chuyến đi
-                </button>
-
-                <a href="{{ route('admin.trips.index') }}"
-                    style="display: inline-flex; align-items: center; background-color: #f0f2f5; color: #333; padding: 10px 24px; border-radius: 8px; font-weight: 600; text-decoration: none;">
-                    Hủy
-                </a>
-            </div>
-
-        </form>
+        </div>
     </div>
 @endsection

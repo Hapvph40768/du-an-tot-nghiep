@@ -1,115 +1,77 @@
 @extends('layout.admin.AdminLayout')
 
 @section('content-main')
-    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
-
-        <form action="{{ route('admin.trips.update', $trip->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-
-                <div style="grid-column: span 2;">
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Tuyến đường <span style="color: #ff5b24;">*</span>
-                    </label>
-                    <select name="route_id" style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                        @foreach ($routes as $route)
-                            <option value="{{ $route->id }}"
-                                {{ old('route_id', $trip->route_id) == $route->id ? 'selected' : '' }}>
-                                {{ $route->startLocation->name }} → {{ $route->endLocation->name }}
-                            </option>
-                        @endforeach
-                    </select>
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm border-0 rounded-4 p-4">
+                    <h3 class="fw-bold mb-4 text-primary">Cập nhật lịch trình: #{{ $trip->id }}</h3>
+                    <form action="{{ route('admin.trips.update', $trip->id) }}" method="POST">
+                        @csrf @method('PUT')
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Tuyến đường</label>
+                                <select name="route_id" class="form-select rounded-3">
+                                    @foreach ($routes as $route)
+                                        <option value="{{ $route->id }}"
+                                            {{ $trip->route_id == $route->id ? 'selected' : '' }}>
+                                            {{ $route->departureLocation->name }} → {{ $route->destinationLocation->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Ngày khởi hành</label>
+                                <input type="date" name="trip_date" class="form-control rounded-3"
+                                    value="{{ $trip->trip_date }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Giờ xuất bến</label>
+                                <input type="time" name="departure_time" class="form-control rounded-3"
+                                    value="{{ $trip->departure_time }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Giờ đến</label>
+                                <input type="time" name="arrival_time" class="form-control rounded-3"
+                                    value="{{ $trip->arrival_time }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Xe phụ trách</label>
+                                <select name="vehicle_id" class="form-select rounded-3">
+                                    @foreach ($vehicles as $vehicle)
+                                        <option value="{{ $vehicle->id }}"
+                                            {{ $trip->vehicle_id == $vehicle->id ? 'selected' : '' }}>
+                                            {{ $vehicle->license_plate }} ({{ $vehicle->type }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Trạng thái chuyến đi</label>
+                                <select name="status" class="form-select rounded-3 fw-bold text-primary">
+                                    <option value="active" {{ $trip->status == 'active' ? 'selected' : '' }}>Đang mở bán
+                                    </option>
+                                    <option value="completed" {{ $trip->status == 'completed' ? 'selected' : '' }}>Đã hoàn
+                                        thành</option>
+                                    <option value="cancelled" {{ $trip->status == 'cancelled' ? 'selected' : '' }}>Hủy
+                                        chuyến</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Điều chỉnh Giá vé</label>
+                                <input type="number" name="price" class="form-control rounded-3"
+                                    value="{{ $trip->price }}">
+                            </div>
+                        </div>
+                        <div class="mt-5 pt-3 border-top">
+                            <button type="submit" class="btn btn-success px-5 py-2 fw-bold"
+                                style="border-radius: 10px;">Lưu cập nhật</button>
+                            <a href="{{ route('admin.trips.index') }}" class="btn btn-light px-4 border ms-2"
+                                style="border-radius: 10px;">Quay lại</a>
+                        </div>
+                    </form>
                 </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Xe *
-                    </label>
-                    <select name="vehicle_id" style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                        @foreach ($vehicles as $vehicle)
-                            <option value="{{ $vehicle->id }}"
-                                {{ old('vehicle_id', $trip->vehicle_id) == $vehicle->id ? 'selected' : '' }}>
-                                {{ $vehicle->type }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Tài xế *
-                    </label>
-                    <select name="driver_id" style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                        @foreach ($drivers as $driver)
-                            <option value="{{ $driver->id }}"
-                                {{ old('driver_id', $trip->driver_id) == $driver->id ? 'selected' : '' }}>
-                                {{ $driver->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Ngày đi *
-                    </label>
-                    <input type="date" name="trip_date" value="{{ old('trip_date', $trip->trip_date) }}"
-                        style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Giờ đi *
-                    </label>
-                    <input type="time" name="departure_time"
-                        value="{{ old('departure_time', \Carbon\Carbon::parse($trip->departure_time)->format('H:i')) }}"
-                        style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Giờ đến *
-                    </label>
-                    <input type="time" name="arrival_time"
-                        value="{{ old('arrival_time', \Carbon\Carbon::parse($trip->arrival_time)->format('H:i')) }}"
-                        style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                </div>
-
-                <div>
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Giá vé *
-                    </label>
-                    <input type="number" name="price" value="{{ old('price', $trip->price) }}"
-                        style="width: 100%; padding: 10px; border-radius: 8px;" min="0" required>
-                </div>
-
-                <div style="grid-column: span 2;">
-                    <label style="margin-bottom: 8px; font-weight: 600;">
-                        Trạng thái *
-                    </label>
-                    <select name="status" style="width: 100%; padding: 10px; border-radius: 8px;" required>
-                        <option value="active" {{ $trip->status == 'active' ? 'selected' : '' }}>Hoạt động</option>
-                        <option value="completed" {{ $trip->status == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
-                        <option value="cancelled" {{ $trip->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
-                    </select>
-                </div>
-
             </div>
-
-            <div style="display: flex; gap: 12px;">
-                <button type="submit"
-                    style="background-color: #ff5b24; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600;">
-                    Cập nhật
-                </button>
-
-                <a href="{{ route('admin.trips.index') }}"
-                    style="background-color: #f0f2f5; padding: 10px 24px; border-radius: 8px; text-decoration: none;">
-                    Hủy
-                </a>
-            </div>
-
-        </form>
+        </div>
     </div>
 @endsection
