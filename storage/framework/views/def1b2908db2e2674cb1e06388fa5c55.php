@@ -55,13 +55,28 @@
                         <?php echo e(strtoupper(substr(Auth::user()->name ?? 'D', 0, 1))); ?>
 
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-gray-800 truncate"><?php echo e(Auth::user()->name ?? 'Tài xế'); ?></p>
-                        <p class="text-sm text-gray-500 flex items-center gap-1">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            Sẵn sàng
-                        </p>
-                    </div>
+                    <a href="<?php echo e(route('driver.profile')); ?>">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-gray-800 truncate"><?php echo e(Auth::user()->name ?? 'Tài xế'); ?></p>
+                            <p class="text-sm flex items-center gap-2 font-medium text-gray-600">
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full animate-pulse 
+                                    <?php echo e(in_array(Auth::user()->driver?->status, ['active'])
+                                        ? 'bg-emerald-500'
+                                        : (Auth::user()->driver?->status === 'inactive'
+                                            ? 'bg-amber-500'
+                                            : 'bg-gray-400')); ?>">
+                                </span>
+                                <?php echo e(match (Auth::user()->driver?->status) {
+                                    'available', 'ready' => 'Online',
+                                    'inactive' => 'Offline',
+                                    default => 'Online',
+                                }); ?>
+
+                            </p>
+                        </div>
+                    </a>
+
                 </div>
             </div>
 
@@ -137,26 +152,6 @@
                     </button>
                     <h1 class="text-xl font-semibold text-gray-800"><?php echo $__env->yieldContent('page-title', 'Driver Portal'); ?></h1>
                 </div>
-
-                <div class="flex items-center gap-6">
-                    <div
-                        class="hidden md:flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-2xl text-sm font-medium">
-                        <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
-                        Xe đang hoạt động
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="text-right hidden md:block">
-                            <p class="font-medium text-gray-700"><?php echo e(Auth::user()->name); ?></p>
-                            <p class="text-xs text-gray-500">Tài xế chính</p>
-                        </div>
-                        <div
-                            class="w-9 h-9 bg-amber-500 text-white rounded-2xl flex items-center justify-center font-bold">
-                            <?php echo e(strtoupper(substr(Auth::user()->name ?? 'D', 0, 1))); ?>
-
-                        </div>
-                    </div>
-                </div>
             </header>
 
             <!-- Content Area -->
@@ -187,23 +182,20 @@
             toast.classList.remove('hidden');
             toast.style.transform = 'translateY(0)';
 
-            // Tự động ẩn sau 5 giây
             setTimeout(() => {
                 toast.style.transform = 'translateY(100px)';
                 setTimeout(() => {
                     toast.classList.add('hidden');
                 }, 400);
-            }, 5000);
+            }, 3000);
         }
 
-        // Hiển thị toast khi trang load (nếu có session success)
         document.addEventListener('DOMContentLoaded', function() {
             <?php if(session('success')): ?>
                 showToast("<?php echo e(session('success')); ?>");
             <?php endif; ?>
         });
 
-        // Hỗ trợ mobile sidebar (nếu cần)
         function toggleSidebar() {
             alert("Chức năng sidebar trên mobile đang được phát triển.");
         }

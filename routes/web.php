@@ -167,6 +167,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 */
 Route::prefix('driver')->name('driver.')->middleware(['auth',CheckDriverRole::class])->group(function(){
     Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
     
 });
 
