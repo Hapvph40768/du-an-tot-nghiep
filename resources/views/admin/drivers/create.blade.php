@@ -36,6 +36,18 @@
 
                 <div>
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Email liên hệ <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="email"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('email') }}" required>
+                    @error('email')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
                         Số bằng lái <span style="color: #ff5b24;">*</span>
                     </label>
                     <input type="text" name="license_number"

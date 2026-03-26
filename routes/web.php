@@ -37,6 +37,8 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Driver\HomeController;
+use App\Http\Middleware\CheckDriverRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -157,3 +159,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
         Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| 5. DRIVERS ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::prefix('driver')->name('driver.')->middleware(['auth',CheckDriverRole::class])->group(function(){
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+    
+});
+
