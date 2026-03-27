@@ -83,7 +83,7 @@
                                 <div>
                                     <p class="text-xs text-gray-500">Trạng thái</p>
                                     <p class="font-medium capitalize">
-                                        <?php echo e(Auth::user()->driver?->status ?? 'available'); ?>
+                                        <?php echo e(Auth::user()->driver?->status); ?>
 
                                     </p>
                                 </div>

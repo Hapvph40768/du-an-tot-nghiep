@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Driver\DriverTripController;
 use App\Http\Controllers\Driver\HomeController;
 use App\Http\Middleware\CheckDriverRole;
 
@@ -165,9 +166,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 | 5. DRIVERS ROUTES
 |--------------------------------------------------------------------------
 */
-Route::prefix('driver')->name('driver.')->middleware(['auth',CheckDriverRole::class])->group(function(){
+Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
-    
-});
 
+    Route::get('/trips', [DriverTripController::class, 'index'])->name('trips.index');
+    Route::get('/trips/{trip}', [DriverTripController::class, 'show'])->name('trips.show');
+
+    Route::get('/trips/{trip}/start', [DriverTripController::class, 'start'])->name('trips.start');
+});

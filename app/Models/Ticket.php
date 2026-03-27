@@ -21,10 +21,6 @@ class Ticket extends Model
         });
     }
 
-    /**
-     * Sinh mã vé ngẫu nhiên duy nhất
-     * Format: VE-{YYYY}-{MM}-{XXXXX} (VD: VE-2026-02-A1B2C)
-     */
     public static function generateUniqueTicketCode()
     {
         do {

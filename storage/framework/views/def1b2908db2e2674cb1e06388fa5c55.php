@@ -12,7 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
-
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .gradient-hero-driver {
             background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
@@ -83,28 +86,13 @@
             <!-- Menu -->
             <nav class="flex-1 px-3 py-6 overflow-y-auto">
                 <ul class="space-y-1">
+                    
                     <li>
-                        <a href="<?php echo e(route('driver.home')); ?>"
-                            class="<?php echo e(request()->routeIs('driver.home') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50'); ?> 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
-                            <i class='bx bx-home text-2xl'></i>
-                            <span>Trang chủ</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
+                        <a href="<?php echo e(route('driver.trips.index')); ?>"
                             class="<?php echo e(request()->routeIs('driver.trips.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50'); ?> 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
+                                    flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
                             <i class='bx bx-bus text-2xl'></i>
                             <span>Chuyến xe của tôi</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="<?php echo e(request()->routeIs('driver.passengers.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50'); ?> 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
-                            <i class='bx bx-user-check text-2xl'></i>
-                            <span>Hành khách</span>
                         </a>
                     </li>
                     <li>
