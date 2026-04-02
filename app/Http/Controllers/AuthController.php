@@ -5,68 +5,83 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    //hiển thì form dang nhập
-    public function loginForm()
-    {
-        return view('auth.login');
-    }
-    //hiển thị form đăng ký
-    public function registerForm()
+    public function showRegister()
     {
         return view('auth.register');
     }
-    //xử lý đăng ky
+
     public function register(Request $request)
     {
-        //validate dữ liệu
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|min:6',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
+            'phone'    => 'required|unique:users',
         ]);
+
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-            'role' => 'customer',
-            'status' => 'active',
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+            'role'     => 'customer',
         ]);
-        return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
+
+        return redirect()->route('login')
+            ->with('success', 'Đăng ký thành công, mời đăng nhập.');
     }
+
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
-        //validate dữ liệu
-        $request->validate([
-            'email' => 'required|email',
+        $credentials = $request->validate([
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-            'status' => 'active',
-        ])) {
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
             $user = Auth::user();
 
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
+            if ($user->role === 'admin' || $user->role === 'staff') {
+                return redirect()->route('admin.dashboard.index')
+                    ->with('success', 'Chào mừng quay lại Admin!');
             }
 
-            if ($user->role === 'staff') {
-                return redirect('/staff');
+            if ($user->role === 'assistant') {
+                return redirect()->route('assistant.trips.index')
+                    ->with('success', 'Chào mừng Phụ xe! Vui lòng chọn chuyến.');
             }
 
-            return redirect()->route('customer.home');
+            if ($user->role === 'driver') {
+                return redirect()->route('driver.home')
+                    ->with('success', 'Chúc bạn có những chuyến đi thuận lợi (Tài xế)!');
+            }
+
+            return redirect()->route('customer.home')
+                ->with('success', 'Đăng nhập thành công!');
         }
+
+        return back()
+            ->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
+            ->onlyInput('email');
     }
-    //xử lý đăng xuất
-    public function logout()
+
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Bạn đã đăng xuất thành công.');
     }
 }
