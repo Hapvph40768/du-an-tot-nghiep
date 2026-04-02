@@ -50,8 +50,10 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Chuyển hướng dựa trên Role
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
+            if (Auth::user()->role === 'admin') {
                 return redirect()->intended('/admin');
+            } elseif (Auth::user()->role === 'staff') {
+                return redirect()->intended('/staff');
             }
             return redirect()->intended('/');
         }

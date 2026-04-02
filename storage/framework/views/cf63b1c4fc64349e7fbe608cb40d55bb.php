@@ -52,13 +52,17 @@
                                 <a href="<?php echo e(route('customer.bookings.index')); ?>" class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Vé của tôi
                                 </a>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(Auth::user()->role === 'staff'): ?>
+                                    <a href="<?php echo e(route('staff.dashboard')); ?>" class="text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all">
+                                        Trang nhân viên
+                                    </a>
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 <a href="<?php echo e(route('customer.profile.edit')); ?>" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
                                     Chào, <?php echo e(Auth::user()->name); ?>
 
                                 </a>
 
-                                <form action="<?php echo e(route('logout')); ?>" method="POST"
-                                    onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
+                                <form action="<?php echo e(route('logout')); ?>" method="POST">
                                     <?php echo csrf_field(); ?>
                                     <button type="submit"
                                         class="flex items-center gap-2 text-sm font-bold bg-white/10 hover:bg-red-500/20 text-white px-4 py-2 rounded-lg border border-white/20 transition-all">

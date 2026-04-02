@@ -52,6 +52,11 @@
                                 <a href="{{ route('customer.bookings.index') }}" class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Vé của tôi
                                 </a>
+                                @if(Auth::user()->role === 'staff')
+                                    <a href="{{ route('staff.dashboard') }}" class="text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all">
+                                        Trang nhân viên
+                                    </a>
+                                @endif
                                 <a href="{{ route('customer.profile.edit') }}" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
                                     Chào, {{ Auth::user()->name }}
                                 </a>

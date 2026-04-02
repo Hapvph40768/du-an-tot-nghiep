@@ -49,6 +49,8 @@ class RouteController extends Controller
     public function update(Request $request, Route $route)
     {
         $validated = $request->validate([
+            'start_location_id' => 'required|exists:locations,id',
+            'end_location_id' => 'required|exists:locations,id|different:start_location_id',
             'distance_km' => 'nullable|integer|min:1',
             'estimated_time' => 'nullable|integer|min:1',
         ]);
