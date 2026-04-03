@@ -37,6 +37,9 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Driver\DriverTripController;
+use App\Http\Controllers\Driver\HomeController;
+use App\Http\Middleware\CheckDriverRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,7 +116,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::resource('drivers', DriverController::class);
     Route::resource('vehicles', VehicleController::class);
     Route::resource('seats', SeatController::class);
-    
+
     // Quản lý tổng kho các bến xe/điểm dừng
     Route::resource('pickup-points', PickupPointController::class);
 
@@ -133,7 +136,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     // --- ĐẶT VÉ & KHÁCH HÀNG ---
     Route::resource('bookings', AdminBookingController::class);
     Route::resource('tickets', TicketController::class);
-    
+
     // Khóa ghế
     Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
     Route::resource('seat-locks', SeatLockController::class);
@@ -148,7 +151,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // --- CSKH & SUPPORT ---
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
-    
+
     // Quản lý Support Ticket
     Route::prefix('support-tickets')->name('support_tickets.')->group(function () {
         Route::get('/', [AdminSupportController::class, 'index'])->name('index');
@@ -156,4 +159,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
         Route::post('/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('reply');
         Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
     });
+});
+
+/*
+|--------------------------------------------------------------------------
+| 5. DRIVERS ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class])->group(function () {
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+
+    Route::get('/trips', [DriverTripController::class, 'index'])->name('trips.index');
+    Route::get('/trips/{trip}', [DriverTripController::class, 'show'])->name('trips.show');
+
+    Route::get('/trips/{trip}/start', [DriverTripController::class, 'start'])->name('trips.start');
 });

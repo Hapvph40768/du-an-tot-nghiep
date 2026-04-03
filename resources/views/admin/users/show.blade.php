@@ -1,105 +1,143 @@
 @extends('layout.admin.AdminLayout')
 
 @section('content-main')
-    <div class="container-fluid py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div style="padding: 24px;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
             <div>
-                <h3 class="fw-bold text-dark mb-1">
-                    <i class="bx bx-user-circle me-2 text-primary"></i>
-                    Chi tiết Người dùng 
-                </h3>
-                <small class="text-muted">Quản lý thông tin tài khoản</small>
+                <small style="color:#888;">Quản lý thông tin tài khoản</small>
             </div>
 
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
-                    <i class="bx bx-arrow-back me-1"></i> Quay lại danh sách
-                </a>
-            </div>
+            <a href="{{ route('admin.users.index') }}"
+                style="padding:8px 16px; border-radius:8px; background:#f5f5f5; text-decoration:none; color:#333; font-weight:500;">
+                ← Quay lại
+            </a>
         </div>
 
-        <div class="card shadow border-0 rounded-4 overflow-hidden">
-            <div class="card-body p-4 p-md-5">
-                <div class="row g-5 align-items-center">
-                    <div class="col-md-4 text-center text-md-start">
-                        <div class="position-relative d-inline-block mb-4">
-                            <img src="{{ $user->avatar }}" 
-                                 alt="{{ $user->name }}" 
-                                 class="rounded-circle img-fluid shadow-lg border border-4 border-white"
-                                 style="width: 180px; height: 180px; object-fit: cover;">
-                            <span class="position-absolute bottom-0 end-0 translate-middle badge rounded-pill 
-                                bg-{{ $user->status === 'active' ? 'success' : 'danger' }} border border-white border-3 p-2">
-                                <span class="visually-hidden">Trạng thái</span>
-                            </span>
-                        </div>
+        <div style="background:white; border-radius:16px; padding:32px; box-shadow:0 4px 20px rgba(0,0,0,0.05);">
 
-                        <h4 class="fw-bold mb-1">{{ $user->name }}</h4>
+            <div style="display:grid; grid-template-columns:300px 1fr; gap:32px;">
 
-                        <div class="d-flex justify-content-center justify-content-md-start gap-3 mb-4">
-                            <span class="badge bg-primary-subtle text-primary px-4 py-2 fs-6">
-                                {{ ucfirst($user->role) }}
-                            </span>
-                            <span class="badge bg-{{ $user->status === 'active' ? 'success-subtle text-success' : 'danger-subtle text-danger' }} px-4 py-2 fs-6">
-                                {{ ucfirst($user->status) === 'Active' ? 'Hoạt động' : 'Bị chặn' }}
-                            </span>
-                        </div>
+                <div style="text-align:center; border-right:1px solid #f0f2f5; padding-right:24px;">
+
+                    <div style="position:relative; display:inline-block;">
+                        <img src="{{ $user->avatar ?? 'https://via.placeholder.com/150' }}"
+                            style="width:160px; height:160px; border-radius:50%; object-fit:cover; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+
+                        <span
+                            style="
+                        position:absolute;
+                        bottom:10px;
+                        right:10px;
+                        width:16px;
+                        height:16px;
+                        border-radius:50%;
+                        border:3px solid white;
+                        background: {{ $user->status === 'active' ? '#52c41a' : '#ff4d4f' }};
+                    "></span>
                     </div>
 
-                    <div class="col-md-8">
-                        <div class="row g-4">
-                            <div class="col-12 col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-envelope fs-4 text-primary me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Email</small>
-                                        <strong>{{ $user->email ?? 'Chưa cập nhật' }}</strong>
-                                    </div>
-                                </div>
-                            </div>
+                    <h4 style="margin-top:16px; font-weight:700;">{{ $user->name }}</h4>
 
-                            <div class="col-12 col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-phone fs-4 text-primary me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Số điện thoại</small>
-                                        <strong>{{ $user->phone ?? 'Chưa cập nhật' }}</strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-calendar fs-4 text-primary me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Ngày tạo tài khoản</small>
-                                        <strong>{{ $user->created_at->format('d/m/Y H:i') }}</strong>
-                                        <small class="text-muted d-block mt-1">
-                                            ({{ $user->created_at->diffForHumans() }})
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-sm-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-time-five fs-4 text-primary me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Cập nhật lần cuối</small>
-                                        <strong>{{ $user->updated_at->format('d/m/Y H:i') }}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="alert alert-info bg-light border-0 mb-0" role="alert">
-                            <i class="bx bx-info-circle me-2"></i>
-                            Đây là thông tin cơ bản của người dùng.
-                        </div>
+                    <div style="margin-top:8px;">
+                        <span
+                            style="
+                        padding:6px 14px;
+                        border-radius:20px;
+                        font-size:13px;
+                        font-weight:600;
+                        color:white;
+                        background:
+                        {{ $user->role === 'admin' ? '#ff4d4f' : ($user->role === 'staff' ? '#faad14' : '#1890ff') }};
+                    ">
+                            {{ ucfirst($user->role) }}
+                        </span>
                     </div>
+
+                    <div style="margin-top:10px;">
+                        <span
+                            style="
+                        padding:6px 14px;
+                        border-radius:20px;
+                        font-size:13px;
+                        font-weight:600;
+                        background:
+                            {{ $user->status === 'active' ? '#f6ffed' : '#fff1f0' }};
+                        color:
+                            {{ $user->status === 'active' ? '#389e0d' : '#cf1322' }};
+                    ">
+                            {{ $user->status === 'active' ? 'Hoạt động' : 'Bị chặn' }}
+                        </span>
+                    </div>
+
+                    <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" style="margin-top:20px;">
+                        @csrf
+                        @method('PATCH')
+
+                        <button type="submit"
+                            style="
+                            width:100%;
+                            padding:10px;
+                            border:none;
+                            border-radius:8px;
+                            font-weight:600;
+                            cursor:pointer;
+                            background:
+                                {{ $user->status === 'active' ? '#fff1f0' : '#f6ffed' }};
+                            color:
+                                {{ $user->status === 'active' ? '#cf1322' : '#389e0d' }};
+                        ">
+                            {{ $user->status === 'active' ? '🚫 Chặn tài khoản' : '✅ Mở khóa' }}
+                        </button>
+                    </form>
+
                 </div>
+
+                <div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div style="padding:16px; border-radius:12px; background:#fafafa;">
+                            <small style="color:#888;">Email</small>
+                            <div style="font-weight:600; margin-top:4px;">
+                                {{ $user->email ?? 'Chưa cập nhật' }}
+                            </div>
+                        </div>
+
+                        <div style="padding:16px; border-radius:12px; background:#fafafa;">
+                            <small style="color:#888;">Số điện thoại</small>
+                            <div style="font-weight:600; margin-top:4px;">
+                                {{ $user->phone ?? 'Chưa cập nhật' }}
+                            </div>
+                        </div>
+
+                        <div style="padding:16px; border-radius:12px; background:#fafafa;">
+                            <small style="color:#888;">Ngày tạo</small>
+                            <div style="font-weight:600; margin-top:4px;">
+                                {{ $user->created_at->format('d/m/Y H:i') }}
+                            </div>
+                            <small style="color:#aaa;">
+                                {{ $user->created_at->diffForHumans() }}
+                            </small>
+                        </div>
+
+                        <div style="padding:16px; border-radius:12px; background:#fafafa;">
+                            <small style="color:#888;">Cập nhật lần cuối</small>
+                            <div style="font-weight:600; margin-top:4px;">
+                                {{ $user->updated_at->format('d/m/Y H:i') }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="margin-top:24px; padding:16px; border-radius:12px; background:#f0f5ff; color:#1d39c4;">
+                        ℹ️ Đây là thông tin cơ bản của người dùng trong hệ thống.
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+
     </div>
 @endsection

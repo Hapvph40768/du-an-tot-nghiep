@@ -110,7 +110,8 @@
         </div>
         <form action="{{ route('logout') }}" method="POST" style="margin-left: auto;">
             @csrf
-            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Đăng xuất">
+            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;"
+                title="Đăng xuất">
                 <i class='bx bx-log-out fs-4'></i>
             </button>
         </form>

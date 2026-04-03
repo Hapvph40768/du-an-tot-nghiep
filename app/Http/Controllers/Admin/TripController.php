@@ -48,7 +48,7 @@ class TripController extends Controller
             'driver',
             'pickupPoints'
         ]);
-        
+
         $bookedSeatIds = $trip->seatLocks()->pluck('seat_id')->toArray();
 
         return view('admin.trips.show', compact('trip', 'bookedSeatIds'));
