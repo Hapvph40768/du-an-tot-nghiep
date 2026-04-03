@@ -37,6 +37,13 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\ParcelController;
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\PriceRuleController;
+use App\Http\Controllers\Admin\DailyReportController;
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Driver\DriverTripController;
 use App\Http\Controllers\Driver\HomeController;
 use App\Http\Middleware\CheckDriverRole;
@@ -111,6 +118,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // --- QUẢN LÝ DANH MỤC GỐC (KHO DỮ LIỆU) ---
     Route::resource('users', UserController::class);
+    Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
     Route::resource('drivers', DriverController::class);
@@ -159,6 +167,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
         Route::post('/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('reply');
         Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
     });
+
+    // --- CÁC MODULE QUẢN TRỊ MỚI ---
+    Route::resource('promotions', PromotionController::class);
+    Route::resource('parcels', ParcelController::class);
+    Route::resource('schedules', ScheduleController::class);
+    Route::resource('price_rules', PriceRuleController::class);
+    
+    // Read-only modules
+    Route::get('daily-reports', [DailyReportController::class, 'index'])->name('daily_reports.index');
+    Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
 });
 
 /*

@@ -57,6 +57,15 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật thành công');
     }
 
+    public function toggleStatus(User $user)
+    {
+        $user->status = ($user->status === 'active') ? 'blocked' : 'active';
+        $user->save();
+
+        $msg = $user->status === 'active' ? 'Đã kích hoạt người dùng.' : 'Đã khóa người dùng.';
+        return redirect()->back()->with('success', $msg);
+    }
+
     public function destroy(User $user)
     {
         $user->delete();
