@@ -1,0 +1,6 @@
+Array
+(
+    [0] => id
+    [1] => name
+    [2] => deleted_at
+)

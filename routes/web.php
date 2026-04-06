@@ -89,6 +89,7 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
         Route::get('/', [CustomerBookingController::class, 'index'])->name('customer.bookings.index');
         Route::post('/', [CustomerBookingController::class, 'store'])->name('customer.bookings.store');
         Route::get('/{booking}', [CustomerBookingController::class, 'show'])->name('customer.bookings.show');
+        Route::post('/check-coupon', [CustomerBookingController::class, 'checkCoupon'])->name('customer.bookings.checkCoupon');
     });
 
     Route::prefix('payment')->group(function () {

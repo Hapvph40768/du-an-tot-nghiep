@@ -1,19 +1,17 @@
-@extends('layout.customer.CustomerLayout')
-
-@section('content-main')
+<?php $__env->startSection('content-main'); ?>
     <section class="py-12 bg-gray-50 border-t">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-2xl font-bold mb-6">Chi tiết chuyến xe và Chọn chỗ</h2>
 
-            @if(session('error'))
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('error')): ?>
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
+                    <span class="block sm:inline"><?php echo e(session('error')); ?></span>
                 </div>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-            <form action="{{ route('customer.bookings.store') }}" method="POST" id="booking-form">
-                @csrf
-                <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+            <form action="<?php echo e(route('customer.bookings.store')); ?>" method="POST" id="booking-form">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="trip_id" value="<?php echo e($trip->id); ?>">
                 
                 <div class="grid md:grid-cols-3 gap-6">
                     <!-- Left: Trip info & Contact -->
@@ -24,32 +22,33 @@
                             <h3 class="text-xl font-bold border-b pb-3 mb-4">Thông tin chuyến</h3>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Tuyến đường</span>
-                                <span class="text-gray-900">{{ $trip->route->departureLocation->name ?? '...' }} → {{ $trip->route->destinationLocation->name ?? '...' }}</span>
+                                <span class="text-gray-900"><?php echo e($trip->route->departureLocation->name ?? '...'); ?> → <?php echo e($trip->route->destinationLocation->name ?? '...'); ?></span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Khởi hành</span>
-                                <span class="text-gray-900">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
+                                <span class="text-gray-900"><?php echo e(\Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y')); ?> - <?php echo e(\Carbon\Carbon::parse($trip->departure_time)->format('H:i')); ?></span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Dự kiến đến</span>
-                                <span class="text-gray-900">{{ \Carbon\Carbon::parse($trip->arrival_time)->format('H:i') }}</span>
+                                <span class="text-gray-900"><?php echo e(\Carbon\Carbon::parse($trip->arrival_time)->format('H:i')); ?></span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Giá vé</span>
-                                <span class="text-amber-600 font-bold" id="ticket-price" data-price="{{ $trip->price }}">{{ number_format($trip->price, 0, ',', '.') }} đ</span>
+                                <span class="text-amber-600 font-bold" id="ticket-price" data-price="<?php echo e($trip->price); ?>"><?php echo e(number_format($trip->price, 0, ',', '.')); ?> đ</span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Tên tài xế</span>
-                                <span class="text-gray-900">{{ $trip->driver->name ?? 'Đang cập nhật' }}</span>
+                                <span class="text-gray-900"><?php echo e($trip->driver->name ?? 'Đang cập nhật'); ?></span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="font-semibold text-gray-700">Loại xe</span>
-                                <span class="text-gray-900">{{ $trip->vehicle->type ?? 'Seat/Bed' }} ({{ $trip->vehicle->license_plate ?? 'CX-00000' }})</span>
+                                <span class="text-gray-900"><?php echo e($trip->vehicle->type ?? 'Seat/Bed'); ?> (<?php echo e($trip->vehicle->license_plate ?? 'CX-00000'); ?>)</span>
                             </div>
                             <div class="flex justify-between items-center mb-4 border-t pt-2 mt-2 border-dashed">
                                 <span class="font-semibold text-gray-700">SĐT Nhà xe (Hỗ trợ)</span>
                                 <span class="text-amber-600 font-bold text-lg">
-                                    <i class="fas fa-phone-alt text-sm mr-1"></i> {{ $trip->vehicle->phone_vehicles ?? 'Đang cập nhật' }}
+                                    <i class="fas fa-phone-alt text-sm mr-1"></i> <?php echo e($trip->vehicle->phone_vehicles ?? 'Đang cập nhật'); ?>
+
                                 </span>
                             </div>
                             
@@ -57,18 +56,18 @@
                             
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Chọn ngày đi <span class="text-red-500">*</span></label>
-                                <input type="date" name="selected_departure_date" value="{{ $trip->trip_date }}" class="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-500">
+                                <input type="date" name="selected_departure_date" value="<?php echo e($trip->trip_date); ?>" class="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-500">
                             </div>
                             
                             <div class="mb-2">
                                 <label class="block text-gray-700 font-medium mb-2">Điểm lên xe <span class="text-red-500">*</span></label>
                                 <select name="pickup_point_id" id="pickup_point_select" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
-                                    <option value="" data-address="{{ $trip->route->departureLocation->name ?? 'Bến xe' }}">-- Chọn điểm đón --</option>
-                                    @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" data-address="{{ $point->address ? $point->address . ', ' . $point->name : $point->name }}" {{ old('pickup_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }} - {{ $point->name }} ({{ $point->address }})
+                                    <option value="" data-address="<?php echo e($trip->route->departureLocation->name ?? 'Bến xe'); ?>">-- Chọn điểm đón --</option>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->pickupPoints; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                        <option value="<?php echo e($point->id); ?>" data-address="<?php echo e($point->address ? $point->address . ', ' . $point->name : $point->name); ?>" <?php echo e(old('pickup_point_id') == $point->id ? 'selected' : ''); ?>>
+                                            <?php echo e(\Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i')); ?> - <?php echo e($point->name); ?> (<?php echo e($point->address); ?>)
                                         </option>
-                                    @endforeach
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                 </select>
                             </div>
 
@@ -88,11 +87,11 @@
                                 <label class="block text-gray-700 font-medium mb-2">Điểm trả khách <span class="text-gray-400 text-sm font-normal">(tuỳ chọn)</span></label>
                                 <select name="dropoff_point_id" id="dropoff_point_select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
                                     <option value="">-- Trả tại điểm cuối tuyến (mặc định) --</option>
-                                    @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" {{ old('dropoff_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ $point->name }} ({{ $point->address }})
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->pickupPoints; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                        <option value="<?php echo e($point->id); ?>" <?php echo e(old('dropoff_point_id') == $point->id ? 'selected' : ''); ?>>
+                                            <?php echo e($point->name); ?> (<?php echo e($point->address); ?>)
                                         </option>
-                                    @endforeach
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                 </select>
                                 <p class="text-xs text-gray-400 mt-1"><i class="fas fa-info-circle mr-1"></i>Chọn điểm trả nếu bạn muốn xuống xe trước điểm cuối.</p>
                             </div>
@@ -104,13 +103,13 @@
                             
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Họ tên người đi <span class="text-red-500">*</span></label>
-                                <input type="text" name="contact_name" required value="{{ old('contact_name', Auth::user()->name ?? '') }}"
+                                <input type="text" name="contact_name" required value="<?php echo e(old('contact_name', Auth::user()->name ?? '')); ?>"
                                     class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
                             </div>
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Số điện thoại <span class="text-red-500">*</span></label>
-                                <input type="text" name="contact_phone" required value="{{ old('contact_phone', Auth::user()->phone ?? '') }}"
+                                <input type="text" name="contact_phone" required value="<?php echo e(old('contact_phone', Auth::user()->phone ?? '')); ?>"
                                     class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
                             </div>
 
@@ -118,9 +117,9 @@
                                 <!-- Điểm đón đã được dịch chuyển -->
                             </div>
                             <!-- Lưu ý: Nếu user chưa đăng nhập, web sẽ chặn khi submit do có auth middleware, đây là flow chuẩn -->
-                            @guest
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
                                 <p class="text-sm text-amber-600 mt-2"><i>Lưu ý: Bạn sẽ được yêu cầu Đăng nhập hệ thống trước lưu đơn.</i></p>
-                            @endguest
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                     </div>
 
@@ -136,20 +135,21 @@
 
                         <!-- Sơ đồ ghế đơn giản -->
                         <div class="grid grid-cols-4 gap-2 mb-6">
-                            @foreach($trip->vehicle->seats as $seat)
-                                @php
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->vehicle->seats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                <?php
                                     $isBooked = in_array($seat->id, $bookedSeatIds);
-                                @endphp
+                                ?>
                                 <label class="relative cursor-pointer">
-                                    <input type="checkbox" name="seat_ids[]" value="{{ $seat->id }}" class="peer sr-only seat-checkbox" 
-                                        {{ $isBooked ? 'disabled' : '' }}>
+                                    <input type="checkbox" name="seat_ids[]" value="<?php echo e($seat->id); ?>" class="peer sr-only seat-checkbox" 
+                                        <?php echo e($isBooked ? 'disabled' : ''); ?>>
                                     
                                     <div class="w-full aspect-square flex items-center justify-center rounded border font-medium text-sm
-                                        {{ $isBooked ? 'bg-red-800 text-white border-red-900 cursor-not-allowed' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-600 transition-colors' }}">
-                                        {{ $seat->seat_number }}
+                                        <?php echo e($isBooked ? 'bg-red-800 text-white border-red-900 cursor-not-allowed' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-600 transition-colors'); ?>">
+                                        <?php echo e($seat->seat_number); ?>
+
                                     </div>
                                 </label>
-                            @endforeach
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
 
                         <div class="border-t pt-4">
@@ -158,8 +158,8 @@
                                 <span id="selected-seats-display" class="font-medium text-right text-sm">Chưa có</span>
                             </div>
 
-                            {{-- Mã giảm giá --}}
-                            @auth
+                            
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                             <div class="mb-3">
                                 <label class="block text-gray-600 text-sm mb-1">Mã giảm giá</label>
                                 <div class="flex gap-2">
@@ -174,7 +174,7 @@
                                 </div>
                                 <div id="coupon-msg" class="text-xs mt-1 hidden"></div>
                             </div>
-                            @endauth
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                             <div id="price-breakdown" class="hidden mb-2 text-sm">
                                 <div class="flex justify-between text-gray-600">
@@ -194,15 +194,15 @@
 
                             <input type="hidden" name="applied_promo_id" id="applied-promo-id" value="">
 
-                            @guest
-                                <a href="{{ route('login') }}" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
+                                <a href="<?php echo e(route('login')); ?>" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
                                     Đăng nhập để đặt vé
                                 </a>
-                            @else
+                            <?php else: ?>
                                 <button type="submit" id="submit-btn" disabled class="w-full py-3 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed transition-colors">
                                     Tiếp tục
                                 </button>
-                            @endguest
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -304,11 +304,11 @@
                     couponBtn.disabled   = true;
                     couponBtn.innerText  = '...';
 
-                    fetch('{{ route("customer.bookings.checkCoupon") }}', {
+                    fetch('<?php echo e(route("customer.bookings.checkCoupon")); ?>', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                         },
                         body: JSON.stringify({ code: code, base_amount: currentBaseTotal })
                     })
@@ -381,4 +381,6 @@
             }
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.customer.CustomerLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/trips/show.blade.php ENDPATH**/ ?>
