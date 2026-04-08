@@ -55,8 +55,7 @@
                                     class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Vé của tôi
                                 </a>
-                                <a href="{{ route('customer.profile.edit') }}"
-                                    class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
+                                <a href="{{ route('customer.profile.edit') }}" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
                                     Chào, {{ Auth::user()->name }}
                                 </a>
 

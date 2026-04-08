@@ -20,24 +20,6 @@
                         <div class="row g-3">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Điểm khởi hành</label>
-                                    {{-- Đổi name thành start_location_id --}}
-                                    <select name="start_location_id"
-                                        class="form-select rounded-3 @error('start_location_id') is-invalid @enderror">
-                                        <option value="">-- Chọn điểm đi --</option>
-                                        @foreach ($locations as $loc)
-                                            <option value="{{ $loc->id }}"
-                                                {{ old('start_location_id') == $loc->id ? 'selected' : '' }}>
-                                                {{ $loc->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('start_location_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-6">
                                     <label class="form-label fw-bold small">Điểm kết thúc</label>
                                     {{-- Đổi name thành end_location_id --}}
                                     <select name="end_location_id"

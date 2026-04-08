@@ -179,6 +179,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
         Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
     });
 
+
     // --- CÁC MODULE QUẢN TRỊ MỚI ---
     Route::resource('promotions', PromotionController::class);
     Route::resource('parcels', ParcelController::class);
@@ -189,13 +190,66 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::get('daily-reports', [DailyReportController::class, 'index'])->name('daily_reports.index');
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+
 });
 
 /*
 |--------------------------------------------------------------------------
-| 5. DRIVERS ROUTES
+
+| 5. STAFF ROUTES
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\Staff\DashboardController as StaffDashboard;
+use App\Http\Controllers\Staff\BookingController as StaffBooking;
+use App\Http\Controllers\Staff\TripController as StaffTrip;
+use App\Http\Controllers\Staff\CheckInController as StaffCheckIn;
+use App\Http\Controllers\Staff\ParkingController as StaffParking;
+use App\Http\Middleware\CheckStaffRole;
+
+Route::prefix('staff')->name('staff.')->middleware(['auth', CheckStaffRole::class])->group(function () {
+    Route::get('/', [StaffDashboard::class, 'index'])->name('dashboard');
+
+    // Quản lý Booking
+    Route::get('/bookings', [StaffBooking::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [StaffBooking::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [StaffBooking::class, 'store'])->name('bookings.store');
+    Route::get('/api/trips/{trip}/data', [StaffBooking::class, 'getTripData'])->name('api.trips.data');
+    Route::get('/bookings/{booking}', [StaffBooking::class, 'show'])->name('bookings.show');
+    Route::post('/bookings/{booking}/confirm', [StaffBooking::class, 'confirm'])->name('bookings.confirm');
+    Route::post('/bookings/{booking}/cancel', [StaffBooking::class, 'cancel'])->name('bookings.cancel');
+
+    // Chuyến xe & Sơ đồ ghế
+    Route::get('/trips', [StaffTrip::class, 'index'])->name('trips.index');
+    Route::get('/trips/{trip}', [StaffTrip::class, 'show'])->name('trips.show');
+
+    // Check-in hành khách
+    Route::get('/checkin', [StaffCheckIn::class, 'index'])->name('checkin.index');
+    Route::post('/checkin/{ticket}', [StaffCheckIn::class, 'process'])->name('checkin.process');
+    Route::post('/checkin/{ticket}/noshow', [StaffCheckIn::class, 'noShow'])->name('checkin.noshow');
+    Route::post('/checkin/{ticket}/reset', [StaffCheckIn::class, 'resetStatus'])->name('checkin.reset');
+
+    // Hồ sơ cá nhân
+    Route::get('/profile', [\App\Http\Controllers\Staff\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [\App\Http\Controllers\Staff\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\Staff\ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Quản lý bãi xe
+    Route::get('/parking', [StaffParking::class, 'index'])->name('parking.index');
+    Route::post('/parking/slots/{slot}/check-in', [StaffParking::class, 'checkIn'])->name('parking.checkin');
+    Route::post('/parking/slots/{slot}/check-out', [StaffParking::class, 'checkOut'])->name('parking.checkout');
+});
+
+Route::get('/fix-staff', function() {
+    $user = \App\Models\User::where('name', 'nhanvienA')->first() ?? \App\Models\User::first();
+    if ($user) {
+        $user->role = 'staff';
+        $user->save();
+        return "User '{$user->name}' updated to staff! Please refresh and look for 'Trang nhân viên' button.";
+    }
+    return "No users found.";
+});
+
+// 5. DRIVERS ROUTES
 Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class, \App\Http\Middleware\EnsureDriverProfileComplete::class])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
@@ -210,3 +264,4 @@ Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::c
 
     Route::get('/revenue', [DriverTripController::class, 'revenue'])->name('revenue.index');
 });
+

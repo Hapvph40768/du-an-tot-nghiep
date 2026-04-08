@@ -60,14 +60,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $user = Auth::user();
-
-            if ($user->role === 'admin' || $user->role === 'staff') {
-                return redirect()->route('admin.dashboard.index')
-                    ->with('success', 'Chào mừng quay lại Admin!');
+            // Chuyển hướng dựa trên Role
+            if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
+                return redirect()->intended('/admin');
             }
 
-            if ($user->role === 'driver') {
+            if (Auth::user()->role === 'driver') {
                 return redirect()->route('driver.home')
                     ->with('success', 'Chúc bạn có những chuyến đi thuận lợi!');
             }
