@@ -97,6 +97,81 @@
                 </a>
             </li>
 
+            
+            <li class="menu-item" style="margin-top:10px;">
+                <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
+                    Kinh doanh & Marketing
+                </span>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.promotions.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.promotions.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-purchase-tag-alt'></i>
+                    <span>Khuyến mãi</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.price_rules.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.price_rules.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-slider-alt'></i>
+                    <span>Quy tắc giá vé</span>
+                </a>
+            </li>
+
+            <li class="menu-item" style="margin-top:10px;">
+                <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
+                    Vận hành
+                </span>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.schedules.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.schedules.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-time-five'></i>
+                    <span>Lịch trình xe chạy</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.parcels.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.parcels.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-package'></i>
+                    <span>Ký gửi hàng hoá</span>
+                </a>
+            </li>
+
+            <li class="menu-item" style="margin-top:10px;">
+                <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
+                    Giám sát & Thống kê
+                </span>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.daily_reports.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.daily_reports.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-bar-chart-alt-2'></i>
+                    <span>Báo cáo doanh thu</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.activity_logs.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.activity_logs.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-list-check'></i>
+                    <span>Lịch sử hành động</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.notifications.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.notifications.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-bell'></i>
+                    <span>Thông báo hệ thống</span>
+                </a>
+            </li>
+
         </ul>
     </nav>
 
@@ -110,9 +185,11 @@
         </div>
         <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin-left: auto;">
             <?php echo csrf_field(); ?>
-            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;" title="Đăng xuất">
+            <button type="submit" style="background: none; border: none; color: #ff4d4d; cursor: pointer;"
+                title="Đăng xuất">
                 <i class='bx bx-log-out fs-4'></i>
             </button>
         </form>
     </div>
-</aside><?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/blocks/aside.blade.php ENDPATH**/ ?>
+</aside>
+<?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/blocks/aside.blade.php ENDPATH**/ ?>

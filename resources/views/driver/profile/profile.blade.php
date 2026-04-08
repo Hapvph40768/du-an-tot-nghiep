@@ -4,6 +4,13 @@
 
 @section('content-main')
     <div class="max-w-4xl mx-auto">
+        
+        <div class="mb-6">
+            <a href="{{ route('driver.home') }}" class="inline-flex items-center gap-2 text-gray-500 hover:text-amber-600 transition-colors font-medium">
+                <i class='bx bx-chevron-left text-2xl'></i>
+                Quay lại Trang Chủ
+            </a>
+        </div>
 
         <div class="grid md:grid-cols-12 gap-8">
 

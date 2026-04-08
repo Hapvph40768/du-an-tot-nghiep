@@ -6,9 +6,14 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Chi tiết đặt vé #{{ $booking->id }}</h1>
-        <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
+        <div>
+            <a href="{{ route('admin.bookings.export', $booking->id) }}" target="_blank" class="btn btn-info btn-sm text-white md-2">
+                <i class="fas fa-print"></i> In vé
+            </a>
+            <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
     </div>
 
     <div class="row">

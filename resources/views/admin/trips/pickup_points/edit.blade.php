@@ -12,7 +12,7 @@
                     <p class="text-muted small">Cập nhật thông tin cho: <span class="text-primary">{{ $pickupPoint->name }}</span></p>
                 </div>
 
-                <form action="{{ route('admin.pickup_points.update', $pickupPoint->id) }}" method="POST">
+                <form action="{{ route('admin.pickup-points.update', $pickupPoint->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -45,7 +45,7 @@
                         <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">
                             <i class='bx bx-sync'></i> Cập nhật thay đổi
                         </button>
-                        <a href="{{ route('admin.pickup_points.index') }}" class="btn btn-light px-4 border" style="border-radius: 10px;">Quay lại</a>
+                        <a href="{{ route('admin.pickup-points.index') }}" class="btn btn-light px-4 border" style="border-radius: 10px;">Quay lại</a>
                     </div>
                 </form>
             </div>

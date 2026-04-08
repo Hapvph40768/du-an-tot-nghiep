@@ -21,15 +21,25 @@ class AuthController extends Controller
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
             'phone'    => 'required|unique:users',
+            'role'     => 'required|in:customer,driver',
         ]);
 
-        User::create([
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'phone'    => $request->phone,
             'password' => Hash::make($request->password),
-            'role'     => 'customer',
+            'role'     => $request->role,
         ]);
+
+        if ($user->role === 'driver') {
+            \App\Models\Driver::create([
+                'user_id' => $user->id,
+                'name'    => $user->name,
+                'phone'   => $user->phone,
+                'status'  => 'inactive',
+            ]);
+        }
 
         return redirect()->route('login')
             ->with('success', 'Đăng ký thành công, mời đăng nhập.');

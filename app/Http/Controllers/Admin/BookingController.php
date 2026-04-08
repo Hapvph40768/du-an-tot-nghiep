@@ -37,4 +37,10 @@ class BookingController extends Controller
 
         return redirect()->route('admin.bookings.index')->with('success', 'Cập nhật trạng thái vé thành công!');
     }
+
+    public function export(Booking $booking)
+    {
+        $booking->load(['user', 'trip.route.startLocation', 'trip.route.endLocation', 'trip.driver', 'trip.vehicle', 'tickets.seat', 'pickupPoint']);
+        return view('admin.bookings.export', compact('booking'));
+    }
 }

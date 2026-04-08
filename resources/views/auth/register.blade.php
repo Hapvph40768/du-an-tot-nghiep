@@ -57,6 +57,17 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="form-label">Bạn đăng ký với vai trò gì?</label>
+            <div class="input-group">
+                <select name="role" class="form-control" required style="padding-left: 45px; appearance: auto;">
+                    <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Khách hàng</option>
+                    <option value="driver" {{ old('role') == 'driver' ? 'selected' : '' }}>Tài xế</option>
+                </select>
+                <i class='bx bx-briefcase input-icon'></i>
+            </div>
+        </div>
+
         <button type="submit" class="btn-primary" style="width: 100%; margin-top: 16px;">
             Tạo tài khoản mới
         </button>

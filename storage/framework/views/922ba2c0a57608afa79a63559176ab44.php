@@ -24,28 +24,30 @@
 
 <body>
 
-<div class="admin-wrapper">
+    <div class="admin-wrapper">
 
-    <!-- Sidebar -->
-    <?php echo $__env->make('layout.admin.blocks.aside', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <!-- Sidebar -->
+        <?php echo $__env->make('layout.admin.blocks.aside', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-    <!-- Main Content -->
-    <main class="main-content">
+        <!-- Main Content -->
+        <main class="main-content">
 
-        <!-- Header -->
-        <?php echo $__env->make('layout.admin.blocks.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+            <!-- Header -->
+            <?php echo $__env->make('layout.admin.blocks.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-        <!-- Page Content -->
-        <div class="content-body">
-            <?php echo $__env->yieldContent('content-main'); ?>
-        </div>
+            <!-- Page Content -->
+            <div class="content-body">
+                <?php echo $__env->yieldContent('content-main'); ?>
+            </div>
 
-    </main>
+        </main>
 
-</div>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
-</html><?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/AdminLayout.blade.php ENDPATH**/ ?>
+
+</html>
+<?php /**PATH C:\laragon\www\du-an-tot-nghiep\resources\views/layout/admin/AdminLayout.blade.php ENDPATH**/ ?>

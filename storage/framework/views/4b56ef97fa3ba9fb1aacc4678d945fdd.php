@@ -76,13 +76,12 @@
 
                     
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $chatHistory; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
-                        <div class="d-flex mb-3 <?php echo e($msg->sender_id === Auth::id() ? 'justify-content-end' : 'justify-content-start'); ?>">
-                            <div class="p-2 rounded-3 shadow-sm <?php echo e($msg->sender_id === Auth::id() ? 'bg-primary text-white' : 'bg-white border'); ?>"
+                        <div class="d-flex mb-3 <?php echo e($msg->sender_type === 'user' ? 'justify-content-end' : 'justify-content-start'); ?>">
+                            <div class="p-2 rounded-3 shadow-sm <?php echo e($msg->sender_type === 'user' ? 'bg-primary text-white' : 'bg-white border'); ?>"
                                 style="max-width: 85%; font-size: 13px;">
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($msg->sender_id !== Auth::id()): ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($msg->sender_type === 'admin'): ?>
                                     <div class="fw-bold mb-1" style="font-size: 10px; color: #666;">
-                                        <?php echo e($msg->sender_type === 'admin' ? 'Nhân viên hỗ trợ' : 'Khách hàng'); ?>
-
+                                        Nhân viên hỗ trợ
                                     </div>
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 <?php echo e($msg->message); ?>

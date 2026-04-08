@@ -90,6 +90,9 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
         Route::post('/', [CustomerBookingController::class, 'store'])->name('customer.bookings.store');
         Route::get('/{booking}', [CustomerBookingController::class, 'show'])->name('customer.bookings.show');
         Route::post('/check-coupon', [CustomerBookingController::class, 'checkCoupon'])->name('customer.bookings.checkCoupon');
+        Route::post('/{booking}/cancel', [CustomerBookingController::class, 'cancel'])->name('customer.bookings.cancel');
+        Route::get('/{booking}/change-date', [CustomerBookingController::class, 'changeDate'])->name('customer.bookings.changeDate');
+        Route::post('/{booking}/change-date', [CustomerBookingController::class, 'processChangeDate'])->name('customer.bookings.processChangeDate');
     });
 
     Route::prefix('payment')->group(function () {
@@ -100,6 +103,12 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
     });
 
     Route::post('/reviews/{booking}', [CustomerReviewController::class, 'store'])->name('customer.reviews.store');
+
+    Route::prefix('parcels')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Customer\ParcelController::class, 'index'])->name('customer.parcels.index');
+        Route::get('/create', [\App\Http\Controllers\Customer\ParcelController::class, 'create'])->name('customer.parcels.create');
+        Route::post('/', [\App\Http\Controllers\Customer\ParcelController::class, 'store'])->name('customer.parcels.store');
+    });
 
     Route::prefix('support')->group(function () {
         Route::get('/', [SupportTicketController::class, 'index'])->name('customer.support.index');
@@ -143,6 +152,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     });
 
     // --- ĐẶT VÉ & KHÁCH HÀNG ---
+    Route::get('bookings/{booking}/export', [AdminBookingController::class, 'export'])->name('bookings.export');
     Route::resource('bookings', AdminBookingController::class);
     Route::resource('tickets', TicketController::class);
 
@@ -186,12 +196,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 | 5. DRIVERS ROUTES
 |--------------------------------------------------------------------------
 */
-Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class])->group(function () {
+Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class, \App\Http\Middleware\EnsureDriverProfileComplete::class])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [HomeController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
 
     Route::get('/trips', [DriverTripController::class, 'index'])->name('trips.index');
+    Route::get('/trips/history', [DriverTripController::class, 'history'])->name('trips.history');
     Route::get('/trips/{trip}', [DriverTripController::class, 'show'])->name('trips.show');
 
-    Route::get('/trips/{trip}/start', [DriverTripController::class, 'start'])->name('trips.start');
+    Route::post('/trips/{trip}/status', [DriverTripController::class, 'updateStatus'])->name('trips.updateStatus');
+
+    Route::get('/revenue', [DriverTripController::class, 'revenue'])->name('revenue.index');
 });

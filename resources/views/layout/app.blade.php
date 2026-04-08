@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('drivers.index') }}">
+                        <a class="nav-link active" href="{{ route('admin.drivers.index') }}">
                             <i class="fas fa-users me-1"></i> Quản lý Tài xế
                         </a>
                     </li>

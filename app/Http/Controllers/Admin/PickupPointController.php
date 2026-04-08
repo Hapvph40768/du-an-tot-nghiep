@@ -44,7 +44,7 @@ class PickupPointController extends Controller
         }
 
         PickupPoint::create($validated);
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Đã thêm điểm đón vào danh mục hệ thống!');
+        return redirect()->route('admin.pickup-points.index')->with('success', 'Đã thêm điểm đón vào danh mục hệ thống!');
     }
 
     public function edit(PickupPoint $pickupPoint)
@@ -62,13 +62,13 @@ class PickupPointController extends Controller
         ]);
 
         $pickupPoint->update($validated);
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Cập nhật danh mục điểm đón thành công!');
+        return redirect()->route('admin.pickup-points.index')->with('success', 'Cập nhật danh mục điểm đón thành công!');
     }
 
     public function destroy(PickupPoint $pickupPoint)
     {
         // Kiểm tra xem điểm đón này có đang được gán cho chuyến xe nào không trước khi xóa (Nếu cần)
         $pickupPoint->delete();
-        return redirect()->route('admin.pickup_points.index')->with('success', 'Xóa điểm đón khỏi danh mục thành công!');
+        return redirect()->route('admin.pickup-points.index')->with('success', 'Xóa điểm đón khỏi danh mục thành công!');
     }
 }

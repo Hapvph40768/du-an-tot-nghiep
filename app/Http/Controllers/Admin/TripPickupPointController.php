@@ -44,7 +44,7 @@ class TripPickupPointController extends Controller
     public function create(Trip $trip)
     {
         // Gợi ý: Bạn có thể redirect sang trang tạo gốc
-        return redirect()->route('admin.pickup_points.create', ['from_trip' => $trip->id]);
+        return redirect()->route('admin.pickup-points.create', ['from_trip' => $trip->id]);
     }
 
     /**

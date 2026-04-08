@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Portal - Mạnh Hùng</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vite Tailwind CSS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
@@ -53,65 +55,52 @@
             <!-- Driver Info -->
             <div class="px-6 py-5 border-b border-gray-100 bg-amber-50">
                 <div class="flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 bg-amber-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'D', 0, 1)) }}
-                    </div>
-                    <a href="{{ route('driver.profile') }}">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-semibold text-gray-800 truncate">{{ Auth::user()->name ?? 'Tài xế' }}</p>
-                            <p class="text-sm flex items-center gap-2 font-medium text-gray-600">
-                                <span
-                                    class="w-2.5 h-2.5 rounded-full animate-pulse 
-                                    {{ in_array(Auth::user()->driver?->status, ['active'])
-                                        ? 'bg-emerald-500'
-                                        : (Auth::user()->driver?->status === 'inactive'
-                                            ? 'bg-amber-500'
-                                            : 'bg-gray-400') }}">
-                                </span>
-                                {{ match (Auth::user()->driver?->status) {
-                                    'available', 'ready' => 'Online',
-                                    'inactive' => 'Offline',
-                                    default => 'Online',
-                                } }}
-                            </p>
+                    @if(Auth::user()->avatar)
+                        <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : Storage::url(Auth::user()->avatar) }}" class="w-12 h-12 rounded-2xl object-cover" alt="Avatar">
+                    @else
+                        <div class="w-12 h-12 bg-amber-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold">
+                            {{ strtoupper(substr(Auth::user()->name ?? 'D', 0, 1)) }}
                         </div>
-                    </a>
-
+                    @endif
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-800 truncate">{{ Auth::user()->name ?? 'Tài xế' }}</p>
+                        <p class="text-sm flex items-center gap-2 font-medium text-gray-600">
+                            <span class="w-2.5 h-2.5 rounded-full animate-pulse 
+                                {{ in_array(Auth::user()->driver?->status, ['active', 'ready', 'available'])
+                                    ? 'bg-emerald-500'
+                                    : (Auth::user()->driver?->status === 'inactive'
+                                        ? 'bg-amber-500'
+                                        : 'bg-emerald-500') }}">
+                            </span>
+                            {{ in_array(Auth::user()->driver?->status, ['inactive']) ? 'Offline' : 'Online' }}
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <!-- Menu -->
             <nav class="flex-1 px-3 py-6 overflow-y-auto">
                 <ul class="space-y-1">
-                    {{-- <li>
-                        <a href="{{ route('driver.home') }}"
-                            class="{{ request()->routeIs('driver.home') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
-                            <i class='bx bx-home text-2xl'></i>
-                            <span>Trang chủ</span>
-                        </a>
-                    </li> --}}
                     <li>
-                        <a href="{{ route('driver.trips.index') }}"
-                            class="{{ request()->routeIs('driver.trips.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
-                                    flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
+                        <a href="{{ route('driver.trips.index') }}" onclick="window.location.href='{{ route('driver.trips.index') }}'; return false;"
+                            class="{{ request()->routeIs('driver.trips.index', 'driver.trips.show') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
+                                    flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-bus text-2xl'></i>
                             <span>Chuyến xe của tôi</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="{{ request()->routeIs('driver.history.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
+                        <a href="{{ route('driver.trips.history') }}" onclick="window.location.href='{{ route('driver.trips.history') }}'; return false;"
+                            class="{{ request()->routeIs('driver.trips.history') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
+                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-history text-2xl'></i>
                             <span>Lịch sử chuyến</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('driver.revenue.index') }}" onclick="window.location.href='{{ route('driver.revenue.index') }}'; return false;"
                             class="{{ request()->routeIs('driver.revenue.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} 
-                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all">
+                           flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-wallet text-2xl'></i>
                             <span>Doanh thu</span>
                         </a>
@@ -167,9 +156,20 @@
     </div>
 
     <script>
-        function showToast(message) {
+        function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+
+            if (type === 'error') {
+                toast.classList.remove('bg-emerald-600');
+                toast.classList.add('bg-red-600');
+                icon.className = 'bx bx-error-circle text-2xl';
+            } else {
+                toast.classList.remove('bg-red-600');
+                toast.classList.add('bg-emerald-600');
+                icon.className = 'bx bx-check-circle text-2xl';
+            }
 
             toastMessage.textContent = message;
             toast.classList.remove('hidden');
@@ -185,7 +185,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             @if (session('success'))
-                showToast("{{ session('success') }}");
+                showToast("{{ session('success') }}", 'success');
+            @endif
+            @if (session('error'))
+                showToast("{{ session('error') }}", 'error');
             @endif
         });
 
