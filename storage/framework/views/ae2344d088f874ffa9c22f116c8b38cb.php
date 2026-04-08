@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Admin Dashboard'); ?>
 <?php $__env->startSection('header-title', 'TỔNG QUAN HỆ THỐNG'); ?>
 <?php $__env->startSection('header-subtitle', 'Báo cáo và thống kê hoạt động'); ?>

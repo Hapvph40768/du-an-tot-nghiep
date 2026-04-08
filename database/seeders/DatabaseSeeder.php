@@ -51,12 +51,38 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $customer = \App\Models\User::create([
-            'name'     => 'Khách Hàng',
+            'name'     => 'Khách Hàng A',
             'email'    => 'khachhang@gmail.com',
             'password' => Hash::make('password'),
             'role'     => 'customer',
             'phone'    => '0911111111',
         ]);
+
+        // Tạo thêm 12 khách hàng mẫu
+        $extraCustomers = [
+            ['name' => 'Trần Thị Mai',    'email' => 'mai.tran@gmail.com',   'phone' => '0912345601'],
+            ['name' => 'Nguyễn Văn Nam',  'email' => 'nam.nguyen@gmail.com', 'phone' => '0912345602'],
+            ['name' => 'Lê Thị Hoa',      'email' => 'hoa.le@gmail.com',     'phone' => '0912345603'],
+            ['name' => 'Phạm Đình Long',  'email' => 'long.pham@gmail.com',  'phone' => '0912345604'],
+            ['name' => 'Hoàng Thị Lan',   'email' => 'lan.hoang@gmail.com',  'phone' => '0912345605'],
+            ['name' => 'Vũ Đức Minh',    'email' => 'minh.vu@gmail.com',   'phone' => '0912345606'],
+            ['name' => 'Nguyễn Thị Hương','email' => 'huong.ng@gmail.com',  'phone' => '0912345607'],
+            ['name' => 'Đinh Văn Khởi',  'email' => 'khoi.dinh@gmail.com', 'phone' => '0912345608'],
+            ['name' => 'Bùi Thị Loan',    'email' => 'loan.bui@gmail.com',   'phone' => '0912345609'],
+            ['name' => 'Tô Văn Hùng',    'email' => 'hung.to@gmail.com',    'phone' => '0912345610'],
+            ['name' => 'Đặng Thị Ngọc',  'email' => 'ngoc.dang@gmail.com',  'phone' => '0912345611'],
+            ['name' => 'Lý Minh Tuấn',    'email' => 'tuan.ly@gmail.com',    'phone' => '0912345612'],
+        ];
+        $allCustomers = [$customer];
+        foreach ($extraCustomers as $c) {
+            $allCustomers[] = \App\Models\User::create([
+                'name'     => $c['name'],
+                'email'    => $c['email'],
+                'password' => Hash::make('password'),
+                'role'     => 'customer',
+                'phone'    => $c['phone'],
+            ]);
+        }
 
         // 2. Locations
         $locations = [
@@ -218,60 +244,74 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 8. Bookings
+        // 8. Bookings - tạo 15 đơn đặt vé
         shuffle($tripsScheduled);
-        $numBookings = min(5, count($tripsScheduled));
+        $numBookings = min(15, count($tripsScheduled));
+        $allPickupPointsList = array_values($pickupPoints);
         for ($i = 0; $i < $numBookings; $i++) {
             $trip = $tripsScheduled[$i];
+            $bookingCustomer = $allCustomers[array_rand($allCustomers)];
 
             $pickupPointId = $trip->pickupPoints->first()->id ?? null;
             if (!$pickupPointId) continue;
 
+            // Một số đơn có điểm trả, một số không
+            $dropoffId = ($i % 3 === 0) ? ($allPickupPointsList[array_rand($allPickupPointsList)]->id ?? null) : null;
+            // Đảm bảo dropoff != pickup
+            if ($dropoffId === $pickupPointId) $dropoffId = null;
+
+            $numSeats = rand(1, 3);
             $booking = \App\Models\Booking::create([
-                'user_id'         => $customer->id,
-                'trip_id'         => $trip->id,
-                'pickup_point_id' => $pickupPointId,
-                'total_amount'    => $trip->price * 2,
-                'status'          => 'paid',
-                'contact_name'    => $customer->name,
-                'contact_phone'   => $customer->phone,
-                'created_at'      => now(),
-                'updated_at'      => now(),
+                'user_id'          => $bookingCustomer->id,
+                'trip_id'          => $trip->id,
+                'pickup_point_id'  => $pickupPointId,
+                'dropoff_point_id' => $dropoffId,
+                'total_amount'     => $trip->price * $numSeats,
+                'status'           => ($i < 12) ? 'paid' : 'pending',
+                'contact_name'     => $bookingCustomer->name,
+                'contact_phone'    => $bookingCustomer->phone,
+                'created_at'       => now()->subDays(rand(0, 7)),
+                'updated_at'       => now(),
             ]);
 
-            // Assign two random seats
-            $seats = \App\Models\Seat::where('vehicle_id', $trip->vehicle_id)->take(2)->get();
+            // Gán ghế ngẫu nhiên
+            $seats = \App\Models\Seat::where('vehicle_id', $trip->vehicle_id)
+                ->whereNotIn('id', \App\Models\SeatLock::where('trip_id', $trip->id)->pluck('seat_id'))
+                ->take($numSeats)->get();
+
             foreach ($seats as $seat) {
                 \App\Models\Ticket::create([
                     'booking_id'  => $booking->id,
                     'trip_id'     => $trip->id,
                     'seat_id'     => $seat->id,
-                    'ticket_code' => 'TK' . strtoupper(substr(md5(rand()), 0, 6)),
-                    'status'      => 'confirmed',
-                    'created_at'  => now(),
+                    'ticket_code' => 'VE-' . now()->format('Y') . '-' . strtoupper(substr(md5(uniqid()), 0, 6)),
+                    'status'      => ($booking->status === 'paid') ? 'confirmed' : 'pending',
+                    'created_at'  => $booking->created_at,
                     'updated_at'  => now(),
                 ]);
-                
+
                 \App\Models\SeatLock::create([
                     'trip_id'      => $trip->id,
                     'seat_id'      => $seat->id,
-                    'user_id'      => $customer->id,
+                    'user_id'      => $bookingCustomer->id,
                     'booking_id'   => $booking->id,
-                    'locked_until' => now()->addDays(5),
-                    'created_at'   => now(),
+                    'locked_until' => now()->addDays(10),
+                    'created_at'   => $booking->created_at,
                     'updated_at'   => now(),
                 ]);
             }
-            
-            \App\Models\Payment::create([
-                'booking_id'       => $booking->id,
-                'payment_method'   => 'vnpay',
-                'amount'           => $booking->total_amount,
-                'status'           => 'success',
-                'transaction_code' => 'VN' . rand(100000000, 999999999),
-                'created_at'       => now(),
-                'updated_at'       => now(),
-            ]);
+
+            if ($booking->status === 'paid') {
+                \App\Models\Payment::create([
+                    'booking_id'       => $booking->id,
+                    'payment_method'   => ['vnpay', 'cash', 'bank_transfer'][rand(0, 2)],
+                    'amount'           => $booking->total_amount,
+                    'status'           => 'success',
+                    'transaction_code' => 'VN' . rand(100000000, 999999999),
+                    'created_at'       => $booking->created_at,
+                    'updated_at'       => now(),
+                ]);
+            }
         }
 
         // 9. Bãi đỗ xe + Sơ đồ slot (from old code)

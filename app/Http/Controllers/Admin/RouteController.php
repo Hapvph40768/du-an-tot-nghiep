@@ -16,10 +16,10 @@ class RouteController extends Controller
     }
 
     public function show(\App\Models\Route $route)
-{
-    $route->load(['departureLocation', 'destinationLocation']);
-    return view('admin.routes.show', compact('route'));
-}
+    {
+        $route->load(['departureLocation', 'destinationLocation']);
+        return view('admin.routes.show', compact('route'));
+    }
 
     public function create()
     {

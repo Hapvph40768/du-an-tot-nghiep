@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-
-=======
-
->>>>>>> 330ec1f42540000c67e05d8019c14c8405ef0940
-
 <?php $__env->startSection('content-main'); ?>
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -94,5 +88,4 @@
     }
 </style>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('customer.home', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->make('layout.customer.CustomerLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/customer/support/create.blade.php ENDPATH**/ ?>

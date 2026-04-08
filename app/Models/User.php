@@ -65,4 +65,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(SupportTicket::class);
     }
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
 }

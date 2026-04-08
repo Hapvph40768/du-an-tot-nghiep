@@ -45,7 +45,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3"><?php echo e($routes->links()); ?></div>
+        
     </div>
 </div>
 <?php $__env->stopSection(); ?>

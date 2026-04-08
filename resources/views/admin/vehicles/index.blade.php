@@ -129,9 +129,9 @@
                                     </span>
                                 </td>
 
-                               
+
                                 <td>
-                                    @if($vehicle->phone_vehicles)
+                                    @if ($vehicle->phone_vehicles)
                                         <i class='bx bxs-phone-call text-success me-1'></i>
                                         {{ $vehicle->phone_vehicles }}
                                     @else
@@ -154,18 +154,17 @@
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                           class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
+                                            class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
                                             <i class='bx bx-show text-info'></i>
                                         </a>
 
                                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                           class="btn btn-sm btn-light border" title="Sửa">
+                                            class="btn btn-sm btn-light border" title="Sửa">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
 
-                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
+                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
+                                            onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-light border text-danger" title="Xóa">
@@ -176,7 +175,7 @@
                                 </td>
                             </tr>
                         @empty
-                           
+
                             <tr>
                                 <td colspan="6" class="text-center py-5 text-muted">
                                     Chưa có xe nào trong danh sách.

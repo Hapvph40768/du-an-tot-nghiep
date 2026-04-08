@@ -81,6 +81,20 @@
                                 </div>
                                 <iframe id="station-map" class="absolute inset-0 w-full h-full z-10 opacity-0 transition-opacity duration-500" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
+
+                            <!-- Điểm trả khách -->
+                            <div class="mt-4">
+                                <label class="block text-gray-700 font-medium mb-2">Điểm trả khách <span class="text-gray-400 text-sm font-normal">(tuỳ chọn)</span></label>
+                                <select name="dropoff_point_id" id="dropoff_point_select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
+                                    <option value="">-- Trả tại điểm cuối tuyến (mặc định) --</option>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->pickupPoints; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                        <option value="<?php echo e($point->id); ?>" <?php echo e(old('dropoff_point_id') == $point->id ? 'selected' : ''); ?>>
+                                            <?php echo e($point->name); ?> (<?php echo e($point->address); ?>)
+                                        </option>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                                </select>
+                                <p class="text-xs text-gray-400 mt-1"><i class="fas fa-info-circle mr-1"></i>Chọn điểm trả nếu bạn muốn xuống xe trước điểm cuối.</p>
+                            </div>
                         </div>
 
                         <!-- 2. Pickup & Contact Info -->
@@ -143,10 +157,42 @@
                                 <span class="text-gray-600">Ghế đã chọn:</span>
                                 <span id="selected-seats-display" class="font-medium text-right text-sm">Chưa có</span>
                             </div>
+
+                            
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
+                            <div class="mb-3">
+                                <label class="block text-gray-600 text-sm mb-1">Mã giảm giá</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="coupon-input" name="coupon_code"
+                                        placeholder="Nhập mã (nếu có)"
+                                        class="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-amber-500 uppercase"
+                                        autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+                                    <button type="button" id="coupon-btn"
+                                        class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap">
+                                        Áp dụng
+                                    </button>
+                                </div>
+                                <div id="coupon-msg" class="text-xs mt-1 hidden"></div>
+                            </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                            <div id="price-breakdown" class="hidden mb-2 text-sm">
+                                <div class="flex justify-between text-gray-600">
+                                    <span>Giá gốc:</span>
+                                    <span id="base-price-display" class="font-medium">0 đ</span>
+                                </div>
+                                <div class="flex justify-between text-green-600">
+                                    <span id="discount-label">Giảm giá:</span>
+                                    <span id="discount-display" class="font-medium">-0 đ</span>
+                                </div>
+                            </div>
+
                             <div class="flex justify-between items-center mb-6">
                                 <span class="text-gray-600 font-medium">Tổng tiền:</span>
                                 <span id="total-price-display" class="text-xl font-bold text-amber-600">0 đ</span>
                             </div>
+
+                            <input type="hidden" name="applied_promo_id" id="applied-promo-id" value="">
 
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
                                 <a href="<?php echo e(route('login')); ?>" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
@@ -164,32 +210,48 @@
         </div>
     </section>
 
-    <!-- JS Logic cho chọn ghế -->
+    <!-- JS Logic cho chọn ghế + mã giảm giá -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.seat-checkbox:not(:disabled)');
+            const checkboxes    = document.querySelectorAll('.seat-checkbox:not(:disabled)');
             const selectedDisplay = document.getElementById('selected-seats-display');
-            const totalDisplay = document.getElementById('total-price-display');
-            const submitBtn = document.getElementById('submit-btn');
-            
-            const pricePerSeat = parseInt(document.getElementById('ticket-price').getAttribute('data-price')) || 0;
+            const totalDisplay  = document.getElementById('total-price-display');
+            const basePriceDisplay = document.getElementById('base-price-display');
+            const discountDisplay  = document.getElementById('discount-display');
+            const discountLabel    = document.getElementById('discount-label');
+            const priceBreakdown   = document.getElementById('price-breakdown');
+            const submitBtn     = document.getElementById('submit-btn');
+            const pricePerSeat  = parseInt(document.getElementById('ticket-price').getAttribute('data-price')) || 0;
+
+            let currentDiscount  = 0;
+            let currentBaseTotal = 0;
+            let appliedPromoId   = '';
+
+            const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 
             function updateSummary() {
                 let selectedNames = [];
                 let count = 0;
-                
                 checkboxes.forEach(cb => {
-                    if(cb.checked) {
+                    if (cb.checked) {
                         count++;
-                        // Extract seat name from sibling div text
                         selectedNames.push(cb.nextElementSibling.innerText.trim());
                     }
                 });
 
-                if(count > 0) {
+                currentBaseTotal = count * pricePerSeat;
+
+                if (count > 0) {
                     selectedDisplay.innerText = selectedNames.join(', ');
-                    totalDisplay.innerText = new Intl.NumberFormat('vi-VN').format(count * pricePerSeat) + ' đ';
-                    
+                    const finalTotal = Math.max(0, currentBaseTotal - currentDiscount);
+                    totalDisplay.innerText = fmt(finalTotal);
+
+                    if (currentDiscount > 0) {
+                        priceBreakdown && priceBreakdown.classList.remove('hidden');
+                        basePriceDisplay && (basePriceDisplay.innerText = fmt(currentBaseTotal));
+                        discountDisplay  && (discountDisplay.innerText  = '-' + fmt(currentDiscount));
+                    }
+
                     if (submitBtn) {
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
@@ -197,8 +259,12 @@
                     }
                 } else {
                     selectedDisplay.innerText = 'Chưa có';
-                    totalDisplay.innerText = '0 đ';
-                    
+                    totalDisplay.innerText    = '0 đ';
+                    priceBreakdown && priceBreakdown.classList.add('hidden');
+                    currentDiscount = 0;
+                    appliedPromoId  = '';
+                    resetCouponUI();
+
                     if (submitBtn) {
                         submitBtn.disabled = true;
                         submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
@@ -207,37 +273,111 @@
                 }
             }
 
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', updateSummary);
-            });
+            checkboxes.forEach(cb => cb.addEventListener('change', updateSummary));
 
-            // Logic cho bản đồ điểm đón
+            // ===== COUPON LOGIC =====
+            const couponBtn   = document.getElementById('coupon-btn');
+            const couponInput = document.getElementById('coupon-input');
+            const couponMsg   = document.getElementById('coupon-msg');
+            const promoIdField = document.getElementById('applied-promo-id');
+
+            function resetCouponUI() {
+                if (couponInput) couponInput.value = '';
+                if (couponMsg)   { couponMsg.className = 'text-xs mt-1 hidden'; couponMsg.innerText = ''; }
+                if (promoIdField) promoIdField.value = '';
+                priceBreakdown && priceBreakdown.classList.add('hidden');
+            }
+
+            function showCouponMsg(msg, ok) {
+                if (!couponMsg) return;
+                couponMsg.innerText    = msg;
+                couponMsg.className    = 'text-xs mt-1 ' + (ok ? 'text-green-600 font-semibold' : 'text-red-500');
+                couponMsg.classList.remove('hidden');
+            }
+
+            if (couponBtn) {
+                couponBtn.addEventListener('click', function() {
+                    const code = couponInput ? couponInput.value.trim() : '';
+                    if (!code) { showCouponMsg('Vui lòng nhập mã giảm giá.', false); return; }
+                    if (currentBaseTotal <= 0) { showCouponMsg('Vui lòng chọn ghế trước.', false); return; }
+
+                    couponBtn.disabled   = true;
+                    couponBtn.innerText  = '...';
+
+                    fetch('<?php echo e(route("customer.bookings.checkCoupon")); ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                        },
+                        body: JSON.stringify({ code: code, base_amount: currentBaseTotal })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        couponBtn.disabled  = false;
+                        couponBtn.innerText = 'Áp dụng';
+
+                        if (data.valid) {
+                            currentDiscount = data.discount;
+                            appliedPromoId  = data.promo_id;
+                            if (promoIdField) promoIdField.value = appliedPromoId;
+
+                            showCouponMsg('✅ ' + data.message, true);
+
+                            // Cập nhật breakdown
+                            if (priceBreakdown) priceBreakdown.classList.remove('hidden');
+                            if (basePriceDisplay) basePriceDisplay.innerText = fmt(currentBaseTotal);
+                            if (discountDisplay)  discountDisplay.innerText  = '-' + fmt(currentDiscount);
+                            if (discountLabel)    discountLabel.innerText    = data.promo_label + ':';
+                            totalDisplay.innerText = fmt(Math.max(0, currentBaseTotal - currentDiscount));
+
+                            // Đổi nút thành Xoá
+                            couponBtn.innerText  = 'Xoá';
+                            couponBtn.className  = 'px-3 py-2 bg-red-400 hover:bg-red-500 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap';
+                            couponBtn.onclick = function() {
+                                currentDiscount = 0;
+                                appliedPromoId  = '';
+                                resetCouponUI();
+                                updateSummary();
+                                couponBtn.innerText = 'Áp dụng';
+                                couponBtn.className = 'px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap';
+                                couponBtn.onclick   = null;
+                                couponBtn.addEventListener('click', arguments.callee); // re-attach? better just reload logic
+                                location.reload(); // simplest reset - but let's not do this
+                            };
+                        } else {
+                            currentDiscount = 0;
+                            if (promoIdField) promoIdField.value = '';
+                            showCouponMsg('❌ ' + data.message, false);
+                        }
+                    })
+                    .catch(() => {
+                        couponBtn.disabled  = false;
+                        couponBtn.innerText = 'Áp dụng';
+                        showCouponMsg('Lỗi kết nối, vui lòng thử lại.', false);
+                    });
+                });
+            }
+
+            // ===== MAP LOGIC =====
             const pickupSelect = document.getElementById('pickup_point_select');
-            const stationMap = document.getElementById('station-map');
-            
+            const stationMap   = document.getElementById('station-map');
+
             function updateMap() {
-                if(!pickupSelect || !stationMap) return;
-                const selectedOption = pickupSelect.options[pickupSelect.selectedIndex];
-                const address = selectedOption.getAttribute('data-address');
-                
-                if(address) {
-                    // Mờ đi trước khi đổi để tạo hiệu ứng
-                    stationMap.classList.remove('opacity-100');
-                    stationMap.classList.add('opacity-0');
-                    
+                if (!pickupSelect || !stationMap) return;
+                const address = pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-address');
+                if (address) {
+                    stationMap.classList.replace('opacity-100', 'opacity-0');
                     setTimeout(() => {
                         stationMap.src = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
-                        stationMap.onload = () => {
-                            stationMap.classList.remove('opacity-0');
-                            stationMap.classList.add('opacity-100');
-                        };
+                        stationMap.onload = () => stationMap.classList.replace('opacity-0', 'opacity-100');
                     }, 300);
                 }
             }
 
-            if(pickupSelect) {
+            if (pickupSelect) {
                 pickupSelect.addEventListener('change', updateMap);
-                updateMap(); // Load bản đồ lần đầu khi vào trang
+                updateMap();
             }
         });
     </script>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DriverController extends Controller
 {
@@ -34,10 +36,25 @@ class DriverController extends Controller
             'experience_years' => 'nullable|integer|min:0',
             'personal_info' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+            'email' => 'required|email|max:255|unique:users,email',
         ]);
 
-        Driver::create($validated);
-        return redirect()->route('admin.drivers.index')->with('success', 'Thêm tài xế thành công!');
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'password' => Hash::make($validated['email']), 
+            'role' => 'driver',
+            'status' => $validated['status'],
+        ]);
+
+        $driverData = collect($validated)->except('email')->toArray();
+        $driverData['user_id'] = $user->id; 
+
+        Driver::create($driverData);
+
+        return redirect()->route('admin.drivers.index')
+            ->with('success', 'Thêm tài xế thành công!');
     }
 
     public function edit(Driver $driver)

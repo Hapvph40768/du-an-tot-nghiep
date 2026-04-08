@@ -128,7 +128,7 @@
                                     </span>
                                 </td>
 
-                               
+
                                 <td>
                                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($vehicle->phone_vehicles): ?>
                                         <i class='bx bxs-phone-call text-success me-1'></i>
@@ -154,18 +154,17 @@
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="<?php echo e(route('admin.vehicles.show', $vehicle->id)); ?>"
-                                           class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
+                                            class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
                                             <i class='bx bx-show text-info'></i>
                                         </a>
 
                                         <a href="<?php echo e(route('admin.vehicles.edit', $vehicle->id)); ?>"
-                                           class="btn btn-sm btn-light border" title="Sửa">
+                                            class="btn btn-sm btn-light border" title="Sửa">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
 
-                                        <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>"
-                                              method="POST"
-                                              onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
+                                        <form action="<?php echo e(route('admin.vehicles.destroy', $vehicle->id)); ?>" method="POST"
+                                            onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
                                             <?php echo csrf_field(); ?>
                                             <?php echo method_field('DELETE'); ?>
                                             <button class="btn btn-sm btn-light border text-danger" title="Xóa">
@@ -176,7 +175,7 @@
                                 </td>
                             </tr>
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                           
+
                             <tr>
                                 <td colspan="6" class="text-center py-5 text-muted">
                                     Chưa có xe nào trong danh sách.

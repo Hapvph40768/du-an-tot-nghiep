@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('title', 'Gán điểm đón cho chuyến xe'); ?>
 <?php $__env->startSection('content-main'); ?>
 <div class="container-fluid py-4">

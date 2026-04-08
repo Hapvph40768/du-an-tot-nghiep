@@ -31,6 +31,18 @@
                                 <br><span
                                     class="text-xs text-gray-500">(<?php echo e($booking->pickupPoint->address ?? ''); ?>)</span></span>
                         </p>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->dropoffPoint): ?>
+                        <p class="flex justify-between pt-2"><span class="text-gray-500">Điểm trả khách:</span> <span
+                                class="font-medium text-rose-600 text-right"><?php echo e($booking->dropoffPoint->name); ?>
+
+                                <br><span
+                                    class="text-xs text-gray-500">(<?php echo e($booking->dropoffPoint->address ?? ''); ?>)</span></span>
+                        </p>
+                        <?php else: ?>
+                        <p class="flex justify-between pt-2"><span class="text-gray-500">Điểm trả khách:</span>
+                            <span class="text-gray-400 italic text-sm">Điểm cuối tuyến</span>
+                        </p>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
                 </div>
 
@@ -104,6 +116,68 @@
                     </div>
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
+
+            
+            <div class="rounded-xl p-5 mt-6 flex gap-4 items-start shadow-sm border
+                <?php echo e($booking->status == 'paid' ? 'bg-amber-50 border-amber-300' : 'bg-blue-50 border-blue-300'); ?>">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
+                    <?php echo e($booking->status == 'paid' ? 'bg-amber-400' : 'bg-blue-400'); ?>">
+                    <i class="fas fa-info text-white text-lg"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-base mb-2
+                        <?php echo e($booking->status == 'paid' ? 'text-amber-800' : 'text-blue-800'); ?>">
+                        📋 Lưu ý check-in tại quầy
+                    </h4>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->status == 'pending'): ?>
+                    <div class="text-sm text-blue-700 bg-blue-100 border border-blue-200 rounded-lg px-4 py-2 mb-3">
+                        ⏳ Đơn hàng <strong>chưa thanh toán</strong>. Vui lòng hoàn tất thanh toán để nhận mã vé và ghế chính thức.
+                    </div>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <ul class="text-sm space-y-1.5 list-none
+                        <?php echo e($booking->status == 'paid' ? 'text-amber-700' : 'text-blue-700'); ?>">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-clock mt-0.5 flex-shrink-0"></i>
+                            <span>Có mặt tại quầy <strong>trước 30 phút</strong> so với giờ khởi hành.</span>
+                        </li>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->tickets->isNotEmpty()): ?>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-ticket-alt mt-0.5 flex-shrink-0"></i>
+                            <span>Xuất trình <strong>mã vé điện tử</strong>:
+                                <span class="font-mono font-bold"><?php echo e($booking->tickets->pluck('ticket_code')->join(', ')); ?></span>
+                                — hoặc CCCD/Hộ chiếu.
+                            </span>
+                        </li>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-map-marker-alt mt-0.5 flex-shrink-0"></i>
+                            <span>Điểm đón: <strong><?php echo e($booking->pickupPoint->name ?? 'Chưa xác định'); ?></strong>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->pickupPoint?->address): ?>
+                                — <?php echo e($booking->pickupPoint->address); ?>
+
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </span>
+                        </li>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->dropoffPoint): ?>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-flag-checkered mt-0.5 flex-shrink-0"></i>
+                            <span>Điểm trả khách: <strong><?php echo e($booking->dropoffPoint->name); ?></strong> — nhớ thông báo tài xế trước khi lên xe.</span>
+                        </li>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-phone mt-0.5 flex-shrink-0"></i>
+                            <span>Hotline nhà xe:
+                                <a href="tel:<?php echo e($booking->trip->vehicle->phone_vehicles ?? ''); ?>"
+                                   class="font-bold underline <?php echo e($booking->status == 'paid' ? 'text-amber-800' : 'text-blue-800'); ?>">
+                                    <?php echo e($booking->trip->vehicle->phone_vehicles ?? 'Xem trên vé'); ?>
+
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
 
             <?php
                 $vehicle = $booking->trip->vehicle ?? null;

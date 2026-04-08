@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Thêm điểm đón vào kho'); ?>
 
 <?php $__env->startSection('content-main'); ?>

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@extends('layout.customer.CustomerLayout')  
-=======
-@extends('customer.home')
->>>>>>> 330ec1f42540000c67e05d8019c14c8405ef0940
+@extends('layout.customer.CustomerLayout')
 
 @section('content-main')
 <div class="container py-5">

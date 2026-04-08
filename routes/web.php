@@ -37,6 +37,16 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\ParcelController;
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\PriceRuleController;
+use App\Http\Controllers\Admin\DailyReportController;
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Driver\DriverTripController;
+use App\Http\Controllers\Driver\HomeController;
+use App\Http\Middleware\CheckDriverRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +89,7 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
         Route::get('/', [CustomerBookingController::class, 'index'])->name('customer.bookings.index');
         Route::post('/', [CustomerBookingController::class, 'store'])->name('customer.bookings.store');
         Route::get('/{booking}', [CustomerBookingController::class, 'show'])->name('customer.bookings.show');
+        Route::post('/check-coupon', [CustomerBookingController::class, 'checkCoupon'])->name('customer.bookings.checkCoupon');
     });
 
     Route::prefix('payment')->group(function () {
@@ -108,12 +119,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // --- QUẢN LÝ DANH MỤC GỐC (KHO DỮ LIỆU) ---
     Route::resource('users', UserController::class);
+    Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::resource('locations', LocationController::class);
     Route::resource('routes', RouteController::class);
     Route::resource('drivers', DriverController::class);
     Route::resource('vehicles', VehicleController::class);
     Route::resource('seats', SeatController::class);
-    
+
     // Quản lý tổng kho các bến xe/điểm dừng
     Route::resource('pickup-points', PickupPointController::class);
 
@@ -133,7 +145,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     // --- ĐẶT VÉ & KHÁCH HÀNG ---
     Route::resource('bookings', AdminBookingController::class);
     Route::resource('tickets', TicketController::class);
-    
+
     // Khóa ghế
     Route::post('seat-locks/clear-expired', [SeatLockController::class, 'clearExpired'])->name('seat_locks.clearExpired');
     Route::resource('seat-locks', SeatLockController::class);
@@ -148,7 +160,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // --- CSKH & SUPPORT ---
     Route::resource('reviews', AdminReviewController::class)->only(['index', 'destroy']);
-    
+
     // Quản lý Support Ticket
     Route::prefix('support-tickets')->name('support_tickets.')->group(function () {
         Route::get('/', [AdminSupportController::class, 'index'])->name('index');
@@ -156,10 +168,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
         Route::post('/{supportTicket}/reply', [AdminSupportController::class, 'reply'])->name('reply');
         Route::patch('/{supportTicket}/close', [AdminSupportController::class, 'close'])->name('close');
     });
+
+
+    // --- CÁC MODULE QUẢN TRỊ MỚI ---
+    Route::resource('promotions', PromotionController::class);
+    Route::resource('parcels', ParcelController::class);
+    Route::resource('schedules', ScheduleController::class);
+    Route::resource('price_rules', PriceRuleController::class);
+    
+    // Read-only modules
+    Route::get('daily-reports', [DailyReportController::class, 'index'])->name('daily_reports.index');
+    Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+
 });
 
 /*
 |--------------------------------------------------------------------------
+
 | 5. STAFF ROUTES
 |--------------------------------------------------------------------------
 */
@@ -212,3 +238,16 @@ Route::get('/fix-staff', function() {
     }
     return "No users found.";
 });
+
+// 5. DRIVERS ROUTES
+
+Route::prefix('driver')->name('driver.')->middleware(['auth', CheckDriverRole::class])->group(function () {
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+
+    Route::get('/trips', [DriverTripController::class, 'index'])->name('trips.index');
+    Route::get('/trips/{trip}', [DriverTripController::class, 'show'])->name('trips.show');
+
+    Route::get('/trips/{trip}/start', [DriverTripController::class, 'start'])->name('trips.start');
+});
+
