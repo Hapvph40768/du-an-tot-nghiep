@@ -20,6 +20,7 @@
                     <a href="<?php echo e(url('/#search')); ?>" class="hover:text-amber-300 transition-colors">Đặt vé</a>
                     <a href="<?php echo e(url('/#routes')); ?>" class="hover:text-amber-300 transition-colors">Tuyến đường</a>
                     <a href="<?php echo e(url('/#features')); ?>" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
+                    <a href="<?php echo e(route('customer.parcels.create')); ?>" class="hover:text-amber-300 transition-colors">Ký gửi hàng</a>
                     
                 </nav>
 

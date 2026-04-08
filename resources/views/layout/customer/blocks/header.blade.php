@@ -20,6 +20,7 @@
                     <a href="{{ url('/#search') }}" class="hover:text-amber-300 transition-colors">Đặt vé</a>
                     <a href="{{ url('/#routes') }}" class="hover:text-amber-300 transition-colors">Tuyến đường</a>
                     <a href="{{ url('/#features') }}" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
+                    <a href="{{ route('customer.parcels.create') }}" class="hover:text-amber-300 transition-colors">Ký gửi hàng</a>
                     {{-- <a href="{{ route('customer.support.index') }}" class="hover:text-amber-300 transition-colors @yield('active-support-index')">Liên hệ</a> --}}
                 </nav>
 

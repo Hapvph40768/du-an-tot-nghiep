@@ -37,8 +37,10 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
 use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Customer\ParcelController as CustomerParcelController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\ParcelController;
+use App\Http\Controllers\Admin\ParcelPriceController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\PriceRuleController;
 use App\Http\Controllers\Admin\DailyReportController;
@@ -107,6 +109,11 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
         Route::post('/', [SupportTicketController::class, 'store'])->name('customer.support.store');
         Route::get('/{supportTicket}', [SupportTicketController::class, 'show'])->name('customer.support.show');
     });
+
+    Route::prefix('parcels')->group(function () {
+        Route::get('/create', [CustomerParcelController::class, 'create'])->name('customer.parcels.create');
+        Route::post('/', [CustomerParcelController::class, 'store'])->name('customer.parcels.store');
+    });
 });
 
 /*
@@ -172,6 +179,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     // --- CÁC MODULE QUẢN TRỊ MỚI ---
     Route::resource('promotions', PromotionController::class);
     Route::resource('parcels', ParcelController::class);
+    Route::resource('parcel_prices', ParcelPriceController::class);
     Route::resource('schedules', ScheduleController::class);
     Route::resource('price_rules', PriceRuleController::class);
     

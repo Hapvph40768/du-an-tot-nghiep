@@ -18,7 +18,7 @@
                                 class="font-bold text-gray-800 text-right">{{ $booking->trip->route->departureLocation->name ?? '...' }}
                                 → {{ $booking->trip->route->destinationLocation->name ?? '...' }}</span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Khởi hành:</span> <span
-                                class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }}
+                                class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($booking->trip->datex)->format('d/m/Y') }}
                                 lúc {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}</span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Số điện thoại xe:</span> <span
                                 class="font-medium text-gray-800"><a

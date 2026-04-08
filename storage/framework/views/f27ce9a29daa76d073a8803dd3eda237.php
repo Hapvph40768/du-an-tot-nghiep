@@ -142,6 +142,14 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a href="<?php echo e(route('admin.parcel_prices.index')); ?>"
+                    class="menu-link <?php echo e(request()->routeIs('admin.parcel_prices.*') ? 'active' : ''); ?>">
+                    <i class='bx bx-money'></i>
+                    <span>Bảng giá ký gửi</span>
+                </a>
+            </li>
+
             <li class="menu-item" style="margin-top:10px;">
                 <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
                     Giám sát & Thống kê

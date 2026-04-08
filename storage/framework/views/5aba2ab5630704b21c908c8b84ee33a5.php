@@ -17,7 +17,7 @@
 
                                 → <?php echo e($booking->trip->route->destinationLocation->name ?? '...'); ?></span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Khởi hành:</span> <span
-                                class="font-medium text-gray-800"><?php echo e(\Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y')); ?>
+                                class="font-medium text-gray-800"><?php echo e(\Carbon\Carbon::parse($booking->trip->datex)->format('d/m/Y')); ?>
 
                                 lúc <?php echo e(\Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i')); ?></span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Số điện thoại xe:</span> <span

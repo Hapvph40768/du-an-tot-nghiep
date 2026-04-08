@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
         DB::table('pickup_points')->truncate();
         DB::table('routes')->truncate();
         DB::table('locations')->truncate();
+        DB::table('parcel_prices')->truncate();
+        DB::table('parcels')->truncate();
         DB::table('users')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -354,5 +356,8 @@ class DatabaseSeeder extends Seeder
                 'status'     => $statuses[array_rand($statuses)],
             ]);
         }
+
+        // Seed parcel prices sau khi routes được tạo
+        $this->call(ParcelPriceSeeder::class);
     }
 }
