@@ -10,12 +10,21 @@ class Route extends Model
 
     public function departureLocation()
     {
-        return $this->belongsTo(Location::class, 'start_location_id');
+        return $this->belongsTo(Location::class , 'start_location_id');
     }
 
     public function destinationLocation()
     {
-        return $this->belongsTo(Location::class, 'end_location_id');
+        return $this->belongsTo(Location::class , 'end_location_id');
+    }
+
+    public function startLocation()
+    {
+        return $this->belongsTo(Location::class , 'start_location_id');
+    }
+    public function endLocation()
+    {
+        return $this->belongsTo(Location::class , 'end_location_id');
     }
     public function trips()
     {

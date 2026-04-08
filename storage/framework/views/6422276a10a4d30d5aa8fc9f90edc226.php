@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Chi tiết chuyến xe #' . $trip->id); ?>
 
 <?php $__env->startSection('content-main'); ?>
@@ -103,8 +101,10 @@
                 
                 <div class="seat-grid">
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->vehicle->seats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
-                        
-                        <div class="seat-box seat-available" title="Ghế <?php echo e($seat->seat_number); ?>">
+                        <?php
+                            $isBooked = in_array($seat->id, $bookedSeatIds ?? []);
+                        ?>
+                        <div class="seat-box <?php echo e($isBooked ? 'seat-occupied' : 'seat-available'); ?>" title="Ghế <?php echo e($seat->seat_number); ?>">
                             <i class='bx bx-chair fs-5'></i>
                             <?php echo e($seat->seat_number); ?>
 

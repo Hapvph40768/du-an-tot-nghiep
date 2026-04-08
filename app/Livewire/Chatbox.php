@@ -40,6 +40,7 @@ class Chatbox extends Component
     {
         $this->selectedTicketId = $id;
         $this->step = 'chat';
+        $this->isOpen = true;
         $this->dispatch('scroll-to-bottom');
     }
 
@@ -60,12 +61,19 @@ class Chatbox extends Component
             'message' => $this->newMessage
         ]);
 
+        $ticket = SupportTicket::find($this->selectedTicketId);
+        
         // Nếu là Admin nhắn, tự động chuyển ticket sang trạng thái 'processing'
         if (Auth::user()->role === 'admin') {
-            SupportTicket::find($this->selectedTicketId)->update([
+            $ticket->update([
                 'status' => 'processing',
                 'assigned_admin_id' => Auth::id()
             ]);
+        } else {
+            // Nếu là Khách hàng nhắn, tự động chuyển ticket về trạng thái 'open' để báo cho Admin
+            if ($ticket->status !== 'open') {
+                $ticket->update(['status' => 'open']);
+            }
         }
 
         $this->newMessage = '';

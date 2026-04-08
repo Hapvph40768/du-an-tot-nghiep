@@ -23,6 +23,12 @@ class SupportTicketController extends Controller
             ->latest()
             ->get();
 
+
+            
+        $tickets = SupportTicket::where('user_id', Auth::id())
+            ->latest()
+            ->get(); // 👈 THÊM DÒNG NÀY
+
         return view('customer.support.create', compact('bookings'));
     }
 

@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Booking;
+use App\Models\SeatLock;
+use App\Models\Review;
+use App\Models\Order;
+use App\Models\Transaction;
+use App\Models\SupportTicket;
 
 class User extends Authenticatable
 {
@@ -47,5 +53,9 @@ class User extends Authenticatable
     public function supportTickets()
     {
         return $this->hasMany(SupportTicket::class);
+    }
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
     }
 }

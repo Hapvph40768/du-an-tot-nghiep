@@ -9,61 +9,74 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Hiển thị trang đăng ký
-    public function showRegister() {
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    // Xử lý đăng ký
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
-            'phone' => 'required|unique:users',
+            'phone'    => 'required|unique:users',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
             'password' => Hash::make($request->password),
-            'role' => 'customer', // Mặc định là khách hàng
+            'role'     => 'customer',
         ]);
 
-        return redirect()->route('login')->with('success', 'Đăng ký thành công, mời đăng nhập.');
+        return redirect()->route('login')
+            ->with('success', 'Đăng ký thành công, mời đăng nhập.');
     }
 
-    // Hiển thị trang đăng nhập
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    // Xử lý đăng nhập
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Chuyển hướng dựa trên Role
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
-                return redirect()->intended('/admin');
+            $user = Auth::user();
+
+            if ($user->role === 'admin' || $user->role === 'staff') {
+                return redirect()->route('admin.dashboard.index')
+                    ->with('success', 'Chào mừng quay lại Admin!');
             }
-            return redirect()->intended('/');
+
+            if ($user->role === 'driver') {
+                return redirect()->route('driver.home')
+                    ->with('success', 'Chúc bạn có những chuyến đi thuận lợi!');
+            }
+
+            return redirect()->route('customer.home')
+                ->with('success', 'Đăng nhập thành công!');
         }
 
-        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác.']);
+        return back()
+            ->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
+            ->onlyInput('email');
     }
 
-    // Đăng xuất
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+
+        return redirect('/')->with('success', 'Bạn đã đăng xuất thành công.');
     }
 }

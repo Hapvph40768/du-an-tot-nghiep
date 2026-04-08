@@ -15,15 +15,5 @@
             <div class="notif-badge"></div>
         </button>
 
-        @auth
-            <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class='bx bx-log-out'></i>
-                    Đăng xuất
-                </button>
-            </form>
-        @endauth
-
     </div>
 </header>

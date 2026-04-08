@@ -75,12 +75,12 @@
 
                     {{-- Danh sách tin nhắn --}}
                     @foreach ($chatHistory as $msg)
-                        <div class="d-flex mb-3 {{ $msg->sender_id === Auth::id() ? 'justify-content-end' : 'justify-content-start' }}">
-                            <div class="p-2 rounded-3 shadow-sm {{ $msg->sender_id === Auth::id() ? 'bg-primary text-white' : 'bg-white border' }}"
+                        <div class="d-flex mb-3 {{ $msg->sender_type === 'user' ? 'justify-content-end' : 'justify-content-start' }}">
+                            <div class="p-2 rounded-3 shadow-sm {{ $msg->sender_type === 'user' ? 'bg-primary text-white' : 'bg-white border' }}"
                                 style="max-width: 85%; font-size: 13px;">
-                                @if ($msg->sender_id !== Auth::id())
+                                @if ($msg->sender_type === 'admin')
                                     <div class="fw-bold mb-1" style="font-size: 10px; color: #666;">
-                                        {{ $msg->sender_type === 'admin' ? 'Nhân viên hỗ trợ' : 'Khách hàng' }}
+                                        Nhân viên hỗ trợ
                                     </div>
                                 @endif
                                 {{ $msg->message }}

@@ -102,8 +102,10 @@
                 
                 <div class="seat-grid">
                     @foreach($trip->vehicle->seats as $seat)
-                        {{-- Sau này bạn sẽ check xem ghế này có trong bảng ticket của chuyến này chưa --}}
-                        <div class="seat-box seat-available" title="Ghế {{ $seat->seat_number }}">
+                        @php
+                            $isBooked = in_array($seat->id, $bookedSeatIds ?? []);
+                        @endphp
+                        <div class="seat-box {{ $isBooked ? 'seat-occupied' : 'seat-available' }}" title="Ghế {{ $seat->seat_number }}">
                             <i class='bx bx-chair fs-5'></i>
                             {{ $seat->seat_number }}
                         </div>

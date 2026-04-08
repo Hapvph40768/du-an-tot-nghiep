@@ -12,8 +12,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('role', 'customer')
-                 ->latest()
-                 ->paginate(20);
+            ->latest()
+            ->paginate(20);
         return view('admin.users.index', compact('users'));
     }
 
@@ -55,6 +55,15 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật thành công');
+    }
+
+    public function toggleStatus(User $user)
+    {
+        $user->status = ($user->status === 'active') ? 'blocked' : 'active';
+        $user->save();
+
+        $msg = $user->status === 'active' ? 'Đã kích hoạt người dùng.' : 'Đã khóa người dùng.';
+        return redirect()->back()->with('success', $msg);
     }
 
     public function destroy(User $user)

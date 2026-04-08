@@ -1,4 +1,4 @@
-@extends('customer.home')
+@extends('layout.customer.CustomerLayout')
 
 @section('content-main')
 <div class="container py-5">

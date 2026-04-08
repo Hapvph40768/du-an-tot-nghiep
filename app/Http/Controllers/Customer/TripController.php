@@ -14,18 +14,26 @@ class TripController extends Controller
         $request->validate([
             'start_location_id' => 'required|exists:locations,id',
             'end_location_id' => 'required|exists:locations,id',
-            'trip_date' => 'required|date|after_or_equal:today',
+            'trip_date' => 'nullable|date',
         ]);
 
-        // Tìm các chuyến xe thuộc tuyến đường có điểm đi/đến tương ứng và đúng ngày
-        $trips = Trip::with(['route', 'vehicle'])
-            ->whereHas('route', function ($query) use ($request) {
-                $query->where('start_location_id', $request->start_location_id)
+        // Nếu request gửi date lên thì dùng, nếu không thì lấy danh sách từ hôm nay trở đi
+        $query = Trip::with(['route.departureLocation', 'route.destinationLocation', 'vehicle'])
+            ->withCount(['seatLocks' => function ($q) {
+                $q->where('locked_until', '>', now());
+            }])
+            ->whereHas('route', function ($q) use ($request) {
+                $q->where('start_location_id', $request->start_location_id)
                       ->where('end_location_id', $request->end_location_id);
             })
-            ->where('trip_date', $request->trip_date)
-            ->where('status', 'active')
-            ->get();
+            ->where('status', 'active');
+
+        // Bỏ việc fix cứng $tripDate = now() vì các chuyến xe chạy hàng ngày và người dùng không nhập ngày
+        if ($request->filled('trip_date')) {
+            $query->where('trip_date', $request->trip_date);
+        }
+
+        $trips = $query->orderBy('trip_date', 'desc')->get();
 
         return view('customer.trips.search_result', compact('trips'));
     }
@@ -37,7 +45,7 @@ class TripController extends Controller
         $trip->load(['vehicle.seats', 'pickupPoints']);
         
         // Lấy danh sách ID các ghế đã được đặt hoặc đang bị khóa
-        $bookedSeatIds = $trip->seatLocks()->pluck('seat_id')->toArray();
+        $bookedSeatIds = $trip->seatLocks()->where('locked_until', '>', now())->pluck('seat_id')->toArray();
 
         return view('customer.trips.show', compact('trip', 'bookedSeatIds'));
     }

@@ -79,6 +79,16 @@
                         <div class="info-value text-primary">{{ $vehicle->total_seats }} ghế</div>
                     </div>
                     <div class="col-6">
+                        <div class="info-label">Số điện thoại</div>
+                        <div class="info-value">
+                            @if($vehicle->phone_vehicles)
+                                <i class='bx bxs-phone-call text-success me-1'></i> {{ $vehicle->phone_vehicles }}
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-6">
                         <div class="info-label">Trạng thái</div>
                         <div>
                             @if($vehicle->status == 'active')

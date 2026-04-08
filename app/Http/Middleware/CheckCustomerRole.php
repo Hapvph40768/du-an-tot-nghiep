@@ -9,12 +9,15 @@ class CheckCustomerRole
 {
     public function handle($request, Closure $next)
     {
-        // Chỉ khi đã đăng nhập (Auth::check) mới được đọc thuộc tính role
-        if (Auth::check() && Auth::user()->role === 'customer') {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để tiếp tục.');
+        }
+
+        // Cho phép cả admin và staff thực hiện chức năng booking để test
+        if (in_array(Auth::user()->role, ['customer', 'admin', 'staff'])) {
             return $next($request);
         }
 
-        // Nếu chưa đăng nhập hoặc sai role, đẩy về trang login
-        return redirect()->route('login')->with('error', 'Vui lòng đăng nhập với quyền Khách hàng.');
+        return redirect('/')->with('error', 'Tài khoản của bạn không có quyền truy cập.');
     }
 }

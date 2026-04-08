@@ -71,6 +71,12 @@
                                     <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-light border" title="Sửa">
                                         <i class='bx bx-edit'></i>
                                     </a>
+                                    <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-light border {{ $user->status === 'active' ? 'text-danger' : 'text-success' }}" title="{{ $user->status === 'active' ? 'Khóa' : 'Mở khóa' }}">
+                                            <i class='bx {{ $user->status === "active" ? "bx-block" : "bx-check-circle" }}'></i>
+                                        </button>
+                                    </form>
                                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-sm btn-light border text-danger" title="Xóa">

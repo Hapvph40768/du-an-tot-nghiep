@@ -107,6 +107,7 @@
                             <th class="ps-4" style="width: 20%;">Biển số</th>
                             <th style="width: 25%;">Loại xe</th>
                             <th style="width: 15%;">Số ghế</th>
+                            <th style="width: 20%;">Số điện thoại</th>
                             <th style="width: 20%;">Trạng thái</th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
@@ -117,33 +118,55 @@
                                 <td class="ps-4">
                                     <div class="fw-bold text-dark">{{ $vehicle->license_plate }}</div>
                                 </td>
+
                                 <td>
                                     <span class="text-muted small fw-bold">{{ $vehicle->type }}</span>
                                 </td>
+
                                 <td>
-                                    <span class="badge bg-light text-dark border">{{ $vehicle->total_seats }} ghế</span>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ $vehicle->total_seats }} ghế
+                                    </span>
                                 </td>
+
+
                                 <td>
-                                    @if ($vehicle->status == 'active')
-                                        <span class="status-active"><i class='bx bxs-circle fs-6 me-1'></i>Sẵn sàng</span>
+                                    @if ($vehicle->phone_vehicles)
+                                        <i class='bx bxs-phone-call text-success me-1'></i>
+                                        {{ $vehicle->phone_vehicles }}
                                     @else
-                                        <span class="status-maintenance"><i class='bx bxs-wrench fs-6 me-1'></i>Bảo
-                                            trì</span>
+                                        <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
+
+                                <td>
+                                    @if ($vehicle->status == 'active')
+                                        <span class="status-active">
+                                            <i class='bx bxs-circle fs-6 me-1'></i>Sẵn sàng
+                                        </span>
+                                    @else
+                                        <span class="status-maintenance">
+                                            <i class='bx bxs-wrench fs-6 me-1'></i>Bảo trì
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <td class="text-end pe-4">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
                                             class="btn btn-sm btn-light border" title="Xem sơ đồ ghế">
                                             <i class='bx bx-show text-info'></i>
                                         </a>
+
                                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
                                             class="btn btn-sm btn-light border" title="Sửa">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
+
                                         <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
                                             onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
-                                            @csrf @method('DELETE')
+                                            @csrf
+                                            @method('DELETE')
                                             <button class="btn btn-sm btn-light border text-danger" title="Xóa">
                                                 <i class='bx bx-trash'></i>
                                             </button>
@@ -152,8 +175,11 @@
                                 </td>
                             </tr>
                         @empty
+
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">Chưa có xe nào trong danh sách.</td>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    Chưa có xe nào trong danh sách.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -24,28 +24,29 @@
 
 <body>
 
-<div class="admin-wrapper">
+    <div class="admin-wrapper">
 
-    <!-- Sidebar -->
-    @include('layout.admin.blocks.aside')
+        <!-- Sidebar -->
+        @include('layout.admin.blocks.aside')
 
-    <!-- Main Content -->
-    <main class="main-content">
+        <!-- Main Content -->
+        <main class="main-content">
 
-        <!-- Header -->
-        @include('layout.admin.blocks.header')
+            <!-- Header -->
+            @include('layout.admin.blocks.header')
 
-        <!-- Page Content -->
-        <div class="content-body">
-            @yield('content-main')
-        </div>
+            <!-- Page Content -->
+            <div class="content-body">
+                @yield('content-main')
+            </div>
 
-    </main>
+        </main>
 
-</div>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
+
 </html>

@@ -71,6 +71,12 @@
                                     <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>" class="btn btn-sm btn-light border" title="Sửa">
                                         <i class='bx bx-edit'></i>
                                     </a>
+                                    <form action="<?php echo e(route('admin.users.toggle-status', $user->id)); ?>" method="POST" class="d-inline">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="btn btn-sm btn-light border <?php echo e($user->status === 'active' ? 'text-danger' : 'text-success'); ?>" title="<?php echo e($user->status === 'active' ? 'Khóa' : 'Mở khóa'); ?>">
+                                            <i class='bx <?php echo e($user->status === "active" ? "bx-block" : "bx-check-circle"); ?>'></i>
+                                        </button>
+                                    </form>
                                     <form action="<?php echo e(route('admin.users.destroy', $user->id)); ?>" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
                                         <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                         <button class="btn btn-sm btn-light border text-danger" title="Xóa">
@@ -91,4 +97,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/users/index.blade.php ENDPATH**/ ?>
