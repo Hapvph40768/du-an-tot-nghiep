@@ -1,409 +1,163 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
-{{-- Đặt tiêu đề cho tab trình duyệt --}}
-@section('title', 'Quản lý Đội xe')
+@section('header-title', 'Quản lý Đội xe')
+@section('header-subtitle', 'Theo dõi và điều phối tài xế hệ thống')
 
 @section('content-main')
-
-    <style>
-        /* --- CSS TÙY CHỈNH CHO TRANG NÀY (SaaS Style) --- */
-        :root {
-            --primary-color: #ff6b00;
-            /* Màu cam thương hiệu */
-            --primary-hover: #e65100;
-            --bg-light: #f9fafb;
-        }
-
-        /* 1. Card Container: Khung trắng nổi bật */
-        .card-box {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f0f0f0;
-            padding: 24px;
-        }
-
-        /* 2. Toolbar: Thanh công cụ */
-        .toolbar-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .search-box {
-            position: relative;
-            width: 300px;
-        }
-
-        .search-box input {
-            padding-left: 40px;
-            border-radius: 10px;
-            background-color: var(--bg-light);
-            border: 1px solid #e9ecef;
-            height: 45px;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .search-box input:focus {
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-            font-size: 18px;
-        }
-
-        /* 3. Button & Filter */
-        .btn-primary-custom {
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
-            color: white;
-        }
-
-        .form-select-custom {
-            border-radius: 10px;
-            background-color: var(--bg-light);
-            border: 1px solid #e9ecef;
-            height: 45px;
-            cursor: pointer;
-        }
-
-        /* 4. Table Design */
-        .custom-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .custom-table thead th {
-            background-color: #f9fafb;
-            color: #6b7280;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 16px;
-            border-bottom: 2px solid #edf2f7;
-        }
-
-        .custom-table tbody tr {
-            transition: all 0.2s;
-        }
-
-        .custom-table tbody tr:hover {
-            background-color: #fff8f3;
-        }
-
-        .custom-table td {
-            padding: 16px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
-            font-size: 14px;
-        }
-
-        /* 5. Avatar & Info */
-        .driver-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar-box {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #e2e8f0;
-            flex-shrink: 0;
-        }
-
-        .avatar-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Action Buttons */
-        .action-group {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            transition: all 0.2s;
-            background: transparent;
-            text-decoration: none;
-            border: 1px solid transparent;
-            cursor: pointer;
-        }
-
-        .action-btn:hover {
-            background-color: #edf2f7;
-            color: var(--primary-color);
-        }
-
-        .action-btn.delete-btn:hover {
-            background-color: #fee2e2;
-            color: #dc2626;
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-
-        .bg-soft-success {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .bg-soft-warning {
-            background: #fef3c7;
-            color: #92400e;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .bg-soft-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-        }
-    </style>
-
-    <div class="container-fluid py-4">
-
-        <div class="d-flex justify-content-between align-items-end mb-4">
-            <div>
-                <h5 class="text-muted mb-1 small text-uppercase fw-bold ls-1">Quản trị viên</h5>
-                <h2 class="fw-bold text-dark m-0">Danh sách Tài xế</h2>
-            </div>
-
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-primary" aria-current="page">Tài xế</li>
-                </ol>
-            </nav>
+<div class="space-y-8" x-data="{ status: '{{ request('status', '') }}' }">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div class="flex flex-wrap items-center gap-4 flex-1">
+            <form action="{{ route('admin.drivers.index') }}" method="GET" class="contents">
+                <div class="relative group w-full md:w-80">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-brand-accent transition-colors"></i>
+                    <input type="text" name="keyword" value="{{ request('keyword') }}" 
+                           placeholder="Tìm tên, SĐT, bằng lái..." 
+                           class="w-full bg-white/5 border border-white/5 focus:border-brand-accent/30 focus:outline-none rounded-2xl pl-12 pr-4 py-3 text-sm transition-all focus:ring-1 focus:ring-brand-accent/20">
+                </div>
+                
+                <div class="relative group min-w-[180px]">
+                    <select name="status" x-model="status" @change="$el.form.submit()" 
+                            class="w-full appearance-none bg-white/5 border border-white/5 focus:border-brand-accent/30 focus:outline-none rounded-2xl px-5 py-3 text-sm transition-all cursor-pointer">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="active">Đang hoạt động</option>
+                        <option value="busy">Đang chạy</option>
+                        <option value="inactive">Đã nghỉ</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 pointer-events-none"></i>
+                </div>
+            </form>
         </div>
 
-        <div class="card-box">
+        <a href="{{ route('admin.drivers.create') }}" class="liquid-gradient px-8 py-3 rounded-2xl font-black italic text-sm shadow-xl shadow-brand-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 shrink-0">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            THÊM TÀI XẾ
+        </a>
+    </div>
 
-            {{-- Thông báo thành công --}}
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <div class="toolbar-area">
-                {{-- 
-                    ĐÃ SỬA: Thay thẻ <div> bằng <form> để gửi dữ liệu tìm kiếm
-                    - Action: Gửi về route index
-                    - Method: GET
-                --}}
-                <form action="{{ route('admin.drivers.index') }}" method="GET" class="d-flex gap-3 flex-grow-1">
-
-                    <div class="search-box">
-                        <i class='bx bx-search'></i>
-                        {{-- Thêm name="keyword" và value="{{ request('keyword') }}" để giữ lại chữ đã nhập --}}
-                        <input type="text" name="keyword" value="{{ request('keyword') }}" class="form-control"
-                            placeholder="Tìm tên, SĐT, bằng lái...">
-                    </div>
-
-                    {{-- Thêm name="status" và logic selected --}}
-                    <select name="status" class="form-select form-select-custom" style="width: 180px;"
-                        onchange="this.form.submit()">
-                        <option value="">Tất cả trạng thái</option>
-
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
-                            Đang hoạt động
-                        </option>
-
-                        <option value="busy" {{ request('status') == 'busy' ? 'selected' : '' }}>
-                            Đang chạy
-                        </option>
-
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
-                            Đã nghỉ
-                        </option>
-                    </select>
-                </form>
-
-                {{-- NÚT THÊM MỚI (Giữ nguyên) --}}
-                <a href="{{ route('admin.drivers.create') }}" class="btn btn-primary-custom">
-                    <i class='bx bx-plus-circle'></i> Thêm Tài xế
-                </a>
+    @if (session('success'))
+    <div class="glass-dark border-l-4 border-emerald-500 p-4 rounded-2xl animate-fade-in">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
             </div>
-
-            <div class="table-responsive">
-                <table class="custom-table align-middle">
-                    <thead>
-                        <tr>
-                            <th class="ps-4">Tài xế</th>
-                            <th>Thông tin liên hệ</th>
-                            <th>Bằng lái / Hạng</th>
-                            <th>Trạng thái</th>
-                            <th>Ngày tham gia</th>
-                            <th class="text-end pe-4">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if ($drivers->count() > 0)
-                            @foreach ($drivers as $driver)
-                                <tr>
-                                    <td class="ps-4">
-                                        <div class="driver-info">
-                                            <div class="avatar-box">
-                                                @if ($driver->image && file_exists(public_path($driver->image)))
-                                                    <img src="{{ asset($driver->image) }}" alt="{{ $driver->name }}">
-                                                @else
-                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->name) }}&background=random&color=fff&size=128&bold=true"
-                                                        alt="Avatar">
-                                                @endif
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-0 fw-bold text-dark">{{ $driver->name }}</h6>
-                                                <small class="text-muted">ID: #{{ $driver->id }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-medium text-dark">
-                                                <i class='bx bx-phone text-muted me-1'></i> {{ $driver->phone }}
-                                            </span>
-                                            <span class="text-muted small mt-1">user{{ $driver->id }}@example.com</span>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-light text-dark border px-3 py-2">
-                                            <i class='bx bx-id-card me-1'></i> {{ $driver->license_number }}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        @if ($driver->status == 'active')
-                                            <span class="bg-soft-success"><span class="status-dot bg-success"></span>Hoạt
-                                                động</span>
-                                        @elseif($driver->status == 'busy')
-                                            <span class="bg-soft-warning"><span class="status-dot bg-warning"></span>Đang
-                                                chạy</span>
-                                        @else
-                                            <span class="bg-soft-secondary"><span class="status-dot bg-secondary"></span>Đã
-                                                nghỉ</span>
-                                        @endif
-                                    </td>
-
-                                    <td>
-                                        <span class="text-muted small">
-                                            {{ $driver->created_at ? $driver->created_at->format('d/m/Y') : 'N/A' }}
-                                        </span>
-                                    </td>
-
-                                    <td class="text-end pe-4">
-                                        <div class="action-group">
-                                            <a href="{{ route('admin.drivers.show', $driver->id) }}"
-                                                class="btn btn-light border" title="Xem hồ sơ chi tiết">
-                                                <i class='bx bx-show text-info'></i>
-                                            </a>
-                                            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="action-btn"
-                                                title="Chỉnh sửa">
-                                                <i class='bx bx-edit fs-5'></i>
-                                            </a>
-
-                                            <form action="{{ route('admin.drivers.destroy', $driver->id) }}" method="POST"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài xế {{ $driver->name }}?');">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit" class="action-btn delete-btn" title="Xóa"
-                                                    style="border: none;">
-                                                    <i class='bx bx-trash fs-5'></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            {{-- Hiển thị khi không tìm thấy kết quả nào --}}
-                            <tr>
-                                <td colspan="6" class="text-center py-5">
-                                    <div class="text-muted">
-                                        <i class='bx bx-search-alt fs-1 mb-3 d-block'></i>
-                                        Không tìm thấy tài xế nào phù hợp.
-                                    </div>
-                                </td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-                <small class="text-muted">Đang hiển thị <strong>{{ $drivers->count() }}</strong> trên tổng số
-                    <strong>{{ $drivers->total() }}</strong> tài xế</small>
-
-                <div>
-                    {{-- Thêm withQueryString() để giữ bộ lọc khi qua trang 2 --}}
-                    {{ $drivers->appends(request()->query())->links('pagination::bootstrap-4') }}
-                </div>
-            </div>
-
+            <p class="text-xs font-bold">{{ session('success') }}</p>
         </div>
     </div>
+    @endif
+
+    <!-- Table Container -->
+    <div class="glass-dark rounded-4xl border-none ring-1 ring-white/5 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5">
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Tài xế</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Liên hệ</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Bằng lái</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Trạng thái</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/[0.02]">
+                    @if ($drivers->count() > 0)
+                        @foreach ($drivers as $driver)
+                        <tr class="group hover:bg-white/[0.02] transition-colors">
+                            <td class="px-8 py-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-2xl overflow-hidden ring-1 ring-white/10 group-hover:ring-brand-accent/30 transition-all">
+                                        @if ($driver->image)
+                                            <img src="{{ asset($driver->image) }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full liquid-gradient flex items-center justify-center font-black text-xs italic">
+                                                {{ substr($driver->name, 0, 1) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-sm">{{ $driver->name }}</p>
+                                        <p class="text-[10px] font-black uppercase text-white/20 tracking-tighter">ID: #{{ $driver->id }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 text-xs font-bold">
+                                        <i data-lucide="phone" class="w-3 h-3 text-brand-accent"></i>
+                                        <span>{{ $driver->phone }}</span>
+                                    </div>
+                                    <p class="text-[10px] text-white/30 font-medium">user{{ $driver->id }}@manhhung.vn</p>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6">
+                                <div class="glass px-3 py-1.5 rounded-xl border border-white/5 inline-flex items-center gap-2">
+                                    <i data-lucide="id-card" class="w-3.5 h-3.5 text-white/40"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">{{ $driver->license_number }}</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6">
+                                @php
+                                    $statusConfig = [
+                                        'active' => ['color' => 'emerald-400', 'label' => 'Sẵn sàng'],
+                                        'busy' => ['color' => 'brand-accent', 'label' => 'Đang chạy'],
+                                        'inactive' => ['color' => 'red-400', 'label' => 'Nghỉ lễ'],
+                                    ][$driver->status] ?? ['color' => 'white/20', 'label' => 'K.Xác định'];
+                                @endphp
+                                <div class="flex items-center gap-2 text-xs font-bold text-{{ $statusConfig['color'] }}">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-{{ $statusConfig['color'] }} shadow-[0_0_8px] shadow-{{ $statusConfig['color'] }}/50"></div>
+                                    <span>{{ $statusConfig['label'] }}</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.drivers.show', $driver->id) }}" class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-brand-accent hover:text-brand-dark transition-all">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </a>
+                                    <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </a>
+                                    <form action="{{ route('admin.drivers.destroy', $driver->id) }}" method="POST" class="contents" 
+                                          onsubmit="return confirm('Xác nhận xoá tài xế?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5" class="px-8 py-20 text-center space-y-4">
+                                <div class="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center border border-dashed border-white/10 opacity-30">
+                                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                                </div>
+                                <p class="text-sm font-bold text-white/20 uppercase tracking-widest">Không tìm thấy dữ liệu phù hợp</p>
+                            </td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+
+        @if($drivers->hasPages())
+        <div class="px-8 py-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">
+                Hiển thị <span class="text-white">{{ $drivers->count() }}</span> / {{ $drivers->total() }} tài xế
+            </p>
+            <div class="admin-pagination">
+                {{ $drivers->appends(request()->query())->links() }}
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+    // Custom pagination styling if needed
+</script>
+@endpush

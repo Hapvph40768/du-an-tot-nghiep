@@ -1,384 +1,372 @@
-@extends('layout.customer.CustomerLayout')
+@extends('layout.app')
 
-@section('content-main')
-    <section class="py-12 bg-gray-50 border-t">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-2xl font-bold mb-6">Chi tiết chuyến xe và Chọn chỗ</h2>
-
-            @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-
-            <form action="{{ route('customer.bookings.store') }}" method="POST" id="booking-form">
-                @csrf
-                <input type="hidden" name="trip_id" value="{{ $trip->id }}">
-                
-                <div class="grid md:grid-cols-3 gap-6">
-                    <!-- Left: Trip info & Contact -->
-                    <div class="md:col-span-2 space-y-6">
-                        
-                        <!-- 1. Trip Summary -->
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <h3 class="text-xl font-bold border-b pb-3 mb-4">Thông tin chuyến</h3>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Tuyến đường</span>
-                                <span class="text-gray-900">{{ $trip->route->departureLocation->name ?? '...' }} → {{ $trip->route->destinationLocation->name ?? '...' }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Khởi hành</span>
-                                <span class="text-gray-900">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Dự kiến đến</span>
-                                <span class="text-gray-900">{{ \Carbon\Carbon::parse($trip->arrival_time)->format('H:i') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Giá vé</span>
-                                <span class="text-amber-600 font-bold" id="ticket-price" data-price="{{ $trip->price }}">{{ number_format($trip->price, 0, ',', '.') }} đ</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Tên tài xế</span>
-                                <span class="text-gray-900">{{ $trip->driver->name ?? 'Đang cập nhật' }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-semibold text-gray-700">Loại xe</span>
-                                <span class="text-gray-900">{{ $trip->vehicle->type ?? 'Seat/Bed' }} ({{ $trip->vehicle->license_plate ?? 'CX-00000' }})</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-4 border-t pt-2 mt-2 border-dashed">
-                                <span class="font-semibold text-gray-700">SĐT Nhà xe (Hỗ trợ)</span>
-                                <span class="text-amber-600 font-bold text-lg">
-                                    <i class="fas fa-phone-alt text-sm mr-1"></i> {{ $trip->vehicle->phone_vehicles ?? 'Đang cập nhật' }}
-                                </span>
-                            </div>
-                            
-                            <hr class="mb-4">
-                            
-                            <div class="mb-4">
-                                <label class="block text-gray-700 font-medium mb-2">Chọn ngày đi <span class="text-red-500">*</span></label>
-                                <input type="date" name="selected_departure_date" value="{{ $trip->trip_date }}" class="w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-500">
-                            </div>
-                            
-                            <div class="mb-2">
-                                <label class="block text-gray-700 font-medium mb-2">Điểm lên xe <span class="text-red-500">*</span></label>
-                                <select name="pickup_point_id" id="pickup_point_select" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
-                                    <option value="" data-address="{{ $trip->route->departureLocation->name ?? 'Bến xe' }}">-- Chọn điểm đón --</option>
-                                    @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" data-address="{{ $point->address ? $point->address . ', ' . $point->name : $point->name }}" {{ old('pickup_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }} - {{ $point->name }} ({{ $point->address }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <!-- Bản đồ bến xe / điểm đón -->
-                            <div class="mt-4 rounded-lg overflow-hidden border border-gray-200 shadow-sm relative h-56 bg-gray-100">
-                                <div id="map-loading" class="absolute inset-0 flex items-center justify-center bg-gray-50 z-0">
-                                    <span class="text-gray-500 text-sm flex items-center">
-                                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 
-                                        Đang tải bản đồ bến xe...
-                                    </span>
-                                </div>
-                                <iframe id="station-map" class="absolute inset-0 w-full h-full z-10 opacity-0 transition-opacity duration-500" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-
-                            <!-- Điểm trả khách -->
-                            <div class="mt-4">
-                                <label class="block text-gray-700 font-medium mb-2">Điểm trả khách <span class="text-gray-400 text-sm font-normal">(tuỳ chọn)</span></label>
-                                <select name="dropoff_point_id" id="dropoff_point_select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
-                                    <option value="">-- Trả tại điểm cuối tuyến (mặc định) --</option>
-                                    @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" {{ old('dropoff_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ $point->name }} ({{ $point->address }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <p class="text-xs text-gray-400 mt-1"><i class="fas fa-info-circle mr-1"></i>Chọn điểm trả nếu bạn muốn xuống xe trước điểm cuối.</p>
-                            </div>
-                        </div>
-
-                        <!-- 2. Pickup & Contact Info -->
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <h3 class="text-xl font-bold border-b pb-3 mb-4">Thông tin hành khách</h3>
-                            
-                            <div class="mb-4">
-                                <label class="block text-gray-700 font-medium mb-2">Họ tên người đi <span class="text-red-500">*</span></label>
-                                <input type="text" name="contact_name" required value="{{ old('contact_name', Auth::user()->name ?? '') }}"
-                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="block text-gray-700 font-medium mb-2">Số điện thoại <span class="text-red-500">*</span></label>
-                                <input type="text" name="contact_phone" required value="{{ old('contact_phone', Auth::user()->phone ?? '') }}"
-                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
-                            </div>
-
-                            <div class="mb-2">
-                                <!-- Điểm đón đã được dịch chuyển -->
-                            </div>
-                            <!-- Lưu ý: Nếu user chưa đăng nhập, web sẽ chặn khi submit do có auth middleware, đây là flow chuẩn -->
-                            @guest
-                                <p class="text-sm text-amber-600 mt-2"><i>Lưu ý: Bạn sẽ được yêu cầu Đăng nhập hệ thống trước lưu đơn.</i></p>
-                            @endguest
-                        </div>
-                    </div>
-
-                    <!-- Right: Seat selection & Summary -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 self-start sticky top-6">
-                        <h3 class="text-xl font-bold border-b pb-3 mb-4">Chọn ghế</h3>
-                        
-                        <div class="flex justify-between mb-4 text-sm max-w-[200px] mx-auto">
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-gray-200 border rounded"></div> Trống</div>
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-amber-500 rounded"></div> Đang chọn</div>
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-red-800 rounded"></div> Đã đặt</div>
-                        </div>
-
-                        <!-- Sơ đồ ghế đơn giản -->
-                        <div class="grid grid-cols-4 gap-2 mb-6">
-                            @foreach($trip->vehicle->seats as $seat)
-                                @php
-                                    $isBooked = in_array($seat->id, $bookedSeatIds);
-                                @endphp
-                                <label class="relative cursor-pointer">
-                                    <input type="checkbox" name="seat_ids[]" value="{{ $seat->id }}" class="peer sr-only seat-checkbox" 
-                                        {{ $isBooked ? 'disabled' : '' }}>
-                                    
-                                    <div class="w-full aspect-square flex items-center justify-center rounded border font-medium text-sm
-                                        {{ $isBooked ? 'bg-red-800 text-white border-red-900 cursor-not-allowed' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-600 transition-colors' }}">
-                                        {{ $seat->seat_number }}
-                                    </div>
-                                </label>
-                            @endforeach
-                        </div>
-
-                        <div class="border-t pt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-600">Ghế đã chọn:</span>
-                                <span id="selected-seats-display" class="font-medium text-right text-sm">Chưa có</span>
-                            </div>
-
-                            {{-- Mã giảm giá --}}
-                            @auth
-                            <div class="mb-3">
-                                <label class="block text-gray-600 text-sm mb-1">Mã giảm giá</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="coupon-input" name="coupon_code"
-                                        placeholder="Nhập mã (nếu có)"
-                                        class="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-amber-500 uppercase"
-                                        autocomplete="off" oninput="this.value=this.value.toUpperCase()">
-                                    <button type="button" id="coupon-btn"
-                                        class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap">
-                                        Áp dụng
-                                    </button>
-                                </div>
-                                <div id="coupon-msg" class="text-xs mt-1 hidden"></div>
-                            </div>
-                            @endauth
-
-                            <div id="price-breakdown" class="hidden mb-2 text-sm">
-                                <div class="flex justify-between text-gray-600">
-                                    <span>Giá gốc:</span>
-                                    <span id="base-price-display" class="font-medium">0 đ</span>
-                                </div>
-                                <div class="flex justify-between text-green-600">
-                                    <span id="discount-label">Giảm giá:</span>
-                                    <span id="discount-display" class="font-medium">-0 đ</span>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-between items-center mb-6">
-                                <span class="text-gray-600 font-medium">Tổng tiền:</span>
-                                <span id="total-price-display" class="text-xl font-bold text-amber-600">0 đ</span>
-                            </div>
-
-                            <input type="hidden" name="applied_promo_id" id="applied-promo-id" value="">
-
-                            @guest
-                                <a href="{{ route('login') }}" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
-                                    Đăng nhập để đặt vé
-                                </a>
-                            @else
-                                <button type="submit" id="submit-btn" disabled class="w-full py-3 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed transition-colors">
-                                    Tiếp tục
-                                </button>
-                            @endguest
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <!-- JS Logic cho chọn ghế + mã giảm giá -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes    = document.querySelectorAll('.seat-checkbox:not(:disabled)');
-            const selectedDisplay = document.getElementById('selected-seats-display');
-            const totalDisplay  = document.getElementById('total-price-display');
-            const basePriceDisplay = document.getElementById('base-price-display');
-            const discountDisplay  = document.getElementById('discount-display');
-            const discountLabel    = document.getElementById('discount-label');
-            const priceBreakdown   = document.getElementById('price-breakdown');
-            const submitBtn     = document.getElementById('submit-btn');
-            const pricePerSeat  = parseInt(document.getElementById('ticket-price').getAttribute('data-price')) || 0;
-
-            let currentDiscount  = 0;
-            let currentBaseTotal = 0;
-            let appliedPromoId   = '';
-
-            const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + ' đ';
-
-            function updateSummary() {
-                let selectedNames = [];
-                let count = 0;
-                checkboxes.forEach(cb => {
-                    if (cb.checked) {
-                        count++;
-                        selectedNames.push(cb.nextElementSibling.innerText.trim());
-                    }
-                });
-
-                currentBaseTotal = count * pricePerSeat;
-
-                if (count > 0) {
-                    selectedDisplay.innerText = selectedNames.join(', ');
-                    const finalTotal = Math.max(0, currentBaseTotal - currentDiscount);
-                    totalDisplay.innerText = fmt(finalTotal);
-
-                    if (currentDiscount > 0) {
-                        priceBreakdown && priceBreakdown.classList.remove('hidden');
-                        basePriceDisplay && (basePriceDisplay.innerText = fmt(currentBaseTotal));
-                        discountDisplay  && (discountDisplay.innerText  = '-' + fmt(currentDiscount));
-                    }
-
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                        submitBtn.classList.add('bg-amber-500', 'hover:bg-amber-600');
-                    }
+@section('content')
+    <div class="px-6 lg:px-12 py-12 max-w-7xl mx-auto" 
+         x-data="{ 
+            selectedSeats: [], 
+            pricePerSeat: {{ $trip->price }},
+            discount: 0,
+            couponCode: '',
+            couponValid: false,
+            couponMessage: '',
+            pickupPoint: '',
+            pickupPointId: '',
+            pickupAddress: '{{ $trip->route->departureLocation->name }}',
+            dropoffPoint: '',
+            dropoffPointId: '',
+            dropoffAddress: '{{ $trip->route->destinationLocation->name }}',
+            tab: 'lower',
+            get subtotal() { return this.selectedSeats.length * this.pricePerSeat },
+            get total() { return Math.max(0, this.subtotal - this.discount) },
+            toggleSeat(id, number) {
+                if (this.selectedSeats.find(s => s.id === id)) {
+                    this.selectedSeats = this.selectedSeats.filter(s => s.id !== id);
                 } else {
-                    selectedDisplay.innerText = 'Chưa có';
-                    totalDisplay.innerText    = '0 đ';
-                    priceBreakdown && priceBreakdown.classList.add('hidden');
-                    currentDiscount = 0;
-                    appliedPromoId  = '';
-                    resetCouponUI();
-
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-                        submitBtn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
+                    if (this.selectedSeats.length >= 5) {
+                        alert('Bạn chỉ có thể chọn tối đa 5 ghế.');
+                        return;
                     }
+                    this.selectedSeats.push({ id, number });
                 }
-            }
-
-            checkboxes.forEach(cb => cb.addEventListener('change', updateSummary));
-
-            // ===== COUPON LOGIC =====
-            const couponBtn   = document.getElementById('coupon-btn');
-            const couponInput = document.getElementById('coupon-input');
-            const couponMsg   = document.getElementById('coupon-msg');
-            const promoIdField = document.getElementById('applied-promo-id');
-
-            function resetCouponUI() {
-                if (couponInput) couponInput.value = '';
-                if (couponMsg)   { couponMsg.className = 'text-xs mt-1 hidden'; couponMsg.innerText = ''; }
-                if (promoIdField) promoIdField.value = '';
-                priceBreakdown && priceBreakdown.classList.add('hidden');
-            }
-
-            function showCouponMsg(msg, ok) {
-                if (!couponMsg) return;
-                couponMsg.innerText    = msg;
-                couponMsg.className    = 'text-xs mt-1 ' + (ok ? 'text-green-600 font-semibold' : 'text-red-500');
-                couponMsg.classList.remove('hidden');
-            }
-
-            if (couponBtn) {
-                couponBtn.addEventListener('click', function() {
-                    const code = couponInput ? couponInput.value.trim() : '';
-                    if (!code) { showCouponMsg('Vui lòng nhập mã giảm giá.', false); return; }
-                    if (currentBaseTotal <= 0) { showCouponMsg('Vui lòng chọn ghế trước.', false); return; }
-
-                    couponBtn.disabled   = true;
-                    couponBtn.innerText  = '...';
-
-                    fetch('{{ route("customer.bookings.checkCoupon") }}', {
+                this.$nextTick(() => lucide.createIcons());
+            },
+            async checkCoupon() {
+                if (!this.couponCode) return;
+                try {
+                    const response = await fetch('{{ route('customer.bookings.checkCoupon') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ code: code, base_amount: currentBaseTotal })
-                    })
-                    .then(r => r.json())
-                    .then(data => {
-                        couponBtn.disabled  = false;
-                        couponBtn.innerText = 'Áp dụng';
-
-                        if (data.valid) {
-                            currentDiscount = data.discount;
-                            appliedPromoId  = data.promo_id;
-                            if (promoIdField) promoIdField.value = appliedPromoId;
-
-                            showCouponMsg('✅ ' + data.message, true);
-
-                            // Cập nhật breakdown
-                            if (priceBreakdown) priceBreakdown.classList.remove('hidden');
-                            if (basePriceDisplay) basePriceDisplay.innerText = fmt(currentBaseTotal);
-                            if (discountDisplay)  discountDisplay.innerText  = '-' + fmt(currentDiscount);
-                            if (discountLabel)    discountLabel.innerText    = data.promo_label + ':';
-                            totalDisplay.innerText = fmt(Math.max(0, currentBaseTotal - currentDiscount));
-
-                            // Đổi nút thành Xoá
-                            couponBtn.innerText  = 'Xoá';
-                            couponBtn.className  = 'px-3 py-2 bg-red-400 hover:bg-red-500 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap';
-                            couponBtn.onclick = function() {
-                                currentDiscount = 0;
-                                appliedPromoId  = '';
-                                resetCouponUI();
-                                updateSummary();
-                                couponBtn.innerText = 'Áp dụng';
-                                couponBtn.className = 'px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap';
-                                couponBtn.onclick   = null;
-                                couponBtn.addEventListener('click', arguments.callee); // re-attach? better just reload logic
-                                location.reload(); // simplest reset - but let's not do this
-                            };
-                        } else {
-                            currentDiscount = 0;
-                            if (promoIdField) promoIdField.value = '';
-                            showCouponMsg('❌ ' + data.message, false);
-                        }
-                    })
-                    .catch(() => {
-                        couponBtn.disabled  = false;
-                        couponBtn.innerText = 'Áp dụng';
-                        showCouponMsg('Lỗi kết nối, vui lòng thử lại.', false);
+                        body: JSON.stringify({ code: this.couponCode, base_amount: this.subtotal })
                     });
-                });
-            }
-
-            // ===== MAP LOGIC =====
-            const pickupSelect = document.getElementById('pickup_point_select');
-            const stationMap   = document.getElementById('station-map');
-
-            function updateMap() {
-                if (!pickupSelect || !stationMap) return;
-                const address = pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-address');
-                if (address) {
-                    stationMap.classList.replace('opacity-100', 'opacity-0');
-                    setTimeout(() => {
-                        stationMap.src = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
-                        stationMap.onload = () => stationMap.classList.replace('opacity-0', 'opacity-100');
-                    }, 300);
+                    const data = await response.json();
+                    this.couponValid = data.valid;
+                    this.couponMessage = data.message;
+                    if (data.valid) {
+                        this.discount = data.discount;
+                    } else {
+                        this.discount = 0;
+                    }
+                } catch (e) {
+                    this.couponMessage = 'Lỗi kiểm tra mã.';
                 }
             }
+         }"
+         x-init="lucide.createIcons()">
+        
+        <!-- Navigation Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+            <div>
+                <a href="{{ route('customer.trips.search', ['start_location_id' => $trip->route->start_location_id, 'end_location_id' => $trip->route->end_location_id]) }}" 
+                   class="inline-flex items-center gap-2 text-white/40 hover:text-brand-accent transition-all group mb-4">
+                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Thay đổi hành trình</span>
+                </a>
+                <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter">ĐẶT VÉ TRỰC TUYẾN</h1>
+                <p class="text-white/40 text-sm font-bold uppercase tracking-[0.2em] mt-2">
+                    <span class="text-brand-accent">{{ $trip->route->departureLocation->name }}</span> 
+                    <i data-lucide="arrow-right" class="inline w-3 h-3 mx-2 opacity-50"></i> 
+                    <span class="text-brand-accent">{{ $trip->route->destinationLocation->name }}</span>
+                </p>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="flex gap-4">
+                <div class="glass p-4 rounded-3xl border-none ring-1 ring-white/10 flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-2xl liquid-gradient flex items-center justify-center shadow-lg shadow-brand-accent/20">
+                        <i data-lucide="calendar" class="w-5 h-5 text-brand-dark"></i>
+                    </div>
+                    <div>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">Ngày đi</p>
+                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</p>
+                    </div>
+                </div>
+                <div class="glass p-4 rounded-3xl border-none ring-1 ring-white/10 flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">
+                        <i data-lucide="clock" class="w-5 h-5 text-brand-accent"></i>
+                    </div>
+                    <div>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">Giờ khởi hành</p>
+                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            if (pickupSelect) {
-                pickupSelect.addEventListener('change', updateMap);
-                updateMap();
-            }
-        });
-    </script>
+        <form action="{{ route('customer.bookings.store') }}" method="POST" id="booking-form">
+            @csrf
+            <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+            <template x-for="seat in selectedSeats" :key="seat.id">
+                <input type="hidden" name="seat_ids[]" :value="seat.id">
+            </template>
+            <input type="hidden" name="coupon_code" :value="couponCode">
+            <input type="hidden" name="pickup_point_id" :value="pickupPointId">
+            <input type="hidden" name="dropoff_point_id" :value="dropoffPointId">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Main Selection Flow -->
+                <div class="lg:col-span-8 space-y-12">
+                    
+                    <!-- STEP 1: Seat Selection -->
+                    <div class="liquid-card p-8 md:p-12">
+                        <div class="flex justify-between items-center mb-12">
+                            <div class="flex items-center gap-4">
+                                <span class="flex-none w-10 h-10 rounded-full liquid-gradient flex items-center justify-center font-black text-brand-dark shadow-lg shadow-brand-accent/20">1</span>
+                                <h3 class="text-2xl font-black italic tracking-tighter">CHỌN CHỖ NGỒI</h3>
+                            </div>
+                            <!-- Deck Toggle -->
+                            @if($trip->vehicle->total_seats > 22)
+                            <div class="flex bg-white/5 p-1.5 rounded-2xl border border-white/5">
+                                <button type="button" @click="tab = 'lower'" 
+                                        :class="tab === 'lower' ? 'bg-white text-brand-dark shadow-lg' : 'text-white/40 hover:text-white'"
+                                        class="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Tầng dưới</button>
+                                <button type="button" @click="tab = 'upper'" 
+                                        :class="tab === 'upper' ? 'bg-white text-brand-dark shadow-lg' : 'text-white/40 hover:text-white'"
+                                        class="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Tầng trên</button>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="flex gap-8 mb-12 p-6 glass rounded-[2rem] border-brand-accent/5 max-w-fit mx-auto">
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-md bg-white/5 border border-white/10"></div>
+                                <span class="text-[9px] font-bold text-white/40 whitespace-nowrap uppercase tracking-widest">Trống</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-md liquid-gradient shadow-lg shadow-brand-accent/20"></div>
+                                <span class="text-[9px] font-bold text-white/40 whitespace-nowrap uppercase tracking-widest">Đang chọn</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded-md bg-red-500/20 border border-red-500/20"></div>
+                                <span class="text-[9px] font-bold text-white/40 whitespace-nowrap uppercase tracking-widest">Đã đặt</span>
+                            </div>
+                        </div>
+
+                        <!-- Seat Map Grid -->
+                        <div class="grid grid-cols-3 md:grid-cols-3 gap-6 md:gap-10 justify-items-center max-w-lg mx-auto relative py-12">
+                            <div class="absolute inset-0 bg-brand-primary/5 blur-[100px] -z-10 rounded-full"></div>
+                            
+                            @foreach($trip->vehicle->seats as $seat)
+                                @php
+                                    $isBooked = in_array($seat->id, $bookedSeatIds);
+                                    $isUpper = str_contains($seat->seat_number, 'B') || (int)filter_var($seat->seat_number, FILTER_SANITIZE_NUMBER_INT) > 20;
+                                @endphp
+                                <div 
+                                    @if($trip->vehicle->total_seats > 22)
+                                        x-show="tab === '{{ $isUpper ? 'upper' : 'lower' }}'"
+                                        x-transition:enter="transition ease-out duration-300 transform"
+                                        x-transition:enter-start="opacity-0 scale-90 translate-y-4"
+                                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                    @endif
+                                >
+                                    <div 
+                                        @click="{{ !$isBooked ? "toggleSeat($seat->id, '$seat->seat_number')" : "" }}"
+                                        :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'selected' : '{{ $isBooked ? 'booked' : 'available' }}'"
+                                        class="seat-v2 w-20 h-24 flex flex-col items-center justify-center gap-2 group"
+                                    >
+                                        <i data-lucide="armchair" 
+                                           :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20 group-hover:text-brand-accent'" 
+                                           class="w-8 h-8 transition-colors duration-300"></i>
+                                        <span class="text-[10px] font-black tracking-[0.2em]"
+                                              :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20'">{{ $seat->seat_number }}</span>
+                                        
+                                        @if(!$isBooked)
+                                        <div class="absolute bottom-1 left-2 right-2 h-0.5 bg-brand-accent/0 group-hover:bg-brand-accent/20 rounded-full transition-all"
+                                             :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'hidden' : ''"></div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Points Selection -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <!-- Pickup -->
+                        <div class="liquid-card p-10">
+                            <div class="flex items-center gap-4 mb-8">
+                                <span class="flex-none w-8 h-8 rounded-full border border-brand-accent/30 flex items-center justify-center font-black text-xs text-brand-accent">2</span>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter">ĐIỂM ĐÓN</h3>
+                            </div>
+                            
+                            <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                                @php $pickupPoints = $trip->pickupPoints->where('location_id', $trip->route->start_location_id); @endphp
+                                @foreach($pickupPoints as $point)
+                                <label class="block cursor-pointer group">
+                                    <input type="radio" name="_pickup_point" value="{{ $point->id }}" class="hidden" 
+                                           @change="pickupAddress = '{{ $point->address ?: $point->name }}'; pickupPoint = '{{ $point->name }}'; pickupPointId = '{{ $point->id }}'" required>
+                                    <div class="timeline-node" :class="pickupPointId == '{{ $point->id }}' ? 'active' : ''">
+                                        <div class="timeline-dot transition-all duration-500">
+                                            <i data-lucide="map-pin" 
+                                               :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-dark w-3 h-3' : 'text-white/20 w-2 h-2'"></i>
+                                        </div>
+                                        <div class="glass p-6 rounded-3xl border-white/5 group-hover:border-white/20 transition-all"
+                                             :class="pickupPointId == '{{ $point->id }}' ? 'bg-brand-accent/5 ring-1 ring-brand-accent/20 border-transparent shadow-[0_0_20px_rgba(34,211,238,0.05)]' : ''">
+                                            <div class="flex justify-between items-start mb-1">
+                                                <p class="text-lg font-black group-hover:text-brand-accent transition-colors"
+                                                   :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-accent' : ''">{{ $point->name }}</p>
+                                                <span class="text-[10px] font-black text-white/30">{{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }}</span>
+                                            </div>
+                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Dropoff -->
+                        <div class="liquid-card p-10">
+                            <div class="flex items-center gap-4 mb-8">
+                                <span class="flex-none w-8 h-8 rounded-full border border-red-500/30 flex items-center justify-center font-black text-xs text-red-400">3</span>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter">ĐIỂM TRẢ</h3>
+                            </div>
+                            
+                            <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar text-red-400">
+                                @php $dropoffPoints = $trip->pickupPoints->where('location_id', $trip->route->end_location_id); @endphp
+                                @foreach($dropoffPoints as $point)
+                                <label class="block cursor-pointer group">
+                                    <input type="radio" name="_dropoff_point" value="{{ $point->id }}" class="hidden" 
+                                           @change="dropoffAddress = '{{ $point->address ?: $point->name }}'; dropoffPoint = '{{ $point->name }}'; dropoffPointId = '{{ $point->id }}'" required>
+                                    <div class="timeline-node" :class="dropoffPointId == '{{ $point->id }}' ? 'active' : ''">
+                                        <div class="timeline-dot transition-all duration-500" 
+                                             :class="dropoffPointId == '{{ $point->id }}' ? 'bg-red-500 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : ''">
+                                            <i data-lucide="flag" 
+                                               :class="dropoffPointId == '{{ $point->id }}' ? 'text-white w-3 h-3' : 'text-red-500/20 w-2 h-2'"></i>
+                                        </div>
+                                        <div class="glass p-6 rounded-3xl border-white/5 group-hover:border-white/20 transition-all text-white"
+                                             :class="dropoffPointId == '{{ $point->id }}' ? 'bg-red-500/5 ring-1 ring-red-500/20 border-transparent' : ''">
+                                            <div class="flex justify-between items-start mb-1">
+                                                <p class="text-lg font-black group-hover:text-red-400 transition-colors"
+                                                   :class="dropoffPointId == '{{ $point->id }}' ? 'text-red-400' : ''">{{ $point->name }}</p>
+                                                <span class="text-[10px] font-black text-white/30 italic">Kết thúc</span>
+                                            </div>
+                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar: Checkout Details -->
+                <div class="lg:col-span-4">
+                    <div class="sticky top-28 space-y-8">
+                        
+                        <!-- Main Summary Card -->
+                        <div class="liquid-card p-10 overflow-hidden relative">
+                            <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-accent/10 blur-[60px] rounded-full"></div>
+                            
+                            <h4 class="text-xs font-black uppercase tracking-[0.3em] text-white/30 mb-8 pb-4 border-b border-white/5">Thông tin vé</h4>
+                            
+                            <div class="space-y-8">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <p class="text-[10px] font-black uppercase tracking-widest text-brand-accent mb-1">Ghế đã chọn</p>
+                                        <p class="text-4xl font-black italic tracking-tighter" x-text="selectedSeats.length > 0 ? selectedSeats.map(s => s.number).join(', ') : '---'"></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] font-black uppercase tracking-widest text-white/30 mb-1">Tầng</p>
+                                        <p class="text-xl font-black italic" x-text="tab === 'lower' ? 'DƯỚI' : 'TRÊN'"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Points Preview -->
+                                <div class="space-y-4 p-6 bg-white/5 rounded-3xl border border-white/5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-2 h-2 rounded-full bg-brand-accent shadow-[0_0_8px_#22d3ee]"></div>
+                                        <div class="flex-1">
+                                            <p class="text-[10px] font-black uppercase text-white/30 tracking-widest">Đón: <span class="text-white/60" x-text="pickupPoint || 'Chưa chọn'"></span></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-2 h-2 rounded-full bg-red-400 shadow-[0_0_8px_#f87171]"></div>
+                                        <div class="flex-1">
+                                            <p class="text-[10px] font-black uppercase text-white/30 tracking-widest">Trả: <span class="text-white/60" x-text="dropoffPoint || 'Chưa chọn'"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coupon -->
+                                <div class="space-y-3">
+                                    <div class="relative">
+                                        <input type="text" x-model="couponCode" placeholder="Mã giảm giá"
+                                               class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold tracking-widest uppercase focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/20 transition-all placeholder:text-white/10">
+                                        <button type="button" @click="checkCoupon()" 
+                                                class="absolute right-2 top-2 bottom-2 px-6 rounded-xl glass hover:bg-white hover:text-brand-dark font-black text-[10px] uppercase tracking-widest transition-all">Áp dụng</button>
+                                    </div>
+                                    <p x-show="couponMessage" :class="couponValid ? 'text-green-400' : 'text-red-400'" class="text-[10px] font-black tracking-widest px-2" x-text="couponMessage"></p>
+                                </div>
+
+                                <!-- Total -->
+                                <div class="pt-8 border-t border-white/5">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[10px] font-black uppercase text-white/30 tracking-widest">Tạm tính</span>
+                                        <span class="font-black" x-text="new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ'"></span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-6 text-green-400" x-show="discount > 0">
+                                        <span class="text-[10px] font-black uppercase tracking-widest text-green-400/50">Giảm giá</span>
+                                        <span class="font-black" x-text="'-' + new Intl.NumberFormat('vi-VN').format(discount) + 'đ'"></span>
+                                    </div>
+                                    <div class="flex justify-between items-end">
+                                        <span class="text-2xl font-black italic tracking-tighter">TỔNG CỘNG</span>
+                                        <span class="text-4xl font-black liquid-text italic tracking-tighter tabular-nums" x-text="new Intl.NumberFormat('vi-VN').format(total) + 'đ'"></span>
+                                    </div>
+                                </div>
+
+                                @guest
+                                    <a href="{{ route('login') }}" class="w-full py-6 rounded-3xl bg-white text-brand-dark text-center font-black italic block hover:bg-brand-accent hover:text-white transition-all transform hover:-translate-y-1 shadow-xl uppercase tracking-widest text-xs">
+                                        Đăng nhập để đặt vé
+                                    </a>
+                                @else
+                                    <button type="submit" 
+                                            :disabled="selectedSeats.length === 0 || !pickupPointId || !dropoffPointId" 
+                                            :class="selectedSeats.length === 0 || !pickupPointId || !dropoffPointId ? 'opacity-20 cursor-not-allowed grayscale' : ''"
+                                            class="w-full py-6 rounded-3xl liquid-gradient text-brand-dark font-black text-xl italic transition-all hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_-10px_rgba(34,211,238,0.3)] flex items-center justify-center gap-4 group">
+                                        <span x-text="selectedSeats.length === 0 ? 'HÃY CHỌN GHẾ' : (!pickupPointId || !dropoffPointId ? 'CHỌN ĐIỂM DỪNG' : 'TIẾP TỤC')"></span>
+                                        <i data-lucide="chevron-right" class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
+                                    </button>
+                                @endguest
+                            </div>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="flex items-center justify-center gap-6 opacity-20 hover:opacity-100 transition-opacity duration-500">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-brand-accent"></i>
+                                <span class="text-[8px] font-black tracking-widest uppercase">Safe & Secure</span>
+                            </div>
+                            <div class="w-1 h-1 rounded-full bg-white/20"></div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="credit-card" class="w-4 h-4 text-brand-accent"></i>
+                                <span class="text-[8px] font-black tracking-widest uppercase">Fast Checkout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.2); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.4); }
+    </style>
 @endsection
+
+@push('scripts')
+<script>
+    // Lucide initialization is handled by Alpine x-init and individual component calls
+    document.addEventListener('alpine:init', () => {
+        lucide.createIcons();
+    });
+</script>
+@endpush

@@ -42,7 +42,7 @@ class TripController extends Controller
     public function show(Trip $trip)
     {
         // Load kèm xe, danh sách ghế, và các điểm đón trả khách
-        $trip->load(['vehicle.seats', 'pickupPoints']);
+        $trip->load(['vehicle.seats', 'pickupPoints.location', 'route.departureLocation', 'route.destinationLocation']);
         
         // Lấy danh sách ID các ghế đã được đặt hoặc đang bị khóa
         $bookedSeatIds = $trip->seatLocks()->where('locked_until', '>', now())->pluck('seat_id')->toArray();

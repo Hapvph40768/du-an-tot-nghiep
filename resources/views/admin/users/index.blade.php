@@ -1,97 +1,115 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
-@section('title', 'Quản lý Người dùng')
+@section('header-title', 'Quản lý Tài khoản')
+@section('header-subtitle', 'Phân quyền và quản lý người dùng hệ thống')
 
 @section('content-main')
-<style>
-    :root { --primary-color: #ff6b00; --primary-hover: #e65100; }
-    .card-box { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-    .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
-    .custom-table thead th { background-color: #f9fafb; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase; padding: 16px; border-bottom: 2px solid #edf2f7; text-align: left; }
-    .custom-table td { padding: 16px; vertical-align: middle; border-bottom: 1px solid #f3f4f6; text-align: left; font-size: 14px; }
-    .btn-primary-custom { background-color: var(--primary-color); border: none; color: white; padding: 8px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; }
-    .btn-primary-custom:hover { background-color: var(--primary-hover); color: white; transform: translateY(-2px); }
-    .badge-role { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; }
-    .role-admin { background: #fee2e2; color: #dc2626; }
-    .role-staff { background: #e0e7ff; color: #4338ca; }
-    .role-customer { background: #f3f4f6; color: #374151; }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-</style>
-
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark m-0">Quản lý tài khoản</h2>
-            <p class="text-muted small mb-0">Hệ thống có tổng cộng {{ $users->total() }} thành viên</p>
+<div class="space-y-8">
+    <!-- Header Summary -->
+    <div class="glass-dark p-8 rounded-4xl border-none ring-1 ring-white/5 flex flex-wrap items-center justify-between gap-8">
+        <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl liquid-gradient flex items-center justify-center shadow-lg shadow-brand-primary/20">
+                <i data-lucide="users" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-black italic tracking-tighter">NGƯỜI DÙNG</h2>
+                <p class="text-xs text-white/30 font-bold uppercase tracking-widest">Hệ thống có {{ $users->total() }} thành viên</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <div class="bg-white/5 px-6 py-3 rounded-2xl border border-white/5 space-y-1">
+                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest leading-none">Hoạt động</p>
+                <p class="text-sm font-bold">{{ $users->where('status', 'active')->count() }} Active</p>
+            </div>
         </div>
     </div>
 
+    {{-- Thông báo --}}
     @if (session('success'))
-        <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-            <i class='bx bx-check-circle'></i> {{ session('success') }}
+        <div class="glass-dark border-l-4 border-emerald-500 p-6 rounded-3xl animate-fade-in flex items-center gap-4">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+            <span class="text-sm font-bold">{{ session('success') }}</span>
         </div>
     @endif
 
-    <div class="card-box">
-        <div class="table-responsive">
-            <table class="custom-table w-100">
+    <!-- Table Container -->
+    <div class="glass-dark rounded-4xl border-none ring-1 ring-white/5 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr>
-                        <th class="ps-4" style="width: 25%;">Họ tên / Email</th>
-                        <th style="width: 15%;">Số điện thoại</th>
-                        <th style="width: 15%;">Vai trò</th>
-                        <th style="width: 15%;">Trạng thái</th>
-                        <th style="width: 15%;">Ngày tạo</th>
-                        <th class="text-end pe-4" style="width: 15%;">Hành động</th>
+                    <tr class="border-b border-white/5">
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Họ tên / Email</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Vai trò</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Liên hệ</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Trạng thái</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">Thao tác</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-white/[0.02]">
                     @foreach ($users as $user)
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-bold text-dark">{{ $user->name }}</div>
-                                <div class="text-muted small">{{ $user->email }}</div>
-                            </td>
-                            <td>{{ $user->phone ?? '—' }}</td>
-                            <td>
-                                <span class="badge-role role-{{ $user->role }}">
-                                    {{ ucfirst($user->role) }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($user->status == 'active')
-                                    <span class="text-success small fw-bold"><span class="status-dot bg-success"></span>Hoạt động</span>
-                                @else
-                                    <span class="text-danger small fw-bold"><span class="status-dot bg-danger"></span>Đã khóa</span>
-                                @endif
-                            </td>
-                            <td class="text-muted small">{{ $user->created_at->format('d/m/Y') }}</td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-light border" title="Sửa">
-                                        <i class='bx bx-edit'></i>
-                                    </a>
-                                    <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-light border {{ $user->status === 'active' ? 'text-danger' : 'text-success' }}" title="{{ $user->status === 'active' ? 'Khóa' : 'Mở khóa' }}">
-                                            <i class='bx {{ $user->status === "active" ? "bx-block" : "bx-check-circle" }}'></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-light border text-danger" title="Xóa">
-                                            <i class='bx bx-trash'></i>
-                                        </button>
-                                    </form>
+                    <tr class="group hover:bg-white/[0.02] transition-colors">
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-sm">{{ $user->name }}</span>
+                                <span class="text-[10px] font-medium text-white/30">{{ $user->email }}</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6">
+                            @php
+                                $roleConfig = [
+                                    'admin' => ['bg' => 'bg-red-500/10', 'text' => 'text-red-500', 'label' => 'Quản trị'],
+                                    'staff' => ['bg' => 'bg-brand-accent/10', 'text' => 'text-brand-accent', 'label' => 'Nhân viên'],
+                                    'customer' => ['bg' => 'bg-white/5', 'text' => 'text-white/40', 'label' => 'Khách hàng'],
+                                ][$user->role] ?? ['bg' => 'bg-white/5', 'text' => 'text-white/20', 'label' => $user->role];
+                            @endphp
+                            <span class="px-3 py-1 rounded-full {{ $roleConfig['bg'] }} {{ $roleConfig['text'] }} text-[10px] font-black uppercase tracking-widest border border-white/5">
+                                {{ $roleConfig['label'] }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="text-xs font-bold text-white/60 italic tracking-tighter">{{ $user->phone ?? '—' }}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            @if($user->status == 'active')
+                                <div class="flex items-center gap-2 text-xs font-bold text-emerald-400">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"></div>
+                                    <span>Đang chạy</span>
                                 </div>
-                            </td>
-                        </tr>
+                            @else
+                                <div class="flex items-center gap-2 text-xs font-bold text-red-400">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                                    <span>Đã khóa</span>
+                                </div>
+                            @endif
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <div class="flex justify-end gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
+                                <a href="{{ route('admin.users.edit', $user->id) }}" class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-white/10 transition-all">
+                                    <i data-lucide="settings-2" class="w-4 h-4"></i>
+                                </a>
+                                <form action="{{ route('admin.users.toggle-status', $user->id) }}" method="POST" class="contents">
+                                    @csrf
+                                    <button type="submit" class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-white/10 transition-all {{ $user->status === 'active' ? 'text-red-400' : 'text-emerald-400' }}">
+                                        <i data-lucide="{{ $user->status === 'active' ? 'lock' : 'unlock' }}" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Xác nhận xóa tài khoản?')">
+                                    @csrf @method('DELETE')
+                                    <button class="w-9 h-9 glass rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
-            {{ $users->links('pagination::bootstrap-5') }}
+
+        <div class="px-8 py-6 border-t border-white/5">
+            {{ $users->links() }}
         </div>
     </div>
 </div>

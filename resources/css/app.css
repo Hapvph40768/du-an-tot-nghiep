@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +7,117 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Brand Colors */
+    --color-brand-primary: #006992;
+    --color-brand-dark: #0b0f11;
+    --color-brand-accent: #22d3ee;
+
+    /* Typography */
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+    /* Custom Radius */
+    --radius-3xl: 1.5rem;
+    --radius-4xl: 2rem;
+
+    /* Animation Easing */
+    --ease-apple: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Base Styles */
+@layer base {
+    body {
+        @apply bg-brand-dark text-white font-sans antialiased;
+        background-image: 
+            radial-gradient(circle at 0% 0%, rgba(0, 105, 146, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 100% 100%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+        background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading tracking-tight;
+    }
+}
+
+/* Liquid Utilities */
+@layer utilities {
+    .glass {
+        @apply bg-white/5 backdrop-blur-xl border border-white/10;
+    }
+    .glass-dark {
+        @apply bg-black/20 backdrop-blur-2xl border border-white/5;
+    }
+    .liquid-bg {
+        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background-size: 200% auto;
+        animation: liquid 4s linear infinite;
+        color: white;
+    }
+
+    .liquid-text {
+        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: liquid 4s linear infinite;
+    }
+
+    .liquid-gradient {
+        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background-size: 200% auto;
+        animation: liquid 4s linear infinite;
+    }
+
+    .liquid-card {
+        @apply bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)];
+        transition: all var(--ease-apple) 0.5s;
+    }
+
+    .liquid-card:hover {
+        @apply border-white/20 bg-white/[0.05];
+        transform: translateY(-4px);
+    }
+
+    .seat-v2 {
+        @apply relative transition-all duration-500 cursor-pointer overflow-hidden rounded-2xl;
+        aspect-ratio: 1/1.2;
+    }
+
+    .seat-v2.available {
+        @apply bg-white/5 border border-white/10 hover:bg-white/10 hover:scale-105;
+    }
+
+    .seat-v2.selected {
+        @apply liquid-gradient scale-110 shadow-[0_0_30px_rgba(34,211,238,0.4)] border-transparent;
+    }
+
+    .seat-v2.booked {
+        @apply bg-red-500/10 border border-red-500/20 opacity-30 cursor-not-allowed;
+    }
+
+    .timeline-node {
+        @apply relative pl-8 pb-8 last:pb-0;
+    }
+
+    .timeline-node::before {
+        content: '';
+        @apply absolute left-[11px] top-6 bottom-0 w-[2px] bg-white/5;
+    }
+
+    .timeline-node.active::before {
+        @apply bg-brand-accent/30;
+    }
+
+    .timeline-dot {
+        @apply absolute left-0 top-1 w-6 h-6 rounded-full glass flex items-center justify-center z-10;
+    }
+
+    .timeline-node.active .timeline-dot {
+        @apply bg-brand-accent border-brand-accent shadow-[0_0_15px_#22d3ee];
+    }
+
+    @keyframes liquid {
+        to { background-position: 200% center; }
+    }
 }
