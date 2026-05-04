@@ -12,6 +12,18 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Tables from AdditionalDataSeeder
+        DB::table('promotions')->truncate();
+        DB::table('price_rules')->truncate();
+        DB::table('parcels')->truncate();
+        DB::table('notifications')->truncate();
+        DB::table('activity_logs')->truncate();
+        DB::table('staff_logs')->truncate();
+        DB::table('daily_reports')->truncate();
+        DB::table('transactions')->truncate();
+        DB::table('orders')->truncate();
+        DB::table('schedules')->truncate();
+        // Tables from main seeder
         DB::table('parking_histories')->truncate();
         DB::table('parking_slots')->truncate();
         DB::table('parkings')->truncate();
@@ -114,31 +126,86 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 4. Routes
-        $routesData = [
-            ['start' => 'Hà Nội', 'end' => 'TP. Hồ Chí Minh', 'dist' => 1700, 'time' => 32],
-            ['start' => 'TP. Hồ Chí Minh', 'end' => 'Hà Nội', 'dist' => 1700, 'time' => 32],
-            ['start' => 'Hà Nội', 'end' => 'Đà Nẵng', 'dist' => 766, 'time' => 14],
-            ['start' => 'Đà Nẵng', 'end' => 'Hà Nội', 'dist' => 766, 'time' => 14],
-            ['start' => 'TP. Hồ Chí Minh', 'end' => 'Đà Lạt', 'dist' => 308, 'time' => 6],
-            ['start' => 'Đà Lạt', 'end' => 'TP. Hồ Chí Minh', 'dist' => 308, 'time' => 6],
-            ['start' => 'TP. Hồ Chí Minh', 'end' => 'Vũng Tàu', 'dist' => 96, 'time' => 2],
-            ['start' => 'Vũng Tàu', 'end' => 'TP. Hồ Chí Minh', 'dist' => 96, 'time' => 2],
-            ['start' => 'Hà Nội', 'end' => 'Hải Phòng', 'dist' => 120, 'time' => 2],
-            ['start' => 'Hải Phòng', 'end' => 'Hà Nội', 'dist' => 120, 'time' => 2],
-            ['start' => 'TP. Hồ Chí Minh', 'end' => 'Nha Trang', 'dist' => 430, 'time' => 8],
-            ['start' => 'Nha Trang', 'end' => 'TP. Hồ Chí Minh', 'dist' => 430, 'time' => 8],
-            ['start' => 'TP. Hồ Chí Minh', 'end' => 'Cần Thơ', 'dist' => 165, 'time' => 3],
+        // 4. Routes - Tự động sinh TẤT CẢ tuyến đường giữa 8 địa điểm (8x7=56 tuyến)
+        // Bản đồ khoảng cách có sẵn (km) giữa các tỉnh thành
+        $distMap = [
+            'Hà Nội|TP. Hồ Chí Minh' => [1700, 32],
+            'TP. Hồ Chí Minh|Hà Nội' => [1700, 32],
+            'Hà Nội|Đà Nẵng' => [766, 14],
+            'Đà Nẵng|Hà Nội' => [766, 14],
+            'Hà Nội|Hải Phòng' => [120, 2],
+            'Hải Phòng|Hà Nội' => [120, 2],
+            'Hà Nội|Nha Trang' => [1200, 22],
+            'Nha Trang|Hà Nội' => [1200, 22],
+            'Hà Nội|Cần Thơ' => [1600, 30],
+            'Cần Thơ|Hà Nội' => [1600, 30],
+            'Hà Nội|Đà Lạt' => [1400, 26],
+            'Đà Lạt|Hà Nội' => [1400, 26],
+            'Hà Nội|Vũng Tàu' => [1750, 33],
+            'Vũng Tàu|Hà Nội' => [1750, 33],
+            'TP. Hồ Chí Minh|Đà Nẵng' => [940, 18],
+            'Đà Nẵng|TP. Hồ Chí Minh' => [940, 18],
+            'TP. Hồ Chí Minh|Hải Phòng' => [1820, 34],
+            'Hải Phòng|TP. Hồ Chí Minh' => [1820, 34],
+            'TP. Hồ Chí Minh|Đà Lạt' => [308, 6],
+            'Đà Lạt|TP. Hồ Chí Minh' => [308, 6],
+            'TP. Hồ Chí Minh|Vũng Tàu' => [96, 2],
+            'Vũng Tàu|TP. Hồ Chí Minh' => [96, 2],
+            'TP. Hồ Chí Minh|Nha Trang' => [430, 8],
+            'Nha Trang|TP. Hồ Chí Minh' => [430, 8],
+            'TP. Hồ Chí Minh|Cần Thơ' => [165, 3],
+            'Cần Thơ|TP. Hồ Chí Minh' => [165, 3],
+            'Đà Nẵng|Hải Phòng' => [680, 13],
+            'Hải Phòng|Đà Nẵng' => [680, 13],
+            'Đà Nẵng|Cần Thơ' => [1100, 20],
+            'Cần Thơ|Đà Nẵng' => [1100, 20],
+            'Đà Nẵng|Nha Trang' => [526, 10],
+            'Nha Trang|Đà Nẵng' => [526, 10],
+            'Đà Nẵng|Đà Lạt' => [650, 12],
+            'Đà Lạt|Đà Nẵng' => [650, 12],
+            'Đà Nẵng|Vũng Tàu' => [880, 16],
+            'Vũng Tàu|Đà Nẵng' => [880, 16],
+            'Hải Phòng|Cần Thơ' => [1500, 28],
+            'Cần Thơ|Hải Phòng' => [1500, 28],
+            'Hải Phòng|Nha Trang' => [1350, 25],
+            'Nha Trang|Hải Phòng' => [1350, 25],
+            'Hải Phòng|Đà Lạt' => [1700, 31],
+            'Đà Lạt|Hải Phòng' => [1700, 31],
+            'Hải Phòng|Vũng Tàu' => [1800, 34],
+            'Vũng Tàu|Hải Phòng' => [1800, 34],
+            'Cần Thơ|Đà Lạt' => [420, 8],
+            'Đà Lạt|Cần Thơ' => [420, 8],
+            'Cần Thơ|Nha Trang' => [520, 10],
+            'Nha Trang|Cần Thơ' => [520, 10],
+            'Cần Thơ|Vũng Tàu' => [220, 4],
+            'Vũng Tàu|Cần Thơ' => [220, 4],
+            'Nha Trang|Đà Lạt' => [134, 3],
+            'Đà Lạt|Nha Trang' => [134, 3],
+            'Nha Trang|Vũng Tàu' => [380, 7],
+            'Vũng Tàu|Nha Trang' => [380, 7],
+            'Đà Lạt|Vũng Tàu' => [390, 7],
+            'Vũng Tàu|Đà Lạt' => [390, 7],
         ];
 
+        $locationNames = array_keys($locModels);
         $routeModels = [];
-        foreach ($routesData as $r) {
-            $routeModels[] = \App\Models\Route::create([
-                'start_location_id' => $locModels[$r['start']]->id,
-                'end_location_id'   => $locModels[$r['end']]->id,
-                'distance_km'       => $r['dist'],
-                'estimated_time'    => $r['time'],
-            ]);
+        foreach ($locationNames as $startName) {
+            foreach ($locationNames as $endName) {
+                if ($startName === $endName) continue;
+                $key = $startName . '|' . $endName;
+                if (isset($distMap[$key])) {
+                    [$dist, $time] = $distMap[$key];
+                } else {
+                    $dist = rand(100, 1800);
+                    $time = ceil($dist / 60);
+                }
+                $routeModels[] = \App\Models\Route::create([
+                    'start_location_id' => $locModels[$startName]->id,
+                    'end_location_id'   => $locModels[$endName]->id,
+                    'distance_km'       => $dist,
+                    'estimated_time'    => $time,
+                ]);
+            }
         }
 
         // 5. Drivers
@@ -354,5 +421,7 @@ class DatabaseSeeder extends Seeder
                 'status'     => $statuses[array_rand($statuses)],
             ]);
         }
+        // Seed thêm dữ liệu chi tiết
+        $this->call(AdditionalDataSeeder::class);
     }
 }
