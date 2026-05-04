@@ -1,11 +1,11 @@
 <script>
     // Pass current locale and translations to JavaScript
-    window.currentLocale = '{{ app()->getLocale() }}';
+    window.currentLocale = '<?php echo app()->getLocale(); ?>';
 
     // Load translations from JSON file
     (function() {
         const locale = window.currentLocale;
-        const fallbackTranslations = {{ json_encode(json_decode(file_get_contents(base_path('lang/' . app()->getLocale() . '.json'))) }};
+        const fallbackTranslations = <?php echo json_encode(json_decode(file_get_contents(base_path('lang/' . app()->getLocale() . '.json')), true)); ?>;
         window.translations = fallbackTranslations || {};
     })();
 
