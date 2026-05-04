@@ -12,23 +12,32 @@
         <div class="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Left: Value Prop -->
             <div class="space-y-8" x-data="{ show: false }" x-init="setTimeout(() => show = true, 300)">
-                <div x-show="show" x-transition:enter="transition ease-apple duration-1000" x-transition:enter-start="opacity-0 -translate-y-8" x-transition:enter-end="opacity-100 translate-y-0">
-                    <span class="inline-block px-4 py-1.5 rounded-full glass text-brand-accent text-xs font-bold tracking-widest uppercase mb-6">
+                <div x-show="show" x-transition:enter="transition ease-apple duration-1000"
+                    x-transition:enter-start="opacity-0 -translate-y-8" x-transition:enter-end="opacity-100 translate-y-0">
+                    <span
+                        class="inline-block px-4 py-1.5 rounded-full glass text-brand-accent text-xs font-bold tracking-widest uppercase mb-6">
                         Luxury Travel Experience
                     </span>
                     <h1 class="text-6xl lg:text-8xl font-black leading-[0.9] mb-6">
-                        ĐẶT VÉ NHANH <br/>
+                        ĐẶT VÉ NHANH <br />
                         <span class="liquid-text font-black">CHỈ 30 GIÂY</span>
                     </h1>
                     <p class="text-xl text-white/60 max-w-lg leading-relaxed">
-                        Trải nghiệm dịch vụ vận tải 5 sao với dàn xe Limousine đời mới. Chọn tuyến, chọn ghế và khởi hành ngay lập tức.
+                        Trải nghiệm dịch vụ vận tải 5 sao với dàn xe Limousine đời mới. Chọn tuyến, chọn ghế và khởi hành
+                        ngay lập tức.
                     </p>
                 </div>
 
-                <div x-show="show" x-transition:enter="transition ease-apple duration-1000 delay-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="flex items-center gap-6">
+                <div x-show="show" x-transition:enter="transition ease-apple duration-1000 delay-300"
+                    x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+                    class="flex items-center gap-6">
                     <div class="flex -space-x-3">
-                        <div class="w-12 h-12 rounded-full border-2 border-brand-dark bg-gray-800 flex items-center justify-center font-bold text-xs ring-2 ring-white/10">MH</div>
-                        <div class="w-12 h-12 rounded-full border-2 border-brand-dark bg-brand-primary flex items-center justify-center font-bold text-xs ring-2 ring-white/10">5★</div>
+                        <div
+                            class="w-12 h-12 rounded-full border-2 border-brand-dark bg-gray-800 flex items-center justify-center font-bold text-xs ring-2 ring-white/10">
+                            MH</div>
+                        <div
+                            class="w-12 h-12 rounded-full border-2 border-brand-dark bg-brand-primary flex items-center justify-center font-bold text-xs ring-2 ring-white/10">
+                            5★</div>
                     </div>
                     <div>
                         <p class="text-sm font-bold">10,000+ Khách hàng</p>
@@ -39,51 +48,66 @@
 
             <!-- Right: Search Form -->
             <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 500)">
-                <div x-show="show" x-transition:enter="transition ease-apple duration-1000 delay-500" x-transition:enter-start="opacity-0 scale-95 translate-x-8" x-transition:enter-end="opacity-100 scale-100 translate-x-0" class="glass-dark p-10 rounded-4xl shadow-2xl relative">
-                    <div class="absolute -top-4 -right-4 w-12 h-12 rounded-2xl liquid-gradient flex items-center justify-center shadow-lg animate-bounce">
+                <div x-show="show" x-transition:enter="transition ease-apple duration-1000 delay-500"
+                    x-transition:enter-start="opacity-0 scale-95 translate-x-8"
+                    x-transition:enter-end="opacity-100 scale-100 translate-x-0"
+                    class="glass-dark p-10 rounded-4xl shadow-2xl relative">
+                    <div
+                        class="absolute -top-4 -right-4 w-12 h-12 rounded-2xl liquid-gradient flex items-center justify-center shadow-lg animate-bounce">
                         <i data-lucide="sparkles" class="w-6 h-6"></i>
                     </div>
 
                     <h3 class="font-heading text-2xl font-bold mb-8">Tìm chuyến xe</h3>
-                    
+
                     <form action="{{ route('customer.trips.search') }}" method="GET" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-white/40 uppercase tracking-widest">Điểm đi</label>
                                 <div class="relative">
-                                    <select name="start_location_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
+                                    <select name="start_location_id" required
+                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
                                         <option value="" class="bg-brand-dark">Chọn điểm đi</option>
                                         @foreach ($locations as $location)
-                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}}</option>
+                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}
+                                            </option>
                                         @endforeach
                                     </select>
-                                    <i data-lucide="map-pin" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                    <i data-lucide="map-pin"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
                                 </div>
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{{ __('destination') }}</label>
+                                <label
+                                    class="text-xs font-bold text-white/40 uppercase tracking-widest">{{ __('destination') }}</label>
                                 <div class="relative">
-                                    <select name="end_location_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
+                                    <select name="end_location_id" required
+                                        class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
                                         <option value="" class="bg-brand-dark">Chọn điểm đến</option>
                                         @foreach ($locations as $location)
-                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}}</option>
+                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}
+                                            </option>
                                         @endforeach
                                     </select>
-                                    <i data-lucide="navigation" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                    <i data-lucide="navigation"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{{ __('date') }} khởi hành</label>
+                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{ __('date') }} khởi
+                                hành</label>
                             <div class="relative">
-                                <input type="date" name="trip_date" value="{{ date('Y-m-d') }}" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all">
-                                <i data-lucide="calendar" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                <input type="date" name="trip_date" value="{{ date('Y-m-d') }}" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all">
+                                <i data-lucide="calendar"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-5 rounded-2xl liquid-gradient font-black text-lg shadow-xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                        <button type="submit"
+                            class="w-full py-5 rounded-2xl liquid-gradient font-black text-lg shadow-xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
                             <span>TÌM CHUYẾN XE</span>
                             <i data-lucide="arrow-right" class="w-6 h-6"></i>
                         </button>
@@ -101,8 +125,9 @@
                 <h2 class="text-5xl font-black italic">TUYẾN ĐƯỜNG PHỔ BIẾN</h2>
             </div>
             <a href="#" class="group flex items-center gap-3 text-white/50 hover:text-white transition-colors">
-                <span>{{{ __('view') }} tất cả</span>
-                <div class="w-10 h-10 rounded-full glass flex items-center justify-center group-hover:bg-brand-accent group-hover:text-white transition-all">
+                <span>{{ __('view') }} tất cả</span>
+                <div
+                    class="w-10 h-10 rounded-full glass flex items-center justify-center group-hover:bg-brand-accent group-hover:text-white transition-all">
                     <i data-lucide="plus" class="w-5 h-5"></i>
                 </div>
             </a>
@@ -122,42 +147,50 @@
             @endphp
 
             @foreach($popular as $route)
-            <div class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass border-none">
-                <img src="{{ $route['img'] }}" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:scale-110 group-hover:brightness-100 transition-all duration-1000">
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent opacity-80"></div>
-                
-                <div class="absolute bottom-0 left-0 right-0 p-8 space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <div class="flex items-center gap-2 text-brand-accent text-xs font-bold tracking-widest uppercase">
-                        <span>{{ $route['from'] }}}</span>
-                        <i data-lucide="arrow-right-left" class="w-3 h-3"></i>
-                        <span>{{ $route['to'] }}}</span>
+                <div class="group relative aspect-[4/5] rounded-3xl overflow-hidden glass border-none">
+                    <img src="{{ $route['img'] }}"
+                        class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:scale-110 group-hover:brightness-100 transition-all duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent opacity-80">
                     </div>
-                    <h4 class="text-2xl font-bold line-clamp-1">{{ $route['from'] }}} - {{ $route['to'] }}}</h4>
-                    <p class="text-white/60 text-sm">Chỉ từ <span class="text-white font-bold">{{ $route['price'] }}đ</span></p>
-                    
-                    <div class="pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                        <a href="{{ route('customer.trips.search', ['start_location_id' => $getLocId($route['from']), 'end_location_id' => $getLocId($route['to']), 'trip_date' => date('Y-m-d')]) }}" class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">{{{ __('bookings') }} ngay</a>
-                    </div>
-                </div>
 
-                <div class="absolute top-6 right-6 w-10 h-10 rounded-full glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
-                    <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+                    <div
+                        class="absolute bottom-0 left-0 right-0 p-8 space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <div class="flex items-center gap-2 text-brand-accent text-xs font-bold tracking-widest uppercase">
+                            <span>{{ $route['from'] }}</span>
+                            <i data-lucide="arrow-right-left" class="w-3 h-3"></i>
+                            <span>{{ $route['to'] }}</span>
+                        </div>
+                        <h4 class="text-2xl font-bold line-clamp-1">{{ $route['from'] }} - {{ $route['to'] }}</h4>
+                        <p class="text-white/60 text-sm">Chỉ từ <span class="text-white font-bold">{{ $route['price'] }}đ</span>
+                        </p>
+
+                        <div class="pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                            <a href="{{ route('customer.trips.search', ['start_location_id' => $getLocId($route['from']), 'end_location_id' => $getLocId($route['to']), 'trip_date' => date('Y-m-d')]) }}"
+                                class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">{{ __('bookings') }}
+                                ngay</a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute top-6 right-6 w-10 h-10 rounded-full glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
+                        <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+                    </div>
                 </div>
-            </div>
             @endforeach
         </div>
     </section>
 
     <!-- Services Section -->
     <section class="py-32 bg-white/5 relative overflow-hidden">
-        <div class="absolute -left-24 top-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/10 blur-[100px] rounded-full"></div>
-        
+        <div class="absolute -left-24 top-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/10 blur-[100px] rounded-full">
+        </div>
+
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                 <div class="space-y-12">
                     <div class="space-y-4">
                         <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Why Choose Us</span>
-                        <h2 class="text-5xl font-black italic">DỊCH VỤ <br/> ĐẲNG CẤP 5 SAO</h2>
+                        <h2 class="text-5xl font-black italic">DỊCH VỤ <br /> ĐẲNG CẤP 5 SAO</h2>
                     </div>
 
                     <div class="space-y-8">
@@ -170,28 +203,34 @@
                         @endphp
 
                         @foreach($features as $f)
-                        <div class="flex gap-6 group">
-                            <div class="w-16 h-16 rounded-2xl glass flex items-center justify-center group-hover:liquid-gradient transition-all duration-500 shrink-0">
-                                <i data-lucide="{{ $f['icon'] }}" class="w-8 h-8 group-hover:text-white transition-colors text-brand-accent"></i>
+                            <div class="flex gap-6 group">
+                                <div
+                                    class="w-16 h-16 rounded-2xl glass flex items-center justify-center group-hover:liquid-gradient transition-all duration-500 shrink-0">
+                                    <i data-lucide="{{ $f['icon'] }}"
+                                        class="w-8 h-8 group-hover:text-white transition-colors text-brand-accent"></i>
+                                </div>
+                                <div class="space-y-2">
+                                    <h4 class="text-xl font-bold font-heading">{{ $f['title'] }}</h4>
+                                    <p class="text-white/50 text-sm leading-relaxed">{{ $f['desc'] }}</p>
+                                </div>
                             </div>
-                            <div class="space-y-2">
-                                <h4 class="text-xl font-bold font-heading">{{ $f['title'] }}}</h4>
-                                <p class="text-white/50 text-sm leading-relaxed">{{ $f['desc'] }}}</p>
-                            </div>
-                        </div>
                         @endforeach
                     </div>
                 </div>
 
                 <div class="relative">
                     <div class="aspect-square rounded-4xl overflow-hidden glass p-4">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover rounded-3xl" alt="Bus Interior">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800"
+                            class="w-full h-full object-cover rounded-3xl" alt="Bus Interior">
                     </div>
                     <div class="absolute -bottom-10 -left-10 glass p-8 rounded-3xl shadow-2xl space-y-2 max-w-[200px]">
                         <p class="text-4xl font-black text-brand-accent italic">20+</p>
-                        <p class="text-xs font-bold uppercase tracking-widest text-white/50 leading-tight">Năm kinh nghiệm vận tải</p>
+                        <p class="text-xs font-bold uppercase tracking-widest text-white/50 leading-tight">Năm kinh nghiệm
+                            vận tải</p>
                     </div>
-                    <div class="absolute -top-10 -right-10 w-32 h-32 liquid-gradient rounded-full blur-[60px] opacity-30 animate-pulse"></div>
+                    <div
+                        class="absolute -top-10 -right-10 w-32 h-32 liquid-gradient rounded-full blur-[60px] opacity-30 animate-pulse">
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,26 +238,32 @@
 
     <!-- App CTA -->
     <section class="py-32 max-w-7xl mx-auto px-6">
-        <div class="liquid-gradient rounded-4xl p-16 relative overflow-hidden flex flex-col items-center text-center space-y-8">
+        <div
+            class="liquid-gradient rounded-4xl p-16 relative overflow-hidden flex flex-col items-center text-center space-y-8">
             <div class="absolute inset-0 bg-black/10"></div>
-            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
-            
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2">
+            </div>
+
             <div class="relative z-10 space-y-4">
-                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">{{{ __('ready_to_launch') }}</h2>
+                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">{{ __('ready_to_launch') }}
+                </h2>
                 <p class="text-xl text-white/80 max-w-2xl mx-auto">
                     Tải ngay ứng dụng Nhà xe Mạnh Hùng để nhận ưu đãi 50.000đ cho chuyến đi đầu tiên.
                 </p>
             </div>
 
             <div class="relative z-10 flex flex-wrap justify-center gap-6">
-                <a href="#" class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
+                <a href="#"
+                    class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
                     <div class="text-left">
                         <p class="text-[10px] font-bold uppercase opacity-50">Download on</p>
                         <p class="text-lg font-bold leading-tight">App Store</p>
                     </div>
                 </a>
-                <a href="#" class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
+                <a href="#"
+                    class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
                     <i data-lucide="play" class="w-6 h-6"></i>
                     <div class="text-left">
                         <p class="text-[10px] font-bold uppercase opacity-50">Get it on</p>
@@ -228,5 +273,30 @@
             </div>
         </div>
     </section>
-@endsection
 
+<!-- Contact Section -->
+<section id="contact" class="py-32 bg-brand-dark">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-8">{{ __('contact') }}</h2>
+        <p class="text-white/60 max-w-2xl mx-auto mb-12">Liên hệ với chúng tôi để được hỗ trợ nhanh nhất</p>
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="glass-dark p-8 rounded-2xl">
+                <i data-lucide="phone" class="w-8 h-8 text-brand-primary mb-4"></i>
+                <h3 class="text-white font-bold mb-2">Hotline</h3>
+                <p class="text-white/60">1900 1234</p>
+            </div>
+            <div class="glass-dark p-8 rounded-2xl">
+                <i data-lucide="mail" class="w-8 h-8 text-brand-primary mb-4"></i>
+                <h3 class="text-white font-bold mb-2">Email</h3>
+                <p class="text-white/60">support@manhhung.com</p>
+            </div>
+            <div class="glass-dark p-8 rounded-2xl">
+                <i data-lucide="map-pin" class="w-8 h-8 text-brand-primary mb-4"></i>
+                <h3 class="text-white font-bold mb-2">{{ __('address') }}</h3>
+                <p class="text-white/60">123 Nguyễn Văn Linh, Q.7, TP.HCM</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@endsection

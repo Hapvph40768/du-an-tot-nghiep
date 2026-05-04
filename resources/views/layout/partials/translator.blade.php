@@ -5,7 +5,7 @@
     // Load translations from JSON file
     (function() {
         const locale = window.currentLocale;
-        const fallbackTranslations = @json(file_get_contents(base_path('lang/' . app()->getLocale() . '.json')))
+        const fallbackTranslations = {{ json_encode(json_decode(file_get_contents(base_path('lang/' . app()->getLocale() . '.json'))) }};
         window.translations = fallbackTranslations || {};
     })();
 
