@@ -11,17 +11,15 @@
                 <div>
                     <h2 class="text-2xl font-black italic tracking-tight">KẾT QUẢ TÌM KIẾM</h2>
                     <p class="text-white/50 text-sm">
-                        {{ $trips->first()?->route->departureLocation->name ?? '...' }} 
-                        <span class="mx-2 text-brand-accent">→</span>
-                        {{ $trips->first()?->route->destinationLocation->name ?? '...' }}
-                    </p>
+                        {{ $trips->first()?->route->departureLocation->name ?? '...' }}}<span class="mx-2 text-brand-accent">→</span>
+                        {{ $trips->first()?->route->destinationLocation->name ?? '...' }}}</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-4">
                 <div class="bg-white/5 px-6 py-3 rounded-2xl border border-white/5 space-y-1">
-                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest leading-none">Ngày khởi hành</p>
-                    <p class="text-sm font-bold">{{ request('trip_date') ? \Carbon\Carbon::parse(request('trip_date'))->format('d/m/Y') : 'Hôm nay' }}</p>
+                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest leading-none">{{{ __('date') }} khởi hành</p>
+                    <p class="text-sm font-bold">{{ request('trip_date') ? \Carbon\Carbon::parse(request('trip_date'))->format('d/m/Y') : 'Hôm nay' }}}</p>
                 </div>
                 <a href="{{ route('customer.home') }}" class="glass px-6 py-4 rounded-2xl text-sm font-bold hover:bg-white hover:text-brand-dark transition-all">
                     Thay đổi
@@ -37,19 +35,19 @@
                     <div class="glass-dark rounded-3xl p-6 border-none ring-1 ring-white/5 space-y-6">
                         <!-- Hour Filter -->
                         <div class="space-y-4">
-                            <p class="text-sm font-bold">Giờ khởi hành</p>
+                            <p class="text-sm font-bold">{{{ __('time') }} khởi hành</p>
                             <div class="space-y-2">
                                 <label class="flex items-center gap-3 text-white/50 hover:text-white cursor-pointer transition-colors">
                                     <input type="checkbox" class="w-5 h-5 rounded-lg border-white/10 bg-white/5 text-brand-primary focus:ring-brand-primary">
-                                    <span class="text-sm">Sáng (00:00 - 12:00)</span>
+                                    <span class="text-sm">{{{ __('morning') }} (00:00 - 12:00)</span>
                                 </label>
                                 <label class="flex items-center gap-3 text-white/50 hover:text-white cursor-pointer transition-colors">
                                     <input type="checkbox" class="w-5 h-5 rounded-lg border-white/10 bg-white/5 text-brand-primary focus:ring-brand-primary">
-                                    <span class="text-sm">Chiều (12:00 - 18:00)</span>
+                                    <span class="text-sm">{{{ __('afternoon') }} (12:00 - 18:00)</span>
                                 </label>
                                 <label class="flex items-center gap-3 text-white/50 hover:text-white cursor-pointer transition-colors">
                                     <input type="checkbox" class="w-5 h-5 rounded-lg border-white/10 bg-white/5 text-brand-primary focus:ring-brand-primary">
-                                    <span class="text-sm">Tối (18:00 - 24:00)</span>
+                                    <span class="text-sm">{{{ __('evening') }} (18:00 - 24:00)</span>
                                 </label>
                             </div>
                         </div>
@@ -77,7 +75,7 @@
                 <div class="liquid-gradient rounded-3xl p-6 space-y-4 shadow-xl shadow-brand-primary/20">
                     <i data-lucide="tag" class="w-8 h-8 opacity-50"></i>
                     <h5 class="font-bold leading-tight uppercase">Ưu đãi giảm giá 20% cho khách hàng mới!</h5>
-                    <button class="w-full py-2.5 rounded-xl bg-white text-brand-dark font-black text-xs">SAO CHÉP MÃ</button>
+                    <button class="w-full py-2.5 rounded-xl bg-white text-brand-dark font-black text-xs">{{{ __('copy_secure_key') }}</button>
                 </div>
             </aside>
 
@@ -108,7 +106,7 @@
                                 <div class="flex items-center gap-8 shrink-0">
                                     <div class="text-center space-y-1">
                                         <p class="text-[10px] font-black uppercase text-white/30 tracking-widest">Khởi hành</p>
-                                        <p class="text-3xl font-black font-heading">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</p>
+                                        <p class="text-3xl font-black font-heading">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}}</p>
                                     </div>
                                     
                                     <div class="flex flex-col items-center gap-2">
@@ -116,13 +114,12 @@
                                         <div class="h-10 w-px border-l border-dashed border-white/20"></div>
                                         <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
                                         <p class="absolute -translate-y-6 text-[10px] font-bold text-white/20 uppercase tracking-tighter">
-                                            {{ $trip->route->estimated_time ? $trip->route->estimated_time . 'H' : '...' }}
-                                        </p>
+                                            {{ $trip->route->estimated_time ? $trip->route->estimated_time . 'H' : '...' }}}</p>
                                     </div>
 
                                     <div class="text-center space-y-1">
                                         <p class="text-[10px] font-black uppercase text-white/30 tracking-widest">Dự kiến</p>
-                                        <p class="text-3xl font-black font-heading text-white/40">{{ \Carbon\Carbon::parse($trip->arrival_time)->format('H:i') }}</p>
+                                        <p class="text-3xl font-black font-heading text-white/40">{{ \Carbon\Carbon::parse($trip->arrival_time)->format('H:i') }}}</p>
                                     </div>
                                 </div>
 
@@ -130,11 +127,9 @@
                                 <div class="flex-1 space-y-4">
                                     <div class="flex flex-wrap gap-2">
                                         <span class="px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-widest border border-brand-primary/30">
-                                            {{ $trip->vehicle->type ?? 'Luxury' }}
-                                        </span>
+                                            {{ $trip->vehicle->type ?? 'Luxury' }}}</span>
                                         <span class="px-3 py-1 rounded-full bg-white/5 text-white/50 text-[10px] font-black uppercase tracking-widest border border-white/5">
-                                            {{ $trip->vehicle->license_plate }}
-                                        </span>
+                                            {{ $trip->vehicle->license_plate }}}</span>
                                     </div>
                                     <h4 class="text-xl font-bold font-heading">Nhà xe Mạnh Hùng Premium</h4>
                                     <div class="flex items-center gap-4 text-xs text-white/40 font-medium">
@@ -160,7 +155,7 @@
                                             CHỌN CHỖ
                                         </a>
                                         <p class="text-center text-[10px] font-bold text-white/40 group-hover:text-brand-accent transition-colors">
-                                            CÒN {{ max(0, ($trip->vehicle->total_seats ?? 0) - ($trip->seat_locks_count ?? 0)) }} GHẾ TRỐNG
+                                            CÒN {{ max(0, ($trip->vehicle->total_seats ?? 0) - ($trip->seat_locks_count ?? 0)) }}} GHẾ TRỐNG
                                         </p>
                                     </div>
                                 </div>

@@ -54,7 +54,7 @@
                                     <select name="start_location_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
                                         <option value="" class="bg-brand-dark">Chọn điểm đi</option>
                                         @foreach ($locations as $location)
-                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}</option>
+                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}}</option>
                                         @endforeach
                                     </select>
                                     <i data-lucide="map-pin" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
@@ -62,12 +62,12 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-xs font-bold text-white/40 uppercase tracking-widest">Điểm đến</label>
+                                <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{{ __('destination') }}</label>
                                 <div class="relative">
                                     <select name="end_location_id" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
                                         <option value="" class="bg-brand-dark">Chọn điểm đến</option>
                                         @foreach ($locations as $location)
-                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}</option>
+                                            <option value="{{ $location->id }}" class="bg-brand-dark">{{ $location->name }}}</option>
                                         @endforeach
                                     </select>
                                     <i data-lucide="navigation" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
@@ -76,7 +76,7 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">Ngày khởi hành</label>
+                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{{ __('date') }} khởi hành</label>
                             <div class="relative">
                                 <input type="date" name="trip_date" value="{{ date('Y-m-d') }}" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all">
                                 <i data-lucide="calendar" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
@@ -101,7 +101,7 @@
                 <h2 class="text-5xl font-black italic">TUYẾN ĐƯỜNG PHỔ BIẾN</h2>
             </div>
             <a href="#" class="group flex items-center gap-3 text-white/50 hover:text-white transition-colors">
-                <span>Xem tất cả</span>
+                <span>{{{ __('view') }} tất cả</span>
                 <div class="w-10 h-10 rounded-full glass flex items-center justify-center group-hover:bg-brand-accent group-hover:text-white transition-all">
                     <i data-lucide="plus" class="w-5 h-5"></i>
                 </div>
@@ -128,15 +128,15 @@
                 
                 <div class="absolute bottom-0 left-0 right-0 p-8 space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     <div class="flex items-center gap-2 text-brand-accent text-xs font-bold tracking-widest uppercase">
-                        <span>{{ $route['from'] }}</span>
+                        <span>{{ $route['from'] }}}</span>
                         <i data-lucide="arrow-right-left" class="w-3 h-3"></i>
-                        <span>{{ $route['to'] }}</span>
+                        <span>{{ $route['to'] }}}</span>
                     </div>
-                    <h4 class="text-2xl font-bold line-clamp-1">{{ $route['from'] }} - {{ $route['to'] }}</h4>
+                    <h4 class="text-2xl font-bold line-clamp-1">{{ $route['from'] }}} - {{ $route['to'] }}}</h4>
                     <p class="text-white/60 text-sm">Chỉ từ <span class="text-white font-bold">{{ $route['price'] }}đ</span></p>
                     
                     <div class="pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                        <a href="{{ route('customer.trips.search', ['start_location_id' => $getLocId($route['from']), 'end_location_id' => $getLocId($route['to']), 'trip_date' => date('Y-m-d')]) }}" class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">Đặt vé ngay</a>
+                        <a href="{{ route('customer.trips.search', ['start_location_id' => $getLocId($route['from']), 'end_location_id' => $getLocId($route['to']), 'trip_date' => date('Y-m-d')]) }}" class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">{{{ __('bookings') }} ngay</a>
                     </div>
                 </div>
 
@@ -175,8 +175,8 @@
                                 <i data-lucide="{{ $f['icon'] }}" class="w-8 h-8 group-hover:text-white transition-colors text-brand-accent"></i>
                             </div>
                             <div class="space-y-2">
-                                <h4 class="text-xl font-bold font-heading">{{ $f['title'] }}</h4>
-                                <p class="text-white/50 text-sm leading-relaxed">{{ $f['desc'] }}</p>
+                                <h4 class="text-xl font-bold font-heading">{{ $f['title'] }}}</h4>
+                                <p class="text-white/50 text-sm leading-relaxed">{{ $f['desc'] }}}</p>
                             </div>
                         </div>
                         @endforeach
@@ -204,7 +204,7 @@
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
             
             <div class="relative z-10 space-y-4">
-                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">Sẵn sàng khởi hành?</h2>
+                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">{{{ __('ready_to_launch') }}</h2>
                 <p class="text-xl text-white/80 max-w-2xl mx-auto">
                     Tải ngay ứng dụng Nhà xe Mạnh Hùng để nhận ưu đãi 50.000đ cho chuyến đi đầu tiên.
                 </p>

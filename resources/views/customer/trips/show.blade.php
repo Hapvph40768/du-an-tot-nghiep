@@ -21,14 +21,12 @@
             toggleSeat(id, number) {
                 if (this.selectedSeats.find(s => s.id === id)) {
                     this.selectedSeats = this.selectedSeats.filter(s => s.id !== id);
-                } else {
+                }} else {
                     if (this.selectedSeats.length >= 5) {
                         alert('Bạn chỉ có thể chọn tối đa 5 ghế.');
                         return;
-                    }
-                    this.selectedSeats.push({ id, number });
-                }
-                this.$nextTick(() => lucide.createIcons());
+                    }} this.selectedSeats.push({ id, number });
+                }} this.$nextTick(() => lucide.createIcons());
             },
             async checkCoupon() {
                 if (!this.couponCode) return;
@@ -46,14 +44,11 @@
                     this.couponMessage = data.message;
                     if (data.valid) {
                         this.discount = data.discount;
-                    } else {
+                    }} else {
                         this.discount = 0;
-                    }
-                } catch (e) {
+                    }}} catch (e) {
                     this.couponMessage = 'Lỗi kiểm tra mã.';
-                }
-            }
-         }"
+                }}} }"
          x-init="lucide.createIcons()">
         
         <!-- Navigation Header -->
@@ -66,9 +61,9 @@
                 </a>
                 <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter">ĐẶT VÉ TRỰC TUYẾN</h1>
                 <p class="text-white/40 text-sm font-bold uppercase tracking-[0.2em] mt-2">
-                    <span class="text-brand-accent">{{ $trip->route->departureLocation->name }}</span> 
+                    <span class="text-brand-accent">{{ $trip->route->departureLocation->name }}}</span> 
                     <i data-lucide="arrow-right" class="inline w-3 h-3 mx-2 opacity-50"></i> 
-                    <span class="text-brand-accent">{{ $trip->route->destinationLocation->name }}</span>
+                    <span class="text-brand-accent">{{ $trip->route->destinationLocation->name }}}</span>
                 </p>
             </div>
             
@@ -79,8 +74,8 @@
                         <i data-lucide="calendar" class="w-5 h-5 text-brand-dark"></i>
                     </div>
                     <div>
-                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">Ngày đi</p>
-                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</p>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">{{{ __('date') }} đi</p>
+                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}}</p>
                     </div>
                 </div>
                 <div class="glass p-4 rounded-3xl border-none ring-1 ring-white/10 flex items-center gap-4">
@@ -88,8 +83,8 @@
                         <i data-lucide="clock" class="w-5 h-5 text-brand-accent"></i>
                     </div>
                     <div>
-                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">Giờ khởi hành</p>
-                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</p>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">{{{ __('time') }} khởi hành</p>
+                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}}</p>
                     </div>
                 </div>
             </div>
@@ -172,7 +167,7 @@
                                            :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20 group-hover:text-brand-accent'" 
                                            class="w-8 h-8 transition-colors duration-300"></i>
                                         <span class="text-[10px] font-black tracking-[0.2em]"
-                                              :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20'">{{ $seat->seat_number }}</span>
+                                              :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20'">{{ $seat->seat_number }}}</span>
                                         
                                         @if(!$isBooked)
                                         <div class="absolute bottom-1 left-2 right-2 h-0.5 bg-brand-accent/0 group-hover:bg-brand-accent/20 rounded-full transition-all"
@@ -190,7 +185,7 @@
                         <div class="liquid-card p-10">
                             <div class="flex items-center gap-4 mb-8">
                                 <span class="flex-none w-8 h-8 rounded-full border border-brand-accent/30 flex items-center justify-center font-black text-xs text-brand-accent">2</span>
-                                <h3 class="text-xl font-black italic uppercase tracking-tighter">ĐIỂM ĐÓN</h3>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter">{{{ __('ignition_pt') }}</h3>
                             </div>
                             
                             <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
@@ -208,10 +203,10 @@
                                              :class="pickupPointId == '{{ $point->id }}' ? 'bg-brand-accent/5 ring-1 ring-brand-accent/20 border-transparent shadow-[0_0_20px_rgba(34,211,238,0.05)]' : ''">
                                             <div class="flex justify-between items-start mb-1">
                                                 <p class="text-lg font-black group-hover:text-brand-accent transition-colors"
-                                                   :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-accent' : ''">{{ $point->name }}</p>
-                                                <span class="text-[10px] font-black text-white/30">{{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }}</span>
+                                                   :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-accent' : ''">{{ $point->name }}}</p>
+                                                <span class="text-[10px] font-black text-white/30">{{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }}}</span>
                                             </div>
-                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}}</p>
                                         </div>
                                     </div>
                                 </label>
@@ -223,7 +218,7 @@
                         <div class="liquid-card p-10">
                             <div class="flex items-center gap-4 mb-8">
                                 <span class="flex-none w-8 h-8 rounded-full border border-red-500/30 flex items-center justify-center font-black text-xs text-red-400">3</span>
-                                <h3 class="text-xl font-black italic uppercase tracking-tighter">ĐIỂM TRẢ</h3>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter">{{{ __('terminal_pt') }}</h3>
                             </div>
                             
                             <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar text-red-400">
@@ -242,10 +237,10 @@
                                              :class="dropoffPointId == '{{ $point->id }}' ? 'bg-red-500/5 ring-1 ring-red-500/20 border-transparent' : ''">
                                             <div class="flex justify-between items-start mb-1">
                                                 <p class="text-lg font-black group-hover:text-red-400 transition-colors"
-                                                   :class="dropoffPointId == '{{ $point->id }}' ? 'text-red-400' : ''">{{ $point->name }}</p>
+                                                   :class="dropoffPointId == '{{ $point->id }}' ? 'text-red-400' : ''">{{ $point->name }}}</p>
                                                 <span class="text-[10px] font-black text-white/30 italic">Kết thúc</span>
                                             </div>
-                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}}</p>
                                         </div>
                                     </div>
                                 </label>
@@ -268,7 +263,7 @@
                             <div class="space-y-8">
                                 <div class="flex justify-between items-end">
                                     <div>
-                                        <p class="text-[10px] font-black uppercase tracking-widest text-brand-accent mb-1">Ghế đã chọn</p>
+                                        <p class="text-[10px] font-black uppercase tracking-widest text-brand-accent mb-1">{{{ __('seats') }} đã chọn</p>
                                         <p class="text-4xl font-black italic tracking-tighter" x-text="selectedSeats.length > 0 ? selectedSeats.map(s => s.number).join(', ') : '---'"></p>
                                     </div>
                                     <div class="text-right">
@@ -355,11 +350,7 @@
     </div>
 
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.2); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.4); }
-    </style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }} .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }} .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.2); border-radius: 10px; }} .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.4); }}</style>
 @endsection
 
 @push('scripts')
