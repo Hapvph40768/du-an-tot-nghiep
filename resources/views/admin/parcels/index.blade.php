@@ -2,7 +2,7 @@
 @section('content-main')
 <div class="container-fluid py-4">
     @if(session('success'))
-        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}</div>
+        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}}</div>
     @endif
     <div class="card shadow-sm border-0 rounded-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,36 +16,36 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>Người gửi</th>
-                        <th>Người nhận</th>
-                        <th>Tuyến đường</th>
-                        <th>Khối lượng</th>
+                        <th>{{{ __('sender') }}</th>
+                        <th>{{{ __('receiver') }}</th>
+                        <th>{{{ __('routes') }}</th>
+                        <th>{{{ __('weight') }}</th>
                         <th>Phí vận chuyển</th>
-                        <th>Trạng thái</th>
+                        <th>{{{ __('status') }}</th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($parcels as $parcel)
                     <tr>
-                        <td>#{{ $parcel->id }}</td>
+                        <td>#{{ $parcel->id }}}</td>
                         <td>
-                            <div class="fw-bold">{{ $parcel->sender_name }}</div>
-                            <small class="text-muted">{{ $parcel->sender_phone }}</small>
+                            <div class="fw-bold">{{ $parcel->sender_name }}}</div>
+                            <small class="text-muted">{{ $parcel->sender_phone }}}</small>
                         </td>
                         <td>
-                            <div class="fw-bold">{{ $parcel->receiver_name }}</div>
-                            <small class="text-muted">{{ $parcel->receiver_phone }}</small>
+                            <div class="fw-bold">{{ $parcel->receiver_name }}}</div>
+                            <small class="text-muted">{{ $parcel->receiver_phone }}}</small>
                         </td>
-                        <td>{{ $parcel->route->departureLocation->name ?? '—' }} → {{ $parcel->route->destinationLocation->name ?? '—' }}</td>
-                        <td>{{ $parcel->weight }} kg</td>
-                        <td>{{ number_format($parcel->price) }} ₫</td>
+                        <td>{{ $parcel->route->departureLocation->name ?? '—' }}} → {{ $parcel->route->destinationLocation->name ?? '—' }}}</td>
+                        <td>{{ $parcel->weight }}} kg</td>
+                        <td>{{ number_format($parcel->price) }}} ₫</td>
                         <td>
                             @php
                                 $statusMap = ['pending'=>['Chờ xử lý','warning'], 'shipping'=>['Đang vận chuyển','primary'], 'completed'=>['Hoàn thành','success'], 'cancelled'=>['Đã huỷ','danger']];
                                 [$label, $color] = $statusMap[$parcel->status] ?? [$parcel->status, 'secondary'];
                             @endphp
-                            <span class="badge bg-{{ $color }}">{{ $label }}</span>
+                            <span class="badge bg-{{ $color }}">{{ $label }}}</span>
                         </td>
                         <td class="text-end">
                             <a href="{{ route('admin.parcels.edit', $parcel->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
@@ -61,7 +61,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">{{ $parcels->links() }}</div>
+        <div class="mt-3">{{ $parcels->links() }}}</div>
     </div>
 </div>
 @endsection

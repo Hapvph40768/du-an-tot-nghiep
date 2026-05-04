@@ -41,7 +41,7 @@
             <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
             </div>
-            <p class="text-xs font-bold">{{ session('success') }}</p>
+            <p class="text-xs font-bold">{{ session('success') }}}</p>
         </div>
     </div>
     @endif
@@ -52,11 +52,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-white/5">
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Tài xế</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Liên hệ</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('drivers') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('contact') }}</th>
                         <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Bằng lái</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Trạng thái</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">Thao tác</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('status') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">{{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/[0.02]">
@@ -70,13 +70,12 @@
                                             <img src="{{ asset($driver->image) }}" class="w-full h-full object-cover">
                                         @else
                                             <div class="w-full h-full liquid-gradient flex items-center justify-center font-black text-xs italic">
-                                                {{ substr($driver->name, 0, 1) }}
-                                            </div>
+                                                {{ substr($driver->name, 0, 1) }}}</div>
                                         @endif
                                     </div>
                                     <div>
-                                        <p class="font-bold text-sm">{{ $driver->name }}</p>
-                                        <p class="text-[10px] font-black uppercase text-white/20 tracking-tighter">ID: #{{ $driver->id }}</p>
+                                        <p class="font-bold text-sm">{{ $driver->name }}}</p>
+                                        <p class="text-[10px] font-black uppercase text-white/20 tracking-tighter">ID: #{{ $driver->id }}}</p>
                                     </div>
                                 </div>
                             </td>
@@ -84,7 +83,7 @@
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2 text-xs font-bold">
                                         <i data-lucide="phone" class="w-3 h-3 text-brand-accent"></i>
-                                        <span>{{ $driver->phone }}</span>
+                                        <span>{{ $driver->phone }}}</span>
                                     </div>
                                     <p class="text-[10px] text-white/30 font-medium">user{{ $driver->id }}@manhhung.vn</p>
                                 </div>
@@ -92,7 +91,7 @@
                             <td class="px-8 py-6">
                                 <div class="glass px-3 py-1.5 rounded-xl border border-white/5 inline-flex items-center gap-2">
                                     <i data-lucide="id-card" class="w-3.5 h-3.5 text-white/40"></i>
-                                    <span class="text-[10px] font-black uppercase tracking-widest">{{ $driver->license_number }}</span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">{{ $driver->license_number }}}</span>
                                 </div>
                             </td>
                             <td class="px-8 py-6">
@@ -104,8 +103,8 @@
                                     ][$driver->status] ?? ['color' => 'white/20', 'label' => 'K.Xác định'];
                                 @endphp
                                 <div class="flex items-center gap-2 text-xs font-bold text-{{ $statusConfig['color'] }}">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-{{ $statusConfig['color'] }} shadow-[0_0_8px] shadow-{{ $statusConfig['color'] }}/50"></div>
-                                    <span>{{ $statusConfig['label'] }}</span>
+                                    <div class="w-1.5 h-1.5 rounded-full bg-{{ $statusConfig['color'] }}} shadow-[0_0_8px] shadow-{{ $statusConfig['color'] }}/50"></div>
+                                    <span>{{ $statusConfig['label'] }}}</span>
                                 </div>
                             </td>
                             <td class="px-8 py-6 text-right">
@@ -145,11 +144,10 @@
         @if($drivers->hasPages())
         <div class="px-8 py-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">
-                Hiển thị <span class="text-white">{{ $drivers->count() }}</span> / {{ $drivers->total() }} tài xế
+                Hiển thị <span class="text-white">{{ $drivers->count() }}}</span> / {{ $drivers->total() }}} tài xế
             </p>
             <div class="admin-pagination">
-                {{ $drivers->appends(request()->query())->links() }}
-            </div>
+                {{ $drivers->appends(request()->query())->links() }}}</div>
         </div>
         @endif
     </div>

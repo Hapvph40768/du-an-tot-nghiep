@@ -15,28 +15,26 @@
                                 <th class="ps-4">Mã</th>
                                 <th>Khách hàng</th>
                                 <th>Loại</th>
-                                <th>Mô tả</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày gửi</th>
+                                <th>{{{ __('description') }}</th>
+                                <th>{{{ __('status') }}</th>
+                                <th>{{{ __('date') }} gửi</th>
                                 <th class="text-end pe-4">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($tickets as $ticket)
                                 <tr>
-                                    <td class="ps-4">#{{ $ticket->id }}</td>
+                                    <td class="ps-4">#{{ $ticket->id }}}</td>
                                     <td>
-                                        <div class="fw-bold">{{ $ticket->user->name ?? 'N/A' }}</div>
-                                        <small class="text-muted">{{ $ticket->user->phone ?? '' }}</small>
+                                        <div class="fw-bold">{{ $ticket->user->name ?? 'N/A' }}}</div>
+                                        <small class="text-muted">{{ $ticket->user->phone ?? '' }}}</small>
                                     </td>
                                     <td>
                                         <span class="badge bg-info-subtle text-info px-2">
-                                            {{ ucfirst($ticket->type) }}
-                                        </span>
+                                            {{ ucfirst($ticket->type) }}}</span>
                                     </td>
                                     <td>
-                                        <div class="text-truncate" style="max-width: 200px;">{{ $ticket->description }}
-                                        </div>
+                                        <div class="text-truncate" style="max-width: 200px;">{{ $ticket->description }}}</div>
                                     </td>
                                     <td>
                                         @if ($ticket->status == 'open')
@@ -47,7 +45,7 @@
                                             <span class="badge bg-secondary rounded-pill">Đã đóng</span>
                                         @endif
                                     </td>
-                                    <td>{{ $ticket->created_at->format('H:i d/m/Y') }}</td>
+                                    <td>{{ $ticket->created_at->format('H:i d/m/Y') }}}</td>
                                     <td class="text-end pe-4">
                                         <a href="{{ route('admin.support_tickets.show', $ticket->id) }}"
                                             class="btn btn-sm btn-primary px-3">
@@ -67,7 +65,6 @@
         </div>
 
         <div class="mt-3">
-            {{ $tickets->links() }}
-        </div>
+            {{ $tickets->links() }}}</div>
     </div>
 @endsection

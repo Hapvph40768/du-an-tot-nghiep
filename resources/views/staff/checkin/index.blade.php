@@ -30,7 +30,7 @@
         </div>
         <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md transition-all">Tìm nhanh</button>
         @if(request('search') || request('route_id') || request('trip_id'))
-            <a href="{{ route('staff.checkin.index') }}" class="px-4 py-2 bg-gray-100 text-gray-500 rounded-xl font-bold flex items-center justify-center italic text-xs">Xóa lọc</a>
+            <a href="{{ route('staff.checkin.index') }}" class="px-4 py-2 bg-gray-100 text-gray-500 rounded-xl font-bold flex items-center justify-center italic text-xs">{{{ __('delete') }} lọc</a>
         @endif
     </form>
 </div>
@@ -47,9 +47,8 @@
                 <a href="{{ route('staff.checkin.index', ['route_id' => $route->id]) }}" class="bg-white dark:bg-[#111111] p-6 rounded-3xl border-2 border-transparent hover:border-blue-500 shadow-sm transition-all group">
                     <div class="text-[10px] font-black opacity-30 uppercase mb-2">Chuyến đi</div>
                     <div class="text-lg font-black leading-tight group-hover:text-blue-600 transition-colors">
-                        {{ $route->startLocation->name }} <br>
-                        <span class="text-blue-500">&rarr;</span> {{ $route->endLocation->name }}
-                    </div>
+                        {{ $route->startLocation->name }}}<br>
+                        <span class="text-blue-500">&rarr;</span> {{ $route->endLocation->name }}}</div>
                 </a>
             @empty
                 <div class="col-span-full py-20 text-center opacity-40 italic font-bold">Hiện không có tuyến đường nào có lịch trình sắp tới.</div>
@@ -62,7 +61,7 @@
     <div class="mb-6">
         <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
             <span class="w-2 h-6 bg-blue-600 rounded-full"></span>
-            Bước 2: Chọn xe đang làm lệnh ({{ $selectedRoute->startLocation->name }} &rarr; {{ $selectedRoute->endLocation->name }})
+            Bước 2: Chọn xe đang làm lệnh ({{ $selectedRoute->startLocation->name }}} &rarr; {{ $selectedRoute->endLocation->name }})
         </h2>
 
         @php
@@ -80,19 +79,19 @@
                 @if($filteredTrips->count() > 0)
                     <div class="space-y-4">
                         <div class="flex items-center gap-4">
-                            <span class="px-3 py-1 {{ $statusLabels[$status]['color'] }} text-white text-[10px] font-black rounded-lg">{{ $statusLabels[$status]['label'] }}</span>
+                            <span class="px-3 py-1 {{ $statusLabels[$status]['color'] }}} text-white text-[10px] font-black rounded-lg">{{ $statusLabels[$status]['label'] }}}</span>
                             <div class="grow h-px bg-gray-100 dark:bg-gray-800"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($filteredTrips as $trip)
-                                <div class="{{ $statusLabels[$status]['bg'] }} p-6 rounded-3xl border border-transparent hover:border-current transition-all group">
+                                <div class="{{ $statusLabels[$status]['bg'] }}} p-6 rounded-3xl border border-transparent hover:border-current transition-all group">
                                     <div class="flex justify-between items-start mb-4">
-                                        <div class="text-2xl font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</div>
-                                        <div class="text-xs font-bold opacity-60 uppercase">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }}</div>
+                                        <div class="text-2xl font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}}</div>
+                                        <div class="text-xs font-bold opacity-60 uppercase">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }}}</div>
                                     </div>
                                     <div class="mb-6">
-                                        <div class="text-sm font-bold">{{ $trip->vehicle->license_plate ?? 'BKS-???' }}</div>
-                                        <div class="text-xs opacity-60 italic">{{ $trip->driver->name ?? 'Chưa gán tài xế' }}</div>
+                                        <div class="text-sm font-bold">{{ $trip->vehicle->license_plate ?? 'BKS-???' }}}</div>
+                                        <div class="text-xs opacity-60 italic">{{ $trip->driver->name ?? 'Chưa gán tài xế' }}}</div>
                                     </div>
                                     <a href="{{ route('staff.checkin.index', ['route_id' => request('route_id'), 'trip_id' => $trip->id]) }}" class="w-full py-3 bg-white dark:bg-black rounded-2xl text-center text-sm font-black shadow-sm group-hover:shadow-lg transition-all block">
                                         VÀO ĐIỂM DANH &rarr;
@@ -112,11 +111,11 @@
         <div class="mb-6 p-4 bg-blue-600 text-white rounded-2xl shadow-lg flex items-center justify-between">
             <div>
                 <div class="text-[10px] font-black opacity-60 uppercase">Đang check-in xe</div>
-                <div class="text-lg font-black">{{ $tickets->first()?->trip?->vehicle?->license_plate ?? '???' }} | Chuyến {{ $tickets->first()?->trip?->departure_time ?? '--:--' }}</div>
+                <div class="text-lg font-black">{{ $tickets->first()?->trip?->vehicle?->license_plate ?? '???' }}} | Chuyến {{ $tickets->first()?->trip?->departure_time ?? '--:--' }}}</div>
             </div>
             <div class="text-right">
-                <div class="text-[10px] font-black opacity-60 uppercase">Tổng khách</div>
-                <div class="text-2xl font-black">{{ $tickets->total() }}</div>
+                <div class="text-[10px] font-black opacity-60 uppercase">{{{ __('total') }} khách</div>
+                <div class="text-2xl font-black">{{ $tickets->total() }}}</div>
             </div>
         </div>
     @endif
@@ -128,8 +127,7 @@
         @foreach($statusTabs as $val => $label)
             <a href="{{ request()->fullUrlWithQuery(['status' => $val]) }}" 
                class="px-5 py-2.5 rounded-xl text-xs font-black transition-all {{ (request('status', '') == (string)$val) ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white dark:bg-[#111] border border-[#e3e3e0] dark:border-[#262626]' }}">
-                {{ $tab['label'] ?? $label }}
-            </a>
+                {{ $tab['label'] ?? $label }}}</a>
         @endforeach
     </div>
 
@@ -137,9 +135,9 @@
         <table class="w-full text-left">
             <thead class="bg-gray-50 dark:bg-[#1a1a1a] text-[10px] uppercase opacity-40 font-black tracking-widest border-b border-[#e3e3e0] dark:border-[#262626]">
                 <tr>
-                    <th class="px-6 py-4">Ghế</th>
+                    <th class="px-6 py-4">{{{ __('seats') }}</th>
                     <th class="px-6 py-4">Khách hàng</th>
-                    <th class="px-6 py-4">Trạng thái</th>
+                    <th class="px-6 py-4">{{{ __('status') }}</th>
                     <th class="px-6 py-4 text-center">Xử lý</th>
                 </tr>
             </thead>
@@ -147,12 +145,12 @@
                 @forelse($tickets as $ticket)
                     <tr class="hover:bg-gray-50 dark:hover:bg-[#161616] transition-colors">
                         <td class="px-6 py-4">
-                            <div class="text-xl font-black text-blue-600">{{ $ticket->seat?->seat_number ?? '?' }}</div>
-                            <div class="text-[10px] font-mono opacity-40">{{ $ticket->ticket_code }}</div>
+                            <div class="text-xl font-black text-blue-600">{{ $ticket->seat?->seat_number ?? '?' }}}</div>
+                            <div class="text-[10px] font-mono opacity-40">{{ $ticket->ticket_code }}}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="font-bold">{{ $ticket->booking?->contact_name ?? 'N/A' }}</div>
-                            <div class="text-xs text-blue-500 font-bold">{{ $ticket->booking?->contact_phone ?? 'N/A' }}</div>
+                            <div class="font-bold">{{ $ticket->booking?->contact_name ?? 'N/A' }}}</div>
+                            <div class="text-xs text-blue-500 font-bold">{{ $ticket->booking?->contact_phone ?? 'N/A' }}}</div>
                         </td>
                         <td class="px-6 py-4">
                             @if($ticket->status === 'used')
@@ -200,8 +198,7 @@
         </table>
     </div>
     <div class="mt-8">
-        {{ $tickets->links() }}
-    </div>
+        {{ $tickets->links() }}}</div>
 @endif
 
 <!-- Shared Modal (No-Show Verification) -->
@@ -236,9 +233,8 @@ function openNoShowModal(name, phone, actionUrl) {
     document.getElementById('modalCustomerPhone').href = 'tel:' + phone;
     document.getElementById('noShowForm').action = actionUrl;
     document.getElementById('noShowModal').classList.remove('hidden');
-}
+}}
 function closeNoShowModal() {
     document.getElementById('noShowModal').classList.add('hidden');
-}
-</script>
+}}</script>
 @endsection

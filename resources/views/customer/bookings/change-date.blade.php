@@ -12,7 +12,7 @@
 
             @if (session('error'))
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-sm">
-                    {{ session('error') }}</div>
+                    {{ session('error') }}}</div>
             @endif
 
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
@@ -20,15 +20,15 @@
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p class="text-gray-500">Tiền vé cũ đã thanh toán:</p>
-                        <p class="font-bold text-gray-800">{{ number_format($booking->total_amount) }} đ</p>
+                        <p class="font-bold text-gray-800">{{ number_format($booking->total_amount) }}} đ</p>
                     </div>
                     <div>
                         <p class="text-gray-500 text-red-500">Phí đổi vé (10%):</p>
-                        <p class="font-bold text-red-600">-{{ number_format($penaltyFee) }} đ</p>
+                        <p class="font-bold text-red-600">-{{ number_format($penaltyFee) }}} đ</p>
                     </div>
                     <div class="col-span-2 pt-2 border-t">
                         <p class="text-gray-500">Giá trị vé cũ được bảo lưu (để trừ vào vé mới):</p>
-                        <p class="font-bold text-green-600 text-xl">{{ number_format($creditAmount) }} đ</p>
+                        <p class="font-bold text-green-600 text-xl">{{ number_format($creditAmount) }}} đ</p>
                     </div>
                 </div>
             </div>
@@ -46,8 +46,8 @@
                                     <div class="flex items-start">
                                         <input type="radio" name="new_trip_id" value="{{ $trip->id }}" class="mt-1 trip-radio" required data-price="{{ $trip->price }}" data-trip-id="{{ $trip->id }}">
                                         <div class="ml-3 flex-1">
-                                            <p class="font-bold text-gray-800">Khởi hành: {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }} lúc {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</p>
-                                            <p class="text-sm text-gray-600">Nhà xe: {{ $trip->vehicle->license_plate ?? 'Chưa xác định' }} - Giá: <span class="text-amber-600 font-bold">{{ number_format($trip->price) }}đ/ghế</span></p>
+                                            <p class="font-bold text-gray-800">Khởi hành: {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}} lúc {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}}</p>
+                                            <p class="text-sm text-gray-600">Nhà xe: {{ $trip->vehicle->license_plate ?? 'Chưa xác định' }}} - Giá: <span class="text-amber-600 font-bold">{{ number_format($trip->price) }}đ/ghế</span></p>
                                             
                                             <!-- Hiển thị ghế trực tiếp trong form -->
                                             <div class="mt-3 hidden seats-container" id="seats-{{ $trip->id }}">
@@ -62,13 +62,11 @@
                                                         @endphp
                                                         @if($isLocked)
                                                             <div class="px-3 py-1 bg-gray-200 text-gray-400 rounded cursor-not-allowed text-sm line-through">
-                                                                {{ $seat->seat_number }}
-                                                            </div>
+                                                                {{ $seat->seat_number }}}</div>
                                                         @else
                                                             <label class="px-3 py-1 bg-white border border-indigo-300 text-indigo-700 rounded cursor-pointer hover:bg-indigo-100 text-sm has-[:checked]:bg-indigo-600 has-[:checked]:text-white">
                                                                 <input type="checkbox" name="seat_ids[]" value="{{ $seat->id }}" class="hidden seat-checkbox" disabled>
-                                                                {{ $seat->seat_number }}
-                                                            </label>
+                                                                {{ $seat->seat_number }}}</label>
                                                         @endif
                                                     @endforeach
                                                 </div>
@@ -110,9 +108,7 @@
                         if(container) {
                             container.classList.remove('hidden');
                             container.querySelectorAll('.seat-checkbox').forEach(cb => cb.disabled = false);
-                        }
-                    }
-                });
+                        }}} });
             });
         });
     </script>

@@ -19,16 +19,15 @@
                 <div class="bg-white rounded-3xl shadow-sm p-8 text-center">
                     <div
                         class="w-32 h-32 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center text-6xl border-4 border-white shadow-md">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}}</div>
 
-                    <h2 class="mt-6 text-2xl font-bold text-gray-800">{{ Auth::user()->name }}</h2>
-                    <p class="text-amber-600 font-medium">Tài xế chính</p>
+                    <h2 class="mt-6 text-2xl font-bold text-gray-800">{{ Auth::user()->name }}}</h2>
+                    <p class="text-amber-600 font-medium">{{{ __('drivers') }} chính</p>
 
                     <div class="mt-8 pt-6 border-t border-gray-100">
                         <div class="flex justify-center gap-8 text-sm">
                             <div>
-                                <p class="text-gray-400">Trạng thái</p>
+                                <p class="text-gray-400">{{{ __('status') }}</p>
                                 <p class="font-medium flex items-center justify-center gap-2 mt-1">
                                     <span
                                         class="w-2.5 h-2.5 rounded-full animate-pulse 
@@ -36,8 +35,7 @@
                                     {{ match (Auth::user()->driver?->status ?? 'available') {
                                         'inactive' => 'Offline',
                                         default => 'Online',
-                                    } }}
-                                </p>
+                                    }}}}</p>
                             </div>
                         </div>
                     </div>
@@ -56,15 +54,15 @@
                             <div class="space-y-5">
                                 <div>
                                     <p class="text-xs text-gray-500">Họ và tên</p>
-                                    <p class="font-medium">{{ Auth::user()->name }}</p>
+                                    <p class="font-medium">{{ Auth::user()->name }}}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500">Số điện thoại</p>
-                                    <p class="font-medium">{{ Auth::user()->driver?->phone ?? Auth::user()->phone }}</p>
+                                    <p class="font-medium">{{ Auth::user()->driver?->phone ?? Auth::user()->phone }}}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Email</p>
-                                    <p class="font-medium">{{ Auth::user()->email }}</p>
+                                    <p class="text-xs text-gray-500">{{{ __('email') }}</p>
+                                    <p class="font-medium">{{ Auth::user()->email }}}</p>
                                 </div>
                             </div>
                         </div>
@@ -75,20 +73,18 @@
                             <div class="space-y-5">
                                 <div>
                                     <p class="text-xs text-gray-500">Số bằng lái</p>
-                                    <p class="font-medium">{{ Auth::user()->driver?->license_number ?? 'Chưa cập nhật' }}
-                                    </p>
+                                    <p class="font-medium">{{ Auth::user()->driver?->license_number ?? 'Chưa cập nhật' }}}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500">Số năm kinh nghiệm</p>
                                     <p class="font-medium">
-                                        {{ Auth::user()->driver?->experience_years ?? '0' }} năm
+                                        {{ Auth::user()->driver?->experience_years ?? '0' }}} năm
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Trạng thái</p>
+                                    <p class="text-xs text-gray-500">{{{ __('status') }}</p>
                                     <p class="font-medium capitalize">
-                                        {{ Auth::user()->driver?->status }}
-                                    </p>
+                                        {{ Auth::user()->driver?->status }}}</p>
                                 </div>
                             </div>
                         </div>
@@ -98,8 +94,7 @@
                     <div class="mt-10 pt-8 border-t border-gray-100">
                         <h3 class="font-semibold text-lg mb-4 text-gray-700">Thông tin thêm</h3>
                         <div class="bg-gray-50 rounded-2xl p-6 text-gray-700 leading-relaxed">
-                            {{ Auth::user()->driver?->personal_info ?? 'Chưa có thông tin bổ sung.' }}
-                        </div>
+                            {{ Auth::user()->driver?->personal_info ?? 'Chưa có thông tin bổ sung.' }}}</div>
                     </div>
 
                     <!-- Nút hành động -->

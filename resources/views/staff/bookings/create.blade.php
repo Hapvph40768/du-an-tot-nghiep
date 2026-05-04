@@ -6,15 +6,14 @@
         <a href="{{ route('staff.bookings.index') }}" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/></svg>
         </a>
-        <h1 class="text-3xl font-bold">Đặt vé Offline (Hỗ trợ khách)</h1>
+        <h1 class="text-3xl font-bold">{{{ __('bookings') }} Offline (Hỗ trợ khách)</h1>
     </div>
     <p class="text-gray-500 italic">Dành cho nhân viên trực tổng đài hỗ trợ đặt vé qua điện thoại.</p>
 </div>
 
 @if(session('error'))
     <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl font-bold">
-        {{ session('error') }}
-    </div>
+        {{ session('error') }}}</div>
 @endif
 
 <form action="{{ route('staff.bookings.store') }}" method="POST" id="bookingForm">
@@ -31,21 +30,20 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">Chuyến xe</label>
+                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{{ __('trips') }}</label>
                         <select name="trip_id" id="tripSelect" required class="w-full px-4 py-3 bg-gray-50 dark:bg-[#0a0a0a] border border-[#e3e3e0] dark:border-[#262626] rounded-xl font-bold">
                             <option value="">-- Chọn chuyến đi --</option>
                             @foreach($trips as $trip)
                                 <option value="{{ $trip->id }}">
                                     [{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}] 
-                                    {{ $trip->route->startLocation->name }} → {{ $trip->route->endLocation->name }} 
-                                    ({{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }})
+                                    {{ $trip->route->startLocation->name }}} → {{ $trip->route->endLocation->name }}} ({{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }})
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">Điểm đón khách</label>
+                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{{ __('pickup_points') }} khách</label>
                         <select name="pickup_point_id" id="pickupSelect" required disabled class="w-full px-4 py-3 bg-gray-50 dark:bg-[#0a0a0a] border border-[#e3e3e0] dark:border-[#262626] rounded-xl font-medium">
                             <option value="">Chọn điểm đón...</option>
                         </select>
@@ -126,9 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!tripId) {
             resetView();
             return;
-        }
-
-        // Show loading state
+        }} // Show loading state
         noTripSelected.classList.add('hidden');
         seatGrid.classList.add('hidden');
         seatLegend.classList.add('hidden');
@@ -142,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Populate Pickup Points
             pickupSelect.innerHTML = '<option value="">Chọn điểm đón...</option>';
             data.pickupPoints.forEach(p => {
-                pickupSelect.innerHTML += `<option value="${p.id}">${p.name} (${p.address})</option>`;
+                pickupSelect.innerHTML += `<option value="${p.id}">${p.name}} (${p.address})</option>`;
             });
             pickupSelect.disabled = false;
             pickupSelect.required = true;
@@ -156,12 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
             seatGrid.classList.remove('hidden');
             seatLegend.classList.remove('hidden');
 
-        } catch (error) {
+        }} catch (error) {
             console.error('Error fetching trip data:', error);
             alert('Không thể tải dữ liệu chuyến xe. Vui lòng thử lại.');
             resetView();
-        }
-    });
+        }});
 
     function renderSeats(data) {
         seatGrid.innerHTML = '';
@@ -179,11 +174,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const seatHtml = `
                 <label class="relative cursor-pointer group">
                     <input type="checkbox" name="seats[]" value="${seat.id}" 
-                           ${isDisabled ? 'disabled' : ''} 
-                           class="seat-checkbox hidden">
+                           ${isDisabled ? 'disabled' : ''}} class="seat-checkbox hidden">
                     <div class="seat-ui h-12 w-full flex items-center justify-center rounded-xl font-black text-sm transition-all border-b-4 border-black/10 ${bgColor}">
-                        ${seat.seat_number}
-                    </div>
+                        ${seat.seat_number}}</div>
                 </label>
             `;
             seatGrid.insertAdjacentHTML('beforeend', seatHtml);
@@ -197,28 +190,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     ui.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-500', 'hover:bg-gray-200');
                     ui.classList.add('bg-blue-600', 'text-white', 'scale-95');
                     selectedSeatsCount++;
-                } else {
+                }} else {
                     ui.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-500', 'hover:bg-gray-200');
                     ui.classList.remove('bg-blue-600', 'text-white', 'scale-95');
                     selectedSeatsCount--;
-                }
-                updateSummary();
+                }} updateSummary();
             });
         });
-    }
-
-    function updateSummary() {
+    }} function updateSummary() {
         totalPriceDisplay.innerText = (selectedSeatsCount * currentPrice).toLocaleString();
         if (selectedSeatsCount > 0) {
             submitBtn.disabled = false;
             submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
+        }} else {
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
-    }
-
-    function resetView() {
+        }}} function resetView() {
         noTripSelected.classList.remove('hidden');
         seatGrid.classList.add('hidden');
         seatLegend.classList.add('hidden');
@@ -227,19 +214,13 @@ document.addEventListener('DOMContentLoaded', function() {
         pickupSelect.disabled = true;
         selectedSeatsCount = 0;
         updateSummary();
-    }
-});
+    }});
 </script>
 
 <style>
     /* Subtle animations for active seat picking */
     .seat-checkbox:checked + .seat-ui {
         animation: pulseSelect 0.2s ease-out;
-    }
-    @keyframes pulseSelect {
-        0% { transform: scale(1); }
-        50% { transform: scale(0.9); }
-        100% { transform: scale(1); }
-    }
-</style>
+    }} @keyframes pulseSelect {
+        0% { transform: scale(1); }} 50% { transform: scale(0.9); }} 100% { transform: scale(1); }}}</style>
 @endsection

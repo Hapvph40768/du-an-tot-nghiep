@@ -28,10 +28,10 @@
                 </div>
             </div>
             <div class="space-y-1">
-                <p class="text-[10px] font-black uppercase tracking-widest text-white/30">{{ $s['title'] }}</p>
-                <h3 class="text-4xl font-black italic tracking-tighter">{{ $s['value'] }}</h3>
+                <p class="text-[10px] font-black uppercase tracking-widest text-white/30">{{ $s['title'] }}}</p>
+                <h3 class="text-4xl font-black italic tracking-tighter">{{ $s['value'] }}}</h3>
             </div>
-            <p class="text-[10px] font-bold text-white/20 uppercase tracking-tight">{{ $s['desc'] }}</p>
+            <p class="text-[10px] font-bold text-white/20 uppercase tracking-tight">{{ $s['desc'] }}}</p>
         </div>
         @endforeach
     </div>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-2 h-2 rounded-full bg-brand-accent"></div>
-                        <span class="text-[10px] font-black uppercase text-white/40">Vé đặt</span>
+                        <span class="text-[10px] font-black uppercase text-white/40">{{{ __('tickets') }} đặt</span>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         <!-- Status Distribution -->
         <div class="lg:col-span-4 glass-dark rounded-4xl p-10 border-none ring-1 ring-white/5 flex flex-col justify-between">
             <div class="space-y-2">
-                <h4 class="text-xl font-black italic uppercase tracking-tight">Trạng thái</h4>
+                <h4 class="text-xl font-black italic uppercase tracking-tight">{{{ __('status') }}</h4>
                 <p class="text-xs text-white/30 font-bold uppercase tracking-widest leading-none">Phân bổ chuyến xe</p>
             </div>
             <div class="py-8">
@@ -75,9 +75,9 @@
                 <div class="flex justify-between items-center text-xs">
                     <div class="flex items-center gap-2">
                         <div class="w-2 h-2 rounded-full" style="background-color: {{ ['#22d3ee', '#006992', '#ef4444'][$index] }}"></div>
-                        <span class="text-white/40 font-bold">{{ $label }}</span>
+                        <span class="text-white/40 font-bold">{{ $label }}}</span>
                     </div>
-                    <span class="font-black">{{ $tripStatusData[$index] }}</span>
+                    <span class="font-black">{{ $tripStatusData[$index] }}}</span>
                 </div>
                 @endforeach
             </div>
@@ -120,31 +120,25 @@
                         pointHoverRadius: 8,
                         tension: 0.4,
                         yAxisID: 'y1'
-                    }
-                ]
+                    }} ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { legend: { display: false }},
                 scales: {
-                    x: { grid: { display: false }, border: { display: false } },
+                    x: { grid: { display: false }, border: { display: false }},
                     y: { 
                         position: 'left',
                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
                         border: { display: false },
                         ticks: {
                             callback: value => value > 0 ? (value / 1000000) + 'M' : 0
-                        }
-                    },
+                        }},
                     y1: {
                         position: 'right',
                         grid: { display: false },
-                        border: { display: false }
-                    }
-                }
-            }
-        });
+                        border: { display: false }}} }}} });
 
         // Status Chart
         const ctxStat = document.getElementById('statusChart').getContext('2d');
@@ -162,9 +156,7 @@
             options: {
                 cutout: '80%',
                 responsive: true,
-                plugins: { legend: { display: false } }
-            }
-        });
+                plugins: { legend: { display: false }}} }});
     });
 </script>
 @endpush

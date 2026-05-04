@@ -18,15 +18,15 @@
                 <div>
                     <h5 class="font-bold mb-4">Dịch vụ</h5>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="{{ route('customer.home') }}" class="hover:text-amber-400 transition-colors">Đặt vé online</a></li>
+                        <li><a href="{{ route('customer.home') }}" class="hover:text-amber-400 transition-colors">{{{ __('bookings') }} online</a></li>
                         <li><a href="javascript:void(0)" onclick="alert('Tính năng đang phát triển')" class="hover:text-amber-400 transition-colors">Thuê xe du lịch</a></li>
-                        <li><a href="javascript:void(0)" onclick="alert('Tính năng đang phát triển')" class="hover:text-amber-400 transition-colors">Gửi hàng hóa</a></li>
+                        <li><a href="javascript:void(0)" onclick="alert('Tính năng đang phát triển')" class="hover:text-amber-400 transition-colors">{{{ __('submit') }} hàng hóa</a></li>
                         <li><a href="javascript:void(0)" onclick="alert('Tính năng đang phát triển')" class="hover:text-amber-400 transition-colors">Đưa đón sân bay</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h5 class="font-bold mb-4">Hỗ trợ</h5>
+                    <h5 class="font-bold mb-4">{{{ __('support') }}</h5>
                     <ul class="space-y-2 text-sm text-gray-400">
                         <li><a href="javascript:void(0)" onclick="alert('Vui lòng làm theo hướng dẫn tại màn hình trang chủ')" class="hover:text-amber-400 transition-colors">Hướng dẫn đặt vé</a></li>
                         <li><a href="javascript:void(0)" onclick="alert('Hệ thống đang bảo trì chính sách hoàn vé')" class="hover:text-amber-400 transition-colors">Chính sách hoàn vé</a></li>
@@ -73,7 +73,7 @@
         <div class="bg-white rounded-2xl max-w-md w-full max-h-[90%] overflow-auto">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">Xác nhận đặt vé</h3><button id="close-modal"
+                    <h3 class="text-xl font-bold text-gray-800">{{{ __('confirm') }} đặt vé</h3><button id="close-modal"
                         class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
                         <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,7 +92,7 @@
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none"
                             placeholder="Nhập số điện thoại">
                     </div>
-                    <div><label class="block text-gray-700 font-medium mb-2 text-sm">Email</label> <input type="email"
+                    <div><label class="block text-gray-700 font-medium mb-2 text-sm">{{{ __('email') }}</label> <input type="email"
                             id="passenger-email"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none"
                             placeholder="Nhập email">
@@ -108,7 +108,7 @@
             <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
                 <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg><span id="toast-message">Đặt vé thành công!</span>
+            </svg><span id="toast-message">{{{ __('bookings') }} thành công!</span>
         </div>
     </div>
     </div>

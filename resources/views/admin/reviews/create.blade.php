@@ -13,7 +13,7 @@
     <div style="background:#fff1f0;border:1px solid #ffa39e;padding:12px 16px;border-radius:8px;margin-bottom:20px;color:#c0392b;">
         <ul style="margin:0;padding-left:18px;">
             @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+                <li>{{ $error }}}</li>
             @endforeach
         </ul>
     </div>
@@ -24,11 +24,11 @@
         @csrf
 
         <div style="margin-bottom:12px;">
-            <label>Người dùng</label>
+            <label>{{{ __('users') }}</label>
             <select name="user_id" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;">
                 <option value="">-- Chọn người dùng --</option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                    <option value="{{ $user->id }}">{{ $user->name }}} ({{ $user->email }})</option>
                 @endforeach
             </select>
         </div>
@@ -38,7 +38,7 @@
             <select name="booking_id" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;">
                 <option value="">-- Chọn booking --</option>
                 @foreach($bookings as $b)
-                    <option value="{{ $b->id }}">#{{ $b->id }} - User {{ $b->user_id }}</option>
+                    <option value="{{ $b->id }}">#{{ $b->id }}} - User {{ $b->user_id }}}</option>
                 @endforeach
             </select>
         </div>
@@ -48,7 +48,7 @@
             <select name="trip_id" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;">
                 <option value="">-- Chọn trip --</option>
                 @foreach($trips as $t)
-                    <option value="{{ $t->id }}">#{{ $t->id }} - {{ $t->departure_time ?? '' }}</option>
+                    <option value="{{ $t->id }}">#{{ $t->id }}} - {{ $t->departure_time ?? '' }}}</option>
                 @endforeach
             </select>
         </div>
@@ -58,7 +58,7 @@
             <select name="rating" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;">
                 <option value="">-- Chọn rating --</option>
                 @for($i=1;$i<=5;$i++)
-                    <option value="{{ $i }}">{{ $i }}</option>
+                    <option value="{{ $i }}">{{ $i }}}</option>
                 @endfor
             </select>
         </div>
@@ -69,8 +69,8 @@
         </div>
 
         <div style="display:flex;gap:8px;">
-            <button type="submit" style="background:#ff5b24;color:#fff;padding:10px 16px;border-radius:8px;border:none;">Lưu</button>
-            <a href="{{ route('admin.reviews.index') }}" style="background:#f0f0f0;padding:10px 16px;border-radius:8px;text-decoration:none;color:#333;">Hủy</a>
+            <button type="submit" style="background:#ff5b24;color:#fff;padding:10px 16px;border-radius:8px;border:none;">{{{ __('save') }}</button>
+            <a href="{{ route('admin.reviews.index') }}" style="background:#f0f0f0;padding:10px 16px;border-radius:8px;text-decoration:none;color:#333;">{{{ __('cancel') }}</a>
         </div>
     </form>
 </div>

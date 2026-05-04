@@ -16,7 +16,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Sender Info -->
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người gửi</h3>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">{{{ __('sender') }}</h3>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người gửi <span class="text-red-500">*</span></label>
                             <input type="text" name="sender_name" value="{{ old('sender_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
@@ -29,7 +29,7 @@
 
                     <!-- Receiver Info -->
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người nhận</h3>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">{{{ __('receiver') }}</h3>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người nhận <span class="text-red-500">*</span></label>
                             <input type="text" name="receiver_name" value="{{ old('receiver_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
@@ -46,13 +46,12 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tuyến đường gửi <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{{ __('routes') }} gửi <span class="text-red-500">*</span></label>
                             <select name="route_id" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
-                                <option value="">-- Chọn tuyến đường --</option>
+                                <option value="">{{{ __('select_route') }}</option>
                                 @foreach($routes as $route)
                                     <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
-                                        {{ $route->startLocation->name ?? '...' }} &rarr; {{ $route->endLocation->name ?? '...' }}
-                                    </option>
+                                        {{ $route->startLocation->name ?? '...' }}} &rarr; {{ $route->endLocation->name ?? '...' }}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,8 +63,8 @@
                     </div>
 
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả hàng hóa</label>
-                        <textarea name="description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500" placeholder="Loại hàng hóa: quần áo, tài liệu, thực phẩm...">{{ old('description') }}</textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{{ __('description') }} hàng hóa</label>
+                        <textarea name="description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500" placeholder="Loại hàng hóa: quần áo, tài liệu, thực phẩm...">{{ old('description') }}}</textarea>
                     </div>
                 </div>
 

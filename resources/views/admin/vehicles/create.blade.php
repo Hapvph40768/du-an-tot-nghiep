@@ -23,7 +23,7 @@
                                 class="form-control rounded-3 @error('license_plate') is-invalid @enderror"
                                 value="{{ old('license_plate') }}" placeholder="VD: 51B-123.45" required>
                             @error('license_plate')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}}</div>
                             @enderror
                         </div>
 
@@ -36,7 +36,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Tổng số ghế</label>
+                                <label class="form-label fw-bold small">{{{ __('total') }} số ghế</label>
                                 <input type="number" name="total_seats"
                                     class="form-control rounded-3 @error('total_seats') is-invalid @enderror"
                                     value="{{ old('total_seats') }}" min="1" required>
@@ -51,7 +51,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Trạng thái</label>
+                                <label class="form-label fw-bold small">{{{ __('status') }}</label>
                                 <select name="status" class="form-select rounded-3">
                                     <option value="active">Đang hoạt động</option>
                                     <option value="maintenance">Đang bảo trì</option>
@@ -63,12 +63,11 @@
                                     <option value="">-- Không xếp bãi --</option>
                                     @foreach ($parkings as $parking)
                                         @if ($parking->slots->count() > 0)
-                                            <optgroup label="{{ $parking->name }} ({{ $parking->location }})">
+                                            <optgroup label="{{ $parking->name }}} ({{ $parking->location }})">
                                                 @foreach ($parking->slots as $slot)
                                                     <option value="{{ $slot->id }}"
                                                         {{ old('parking_slot_id') == $slot->id ? 'selected' : '' }}>
-                                                        {{ $slot->slot_code }} - {{ $slot->zone }}
-                                                    </option>
+                                                        {{ $slot->slot_code }}} - {{ $slot->zone }}}</option>
                                                 @endforeach
                                             </optgroup>
                                         @endif
@@ -83,7 +82,7 @@
                                 Lưu & Tạo sơ đồ ghế
                             </button>
                             <a href="{{ route('admin.vehicles.index') }}" class="btn btn-light px-4 border ms-2"
-                                style="border-radius: 10px; height: 45px;">Hủy</a>
+                                style="border-radius: 10px; height: 45px;">{{{ __('cancel') }}</a>
                         </div>
                     </form>
                 </div>

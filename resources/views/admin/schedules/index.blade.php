@@ -2,11 +2,11 @@
 @section('content-main')
 <div class="container-fluid py-4">
     @if(session('success'))
-        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}</div>
+        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}}</div>
     @endif
     <div class="card shadow-sm border-0 rounded-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold m-0">Lịch trình xe chạy cố định</h3>
+            <h3 class="fw-bold m-0">{{{ __('schedules') }} xe chạy cố định</h3>
             <a href="{{ route('admin.schedules.create') }}" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">
                 <i class='bx bx-plus-circle'></i> Thêm Lịch trình
             </a>
@@ -16,22 +16,22 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>Tuyến đường</th>
-                        <th>Giờ khởi hành</th>
-                        <th>Ngày trong tuần</th>
-                        <th>Trạng thái</th>
+                        <th>{{{ __('routes') }}</th>
+                        <th>{{{ __('time') }} khởi hành</th>
+                        <th>{{{ __('date') }} trong tuần</th>
+                        <th>{{{ __('status') }}</th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($schedules as $s)
                     <tr>
-                        <td>#{{ $s->id }}</td>
-                        <td>{{ $s->route->departureLocation->name ?? '—' }} → {{ $s->route->destinationLocation->name ?? '—' }}</td>
-                        <td><i class='bx bx-time'></i> {{ $s->departure_time }}</td>
+                        <td>#{{ $s->id }}}</td>
+                        <td>{{ $s->route->departureLocation->name ?? '—' }}} → {{ $s->route->destinationLocation->name ?? '—' }}}</td>
+                        <td><i class='bx bx-time'></i> {{ $s->departure_time }}}</td>
                         <td>
                             @foreach($s->days_of_week as $day)
-                                <span class="badge bg-light text-dark border">{{ $day }}</span>
+                                <span class="badge bg-light text-dark border">{{ $day }}}</span>
                             @endforeach
                         </td>
                         <td>
@@ -55,7 +55,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">{{ $schedules->links() }}</div>
+        <div class="mt-3">{{ $schedules->links() }}}</div>
     </div>
 </div>
 @endsection

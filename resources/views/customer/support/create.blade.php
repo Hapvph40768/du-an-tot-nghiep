@@ -11,14 +11,13 @@
                     <form action="{{ route('customer.support.store') }}" method="POST">
                         @csrf
                         
-                        {{-- Chọn loại vấn đề bằng Card --}}
-                        <label class="form-label fw-bold mb-3">Vui lòng chọn danh mục hỗ trợ:</label>
+                        {{-- Chọn loại vấn đề bằng Card --}}}<label class="form-label fw-bold mb-3">Vui lòng chọn danh mục hỗ trợ:</label>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <input type="radio" class="btn-check" name="type" id="type_payment" value="payment" required onclick="updateDesc('Thanh toán')">
                                 <label class="btn btn-outline-primary w-100 py-3 rounded-3 d-flex flex-column align-items-center" for="type_payment">
                                     <i class='bx bx-credit-card fs-1 mb-2'></i>
-                                    <span>Thanh toán</span>
+                                    <span>{{{ __('payments') }}</span>
                                 </label>
                             </div>
                             <div class="col-md-4">
@@ -37,29 +36,26 @@
                             </div>
                         </div>
 
-                        {{-- Chọn mã đặt vé (nếu có) --}}
-                        <div class="mb-4">
+                        {{-- Chọn mã đặt vé (nếu có) --}}}<div class="mb-4">
                             <label class="form-label fw-bold">Chuyến đi liên quan (không bắt buộc):</label>
                             <select name="booking_id" class="form-select rounded-3">
                                 <option value="">-- Chọn chuyến đi --</option>
-                                {{-- Giả sử bạn truyền biến $bookings từ controller qua --}}
-                                @isset($bookings)
+                                {{-- Giả sử bạn truyền biến $bookings từ controller qua --}}} @isset($bookings)
                                     @foreach($bookings as $booking)
-                                        <option value="{{ $booking->id }}">Mã #{{ $booking->id }} - {{ $booking->trip->route->departure }} đi {{ $booking->trip->route->destination }}</option>
+                                        <option value="{{ $booking->id }}">Mã #{{ $booking->id }}} - {{ $booking->trip->route->departure }}} đi {{ $booking->trip->route->destination }}}</option>
                                     @endforeach
                                 @endisset
                             </select>
                         </div>
 
-                        {{-- Nội dung mô tả --}}
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Mô tả chi tiết vấn đề:</label>
+                        {{-- Nội dung mô tả --}}}<div class="mb-4">
+                            <label class="form-label fw-bold">{{{ __('description') }} chi tiết vấn đề:</label>
                             <textarea name="description" id="description" class="form-control rounded-3" rows="5" placeholder="Hãy mô tả vấn đề của bạn tại đây..." required></textarea>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary py-2 fw-bold">Gửi yêu cầu ngay</button>
-                            <a href="{{ route('customer.support.index') }}" class="btn btn-light">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-primary py-2 fw-bold">{{{ __('submit') }} yêu cầu ngay</button>
+                            <a href="{{ route('customer.support.index') }}" class="btn btn-light">{{{ __('cancel') }} bỏ</a>
                         </div>
                     </form>
                 </div>
@@ -73,20 +69,17 @@
         let desc = document.getElementById('description');
         if(type === 'Thanh toán') {
             desc.value = "Tôi gặp vấn đề khi thanh toán cho đơn hàng. Tiền đã bị trừ nhưng vé chưa xác nhận...";
-        } else if(type === 'Vé xe') {
+        }} else if(type === 'Vé xe') {
             desc.value = "Tôi muốn đổi ngày đi hoặc hủy vé cho chuyến xe sắp tới. Lý do là...";
-        } else if(type === 'Khiếu nại') {
+        }} else if(type === 'Khiếu nại') {
             desc.value = "Tôi không hài lòng về chất lượng phục vụ/thái độ nhân viên tại nhà xe...";
-        }
-        desc.focus();
-    }
-</script>
+        }} desc.focus();
+    }}</script>
 
 <style>
     .btn-check:checked + .btn-outline-primary {
         background-color: #0d6efd;
         color: white;
         box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-    }
-</style>
+    }}</style>
 @endsection

@@ -3,7 +3,7 @@
 @section('content')
 <div class="mb-8">
     <h1 class="text-3xl font-bold mb-2">Bảng Tham Mưu Vận Hành</h1>
-    <p class="text-gray-500 {{ isset($todayRevenue) ? '' : 'animate-pulse' }}">Dữ liệu Thời gian thực - Đồng bộ lúc {{ now()->format('H:i:s d/m/Y') }}</p>
+    <p class="text-gray-500 {{ isset($todayRevenue) ? '' : 'animate-pulse' }}">Dữ liệu Thời gian thực - Đồng bộ lúc {{ now()->format('H:i:s d/m/Y') }}}</p>
 </div>
 
 <!-- Tầng 1: Highlight Metrics (Dòng Tiền & Quy Mô Ca Trực) -->
@@ -13,13 +13,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" viewBox="0 0 16 16"><path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/></svg>
         </div>
         <div class="text-sm font-bold opacity-80 uppercase tracking-wider mb-2">Chuyến Hôm Nay</div>
-        <div class="text-4xl font-black mb-1">{{ $todayTripCount }} <span class="text-lg font-medium opacity-60">Chuyến</span></div>
-        <div class="text-xs opacity-80">Đã bán: {{ $todayBookingsCount }} đơn mới.</div>
+        <div class="text-4xl font-black mb-1">{{ $todayTripCount }}}<span class="text-lg font-medium opacity-60">Chuyến</span></div>
+        <div class="text-xs opacity-80">Đã bán: {{ $todayBookingsCount }}} đơn mới.</div>
     </div>
 
     <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-lg">
         <div class="text-sm font-bold opacity-80 uppercase tracking-wider mb-2">Doanh thu Ca Số</div>
-        <div class="text-4xl font-black mb-1">+{{ number_format($todayRevenue, 0, ',', '.') }}<span class="text-lg font-medium opacity-60">đ</span></div>
+        <div class="text-4xl font-black mb-1">+{{ number_format($todayRevenue, 0, ',', '.') }}}<span class="text-lg font-medium opacity-60">đ</span></div>
         <div class="text-xs opacity-80">Tiền ghi nhận qua hệ thống hôm nay.</div>
     </div>
 
@@ -28,7 +28,7 @@
             <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
             <div class="text-sm font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Đơn Treo Chưa Chốt</div>
         </div>
-        <div class="text-4xl font-black text-red-600 dark:text-red-400 mb-1">{{ $pendingBookingsCount }}</div>
+        <div class="text-4xl font-black text-red-600 dark:text-red-400 mb-1">{{ $pendingBookingsCount }}}</div>
         <div class="text-xs opacity-60">Yêu cầu liên hệ khách chốt tiền mặt / hủy giữ chỗ.</div>
     </div>
 
@@ -59,7 +59,7 @@
             @else
                 <div class="space-y-4">
                     @foreach($upcomingTrips as $trip)
-                        <div class="p-5 border {{ $trip->is_urgent ? 'border-red-300 bg-red-50 dark:bg-red-900/10 dark:border-red-800/50' : 'border-[#e3e3e0] dark:border-[#262626]' }} rounded-2xl hover:shadow-md transition-shadow relative overflow-hidden">
+                        <div class="p-5 border {{ $trip->is_urgent ? 'border-red-300 bg-red-50 dark:bg-red-900/10 dark:border-red-800/50' : 'border-[#e3e3e0] dark:border-[#262626]' }}} rounded-2xl hover:shadow-md transition-shadow relative overflow-hidden">
                             @if($trip->is_departed)
                                 <div class="absolute top-0 right-0 px-4 py-1 bg-gray-200 text-gray-500 text-[10px] font-black rounded-bl-xl uppercase tracking-widest">Đã Khởi Hành</div>
                             @elseif($trip->is_urgent)
@@ -68,16 +68,15 @@
 
                             <div class="flex flex-col md:flex-row gap-4 mb-4">
                                 <div class="shrink-0 w-24 text-center border-r border-[#e3e3e0] dark:border-[#262626] pr-4">
-                                    <div class="text-2xl font-black text-blue-600 {{ $trip->is_urgent ? 'text-red-600' : '' }} mb-1">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</div>
-                                    <div class="text-[10px] font-bold opacity-40 uppercase">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</div>
+                                    <div class="text-2xl font-black text-blue-600 {{ $trip->is_urgent ? 'text-red-600' : '' }}} mb-1">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}}</div>
+                                    <div class="text-[10px] font-bold opacity-40 uppercase">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}}</div>
                                 </div>
                                 <div class="grow">
                                     <div class="font-bold flex items-center gap-2 mb-1">
-                                        {{ $trip->route->startLocation->name }} <span class="opacity-40">&rarr;</span> {{ $trip->route->endLocation->name }}
-                                        <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs opacity-60">{{ $trip->vehicle->license_plate ?? 'BKS' }}</span>
+                                        {{ $trip->route->startLocation->name }}}<span class="opacity-40">&rarr;</span> {{ $trip->route->endLocation->name }}}<span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs opacity-60">{{ $trip->vehicle->license_plate ?? 'BKS' }}}</span>
                                     </div>
                                     <div class="text-sm">
-                                        <span class="opacity-60">Lấp đầy:</span> <span class="font-bold">{{ $trip->capacity_data['sold'] }}/{{ $trip->capacity_data['total'] }} ghế</span>
+                                        <span class="opacity-60">Lấp đầy:</span> <span class="font-bold">{{ $trip->capacity_data['sold'] }}/{{ $trip->capacity_data['total'] }}} ghế</span>
                                     </div>
                                 </div>
                                 <div class="shrink-0 text-right space-y-2">
@@ -88,9 +87,9 @@
                             <!-- Progress Bar for Check-in Status -->
                             <div class="mt-4 pt-4 border-t border-[#e3e3e0] dark:border-[#262626] border-dashed">
                                 <div class="flex justify-between text-xs mb-1 font-bold">
-                                    <span class="text-green-600">Lên xe: {{ $trip->capacity_data['checked_in'] }}</span>
+                                    <span class="text-green-600">Lên xe: {{ $trip->capacity_data['checked_in'] }}}</span>
                                     @if($trip->capacity_data['waiting'] > 0)
-                                        <span class="text-red-500">Thiếu: {{ $trip->capacity_data['waiting'] }} khách</span>
+                                        <span class="text-red-500">Thiếu: {{ $trip->capacity_data['waiting'] }}} khách</span>
                                     @endif
                                 </div>
                                 <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2 flex overflow-hidden">
@@ -133,19 +132,18 @@
                         <div class="py-3 flex items-center justify-between px-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-xl transition-colors group">
                             <div class="w-1/2">
                                 <div class="font-bold flex items-center gap-2">
-                                    {{ $bk->contact_name }}
-                                </div>
-                                <div class="text-sm opacity-60 text-blue-500">{{ $bk->contact_phone }}</div>
+                                    {{ $bk->contact_name }}}</div>
+                                <div class="text-sm opacity-60 text-blue-500">{{ $bk->contact_phone }}}</div>
                             </div>
                             <div class="w-1/4">
-                                <div class="text-sm font-medium">{{ \Carbon\Carbon::parse($bk->trip->trip_date)->format('d/m') }}</div>
-                                <div class="text-xs opacity-60 font-bold font-mono">{{ $bk->trip->departure_time }}</div>
+                                <div class="text-sm font-medium">{{ \Carbon\Carbon::parse($bk->trip->trip_date)->format('d/m') }}}</div>
+                                <div class="text-xs opacity-60 font-bold font-mono">{{ $bk->trip->departure_time }}}</div>
                             </div>
                             <div class="w-1/4 flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                                 <form action="{{ route('staff.bookings.cancel', $bk) }}" method="POST" id="cancelForm{{$bk->id}}">
                                     @csrf
                                     <input type="hidden" name="cancellation_reason" id="cancellationReason{{$bk->id}}">
-                                    <button type="button" class="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 text-xs font-bold rounded-lg" onclick="let r = prompt('Vui lòng nhập lý do hủy đơn (bắt buộc):'); if(r){ document.getElementById('cancellationReason{{$bk->id}}').value = r; document.getElementById('cancelForm{{$bk->id}}').submit(); }">Hủy</button>
+                                    <button type="button" class="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 text-xs font-bold rounded-lg" onclick="let r = prompt('Vui lòng nhập lý do hủy đơn (bắt buộc):'); if(r){ document.getElementById('cancellationReason{{$bk->id}}').value = r; document.getElementById('cancelForm{{$bk->id}}').submit(); }">{{{ __('cancel') }}</button>
                                 </form>
                                 <a href="{{ route('staff.bookings.show', $bk) }}" class="px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-bold rounded-lg">Thu tiền</a>
                             </div>
@@ -175,14 +173,13 @@
                             ];
                             $dotColor = $colorMap[$log->action] ?? 'bg-gray-400';
                         @endphp
-                        <span class="absolute -left-[5px] top-1.5 w-2 h-2 {{ $dotColor }} rounded-full ring-4 ring-white dark:ring-[#111]"></span>
+                        <span class="absolute -left-[5px] top-1.5 w-2 h-2 {{ $dotColor }}} rounded-full ring-4 ring-white dark:ring-[#111]"></span>
                         <div class="text-xs font-bold opacity-40 mb-1 flex items-center justify-between">
-                            <span>{{ $log->user->name ?? 'Hệ thống' }}</span>
-                            <span>{{ $log->created_at->diffForHumans() }}</span>
+                            <span>{{ $log->user->name ?? 'Hệ thống' }}}</span>
+                            <span>{{ $log->created_at->diffForHumans() }}}</span>
                         </div>
                         <div class="text-sm font-medium leading-relaxed">
-                            {!! strip_tags($log->description, '<b><strong>') !!}
-                        </div>
+                            {!! strip_tags($log->description, '<b><strong>') !!}}</div>
                     </div>
                 @empty
                     <div class="pl-6 text-sm opacity-50 italic text-center mt-10">Chưa có theo vết hành động nào trong hệ thống.</div>
