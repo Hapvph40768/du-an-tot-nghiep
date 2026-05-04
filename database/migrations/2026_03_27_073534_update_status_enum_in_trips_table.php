@@ -7,21 +7,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("
-            ALTER TABLE trips 
-            MODIFY COLUMN status 
-            ENUM('active', 'running', 'broken', 'completed', 'cancelled') 
-            DEFAULT 'active'
-        ");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE trips MODIFY COLUMN status ENUM('active', 'running', 'broken', 'completed', 'cancelled') DEFAULT 'active'");
+        }
+        // SQLite không hỗ trợ MODIFY COLUMN, bỏ qua khi test
     }
 
     public function down(): void
     {
-        DB::statement("
-            ALTER TABLE trips 
-            MODIFY COLUMN status 
-            ENUM('active', 'completed', 'cancelled') 
-            DEFAULT 'active'
-        ");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE trips MODIFY COLUMN status ENUM('active', 'completed', 'cancelled') DEFAULT 'active'");
+        }
     }
 };

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -12,11 +10,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'used', 'no_show') DEFAULT 'pending'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'used', 'no_show') DEFAULT 'pending'");
+        }
+        // SQLite không hỗ trợ MODIFY COLUMN, bỏ qua khi test
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'used') DEFAULT 'pending'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'used') DEFAULT 'pending'");
+        }
     }
 };

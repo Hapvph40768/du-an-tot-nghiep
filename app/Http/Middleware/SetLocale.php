@@ -12,17 +12,14 @@ class SetLocale
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
-        } else {
-            // Default to Vietnamese if no session exists
-            App::setLocale('vi');
+        $locale = Session::get('locale', config('app.locale'));
+        if (!in_array($locale, ['en', 'vi'])) {
+            $locale = config('app.locale');
         }
+        App::setLocale($locale);
 
         return $next($request);
     }

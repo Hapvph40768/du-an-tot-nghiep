@@ -1,24 +1,28 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up()
     {
-        DB::statement("
-            ALTER TABLE users 
-            MODIFY role ENUM('admin', 'staff', 'customer', 'driver', 'assistant') 
-            DEFAULT 'customer'
-        ");
+        // Sử dụng Schema builder để tương thích đa nền tảng
+        Schema::table('users', function (Blueprint $table) {
+            // Nếu cần đổi enum, ta có thể dùng raw SQL cho MySQL
+            // Hoặc đơn giản là đảm bảo column đã tồn tại với đúng giá trị
+        });
+
+        // Dùng DB::statement cho MySQL để update enum
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'staff', 'customer', 'driver', 'assistant') DEFAULT 'customer'");
+        }
     }
 
     public function down()
     {
-        DB::statement("
-            ALTER TABLE users 
-            MODIFY role ENUM('admin', 'staff', 'customer') 
-            DEFAULT 'customer'
-        ");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'staff', 'customer') DEFAULT 'customer'");
+        }
     }
 };

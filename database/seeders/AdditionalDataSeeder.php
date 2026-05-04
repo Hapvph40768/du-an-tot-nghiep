@@ -93,7 +93,7 @@ class AdditionalDataSeeder extends Seeder
             $sender = $parcelSenders[array_rand($parcelSenders)];
             $receiverNames = ['Phạm Thị Em', 'Hoàng Văn Phong', 'Vũ Đức Quân'];
             $receiverAddrs = ['456 Nguyễn Huệ, TP.HCM', '789 Trần Phú, Hà Nội', '123 Lạc Long Quân, Đà Lạt'];
-            Parcel::create([
+            Parcel::create([S
                 'sender_name' => $sender['name'], 'sender_phone' => $sender['phone'],
                 'sender_address' => $sender['addr'],
                 'receiver_name' => $receiverNames[rand(0, 2)],
