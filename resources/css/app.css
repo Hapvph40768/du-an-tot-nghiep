@@ -40,29 +40,23 @@
     }
 }
 
-/* View Transitions API - Apple Style Smoothness */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation-duration: 0.6s;
-    animation-timing-function: var(--ease-apple);
-}
-
+/* View Transitions API - iOS Style Slide */
 ::view-transition-old(root) {
-    animation-name: fade-out-scale;
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both ios-slide-out-to-left;
 }
 
 ::view-transition-new(root) {
-    animation-name: fade-in-scale;
+    animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both ios-slide-in-from-right;
 }
 
-@keyframes fade-out-scale {
-    from { opacity: 1; transform: scale(1); }
-    to { opacity: 0; transform: scale(0.98); filter: blur(10px); }
+@keyframes ios-slide-in-from-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
 }
 
-@keyframes fade-in-scale {
-    from { opacity: 0; transform: scale(1.02); filter: blur(10px); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes ios-slide-out-to-left {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-30%); opacity: 0; }
 }
 
 /* Luxury Utilities */

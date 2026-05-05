@@ -28,20 +28,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // 2. Handle button click scale effect (extra insurance)
-    document.querySelectorAll('button, a.btn, .clickable').forEach(button => {
-        button.addEventListener('touchstart', () => {
+    // 2. Handle button click scale effect
+    document.querySelectorAll('button, a.btn, .clickable, a').forEach(button => {
+        button.addEventListener('mousedown', () => {
             button.style.transform = 'scale(0.96)';
+            button.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
         });
-        button.addEventListener('touchend', () => {
+        button.addEventListener('mouseup', () => {
+            button.style.transform = 'scale(1)';
+        });
+        button.addEventListener('mouseleave', () => {
             button.style.transform = 'scale(1)';
         });
     });
-});
 
-// Handle Cross-Document View Transitions (for browsers that need a hint)
-window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-        // Force refresh if needed on back/forward
-    }
+    // 3. iOS Style Page Transition Interceptor
+    window.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (
+            link && 
+            link.href && 
+            link.origin === window.location.origin && 
+            !link.hash && 
+            link.target !== '_blank' &&
+            !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey
+        ) {
+            if (document.startViewTransition) {
+                e.preventDefault();
+                document.startViewTransition(async () => {
+                    window.location.href = link.href;
+                });
+            }
+        }
+    });
 });

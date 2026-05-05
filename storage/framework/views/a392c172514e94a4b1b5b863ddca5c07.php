@@ -118,7 +118,7 @@
     </section>
 
     <!-- Popular Routes -->
-    <section id="routes" class="py-32 max-w-7xl mx-auto px-6">
+    <section id="routes" class="py-32 max-w-7xl mx-auto px-6 reveal">
         <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
             <div class="space-y-4">
                 <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Hot Destinations</span>
@@ -182,7 +182,7 @@
     </section>
 
     <!-- Services Section -->
-    <section class="py-32 bg-white/5 relative overflow-hidden">
+    <section class="py-32 bg-white/5 relative overflow-hidden reveal">
         <div class="absolute -left-24 top-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/10 blur-[100px] rounded-full">
         </div>
 
@@ -238,7 +238,7 @@
     </section>
 
     <!-- App CTA -->
-    <section class="py-32 max-w-7xl mx-auto px-6">
+    <section class="py-32 max-w-7xl mx-auto px-6 reveal">
         <div
             class="liquid-gradient rounded-4xl p-16 relative overflow-hidden flex flex-col items-center text-center space-y-8">
             <div class="absolute inset-0 bg-black/10"></div>
@@ -277,7 +277,7 @@
     </section>
 
 <!-- Contact Section -->
-<section id="contact" class="py-32 bg-brand-dark">
+<section id="contact" class="py-32 bg-brand-dark reveal">
     <div class="max-w-7xl mx-auto px-6 text-center">
         <h2 class="text-4xl font-bold mb-8"><?php echo e(__('contact')); ?></h2>
         <p class="text-white/60 max-w-2xl mx-auto mb-12">Liên hệ với chúng tôi để được hỗ trợ nhanh nhất</p>
