@@ -6,7 +6,7 @@
     <title>Nhân Viên - {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-    {{ -- @vite(['resources/css/app.css', 'resources/js/app.js']) -- }}<script src="https://cdn.tailwindcss.com"></script>
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] min-h-screen flex flex-col p-6 lg:p-8">
     <header class="w-full lg:max-w-6xl mx-auto text-sm mb-6 pb-4 border-b border-[#e3e3e0] dark:border-[#262626]">

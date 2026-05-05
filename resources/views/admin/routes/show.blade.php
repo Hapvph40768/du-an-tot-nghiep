@@ -26,7 +26,7 @@
             <div class="card-box mb-4">
                 <h5 class="fw-bold mb-4">{{ __('trajectory_mobile') }} di chuyển</h5>
                 
-                {{ -- Sơ đồ điểm đi - điểm đến -- }}<div class="route-path">
+                {{-- Sơ đồ điểm đi - điểm đến --}}<div class="route-path">
                     <div class="location-box">
                         <i class='bx bxs-map text-danger fs-2'></i>
                         <div class="small text-muted text-uppercase">{{ __('departure') }}</div>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        {{ -- Cột bên phải (Dùng để hiển thị thống kê hoặc lịch trình chuyến đi sau này) -- }}<div class="col-md-4">
+        {{-- Cột bên phải (Dùng để hiển thị thống kê hoặc lịch trình chuyến đi sau này) --}}<div class="col-md-4">
             <div class="card-box bg-light border-0">
                 <h6 class="fw-bold text-dark mb-3">Ghi chú vận hành</h6>
                 <p class="small text-muted mb-0">

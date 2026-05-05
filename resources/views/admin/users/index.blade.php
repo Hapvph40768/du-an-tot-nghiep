@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    {{ -- Thông báo -- }} @if (session('success'))
+    {{-- Thông báo --}} @if (session('success'))
         <div class="glass-dark border-l-4 border-emerald-500 p-6 rounded-3xl animate-fade-in flex items-center gap-4">
             <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
             <span class="text-sm font-bold">{{ session('success') }}</span>

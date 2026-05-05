@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            {{ -- Breadcrumb để Admin biết mình đang ở đâu -- }}<nav aria-label="breadcrumb" class="mb-3">
+            {{-- Breadcrumb để Admin biết mình đang ở đâu --}}<nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.trips.index') }}" class="text-decoration-none">{{ __('trips') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="text-decoration-none">{{ __('pickup_points') }} chuyến</a></li>
@@ -23,10 +23,10 @@
                     </p>
                 </div>
 
-                {{ -- FORM ACTION: Gọi đúng hàm store_new của TripPickupPointController -- }}<form action="{{ route('admin.trips.pickup_points.store_new', $trip->id) }}" method="POST">
+                {{-- FORM ACTION: Gọi đúng hàm store_new của TripPickupPointController --}}<form action="{{ route('admin.trips.pickup_points.store_new', $trip->id) }}" method="POST">
                     @csrf
                     
-                    {{ -- 1. Chọn Tỉnh/Thành phố -- }}<div class="mb-3">
+                    {{-- 1. Chọn Tỉnh/Thành phố --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Thuộc Tỉnh/Thành phố</label>
                         <select name="location_id" class="form-select rounded-3 @error('location_id') is-invalid @enderror">
                             <option value="">-- Chọn vị trí --</option>
@@ -38,7 +38,7 @@
                         @error('location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- 2. Tên điểm đón -- }}<div class="mb-3">
+                    {{-- 2. Tên điểm đón --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">{{ __('name') }} điểm đón (Bến xe/Văn phòng/Điểm dừng)</label>
                         <input type="text" name="name" value="{{ old('name') }}" 
                                class="form-control rounded-3 @error('name') is-invalid @enderror" 
@@ -46,7 +46,7 @@
                         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- 3. Địa chỉ chi tiết -- }}<div class="mb-4">
+                    {{-- 3. Địa chỉ chi tiết --}}<div class="mb-4">
                         <label class="form-label fw-bold small text-muted">{{ __('address') }} chi tiết</label>
                         <textarea name="address" rows="3" class="form-control rounded-3 @error('address') is-invalid @enderror" 
                                   placeholder="Số nhà, tên đường, phường/xã...">{{ old('address') }}</textarea>
@@ -54,11 +54,11 @@
                     </div>
 
                     <div class="pt-3 border-top d-flex gap-2">
-                        {{ -- Nút Lưu & Gán -- }}<button type="submit" class="btn btn-primary px-4 py-2 fw-bold" style="background: #ff6b00; border:none; border-radius: 10px;">
+                        {{-- Nút Lưu & Gán --}}<button type="submit" class="btn btn-primary px-4 py-2 fw-bold" style="background: #ff6b00; border:none; border-radius: 10px;">
                             <i class='bx bx-save'></i> Lưu & Gán vào chuyến
                         </button>
                         
-                        {{ -- Nút Hủy: Quay lại trang index của đúng Trip đó -- }}<a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-light px-4 border" style="border-radius: 10px;">
+                        {{-- Nút Hủy: Quay lại trang index của đúng Trip đó --}}<a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-light px-4 border" style="border-radius: 10px;">
                             Hủy bỏ
                         </a>
                     </div>

@@ -47,7 +47,7 @@
     </div>
 
     <div class="row g-4">
-        {{ -- Thông tin tóm tắt xe -- }}<div class="col-md-4">
+        {{-- Thông tin tóm tắt xe --}}<div class="col-md-4">
             <div class="card-box">
                 <h5 class="fw-bold mb-4 border-bottom pb-2">Thông tin chung</h5>
                 <div class="row g-3">
@@ -90,7 +90,7 @@
             </div>
         </div>
 
-        {{ -- Hiển thị sơ đồ ghế -- }}<div class="col-md-8">
+        {{-- Hiển thị sơ đồ ghế --}}<div class="col-md-8">
             <div class="card-box">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0">Sơ đồ ghế thực tế</h5>

@@ -43,6 +43,6 @@
                 </tbody>
             </table>
         </div>
-        {{ -- <div class="mt-3">{{ $routes->links() }}</div> --}}</div>
+        {{-- <div class="mt-3">{{ $routes->links() }}</div> --}}</div>
 </div>
 @endsection

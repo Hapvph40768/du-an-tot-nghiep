@@ -121,7 +121,7 @@
                 @endif
             </div>
 
-            {{ -- Lưu ý quầy check-in -- }}<div class="rounded-xl p-5 mt-6 flex gap-4 items-start shadow-sm border
+            {{-- Lưu ý quầy check-in --}}<div class="rounded-xl p-5 mt-6 flex gap-4 items-start shadow-sm border
                 {{ $booking->status == 'paid' ? 'bg-amber-50 border-amber-300' : 'bg-blue-50 border-blue-300' }}">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
                     {{ $booking->status == 'paid' ? 'bg-amber-400' : 'bg-blue-400' }}">

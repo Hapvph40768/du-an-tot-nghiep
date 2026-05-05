@@ -19,10 +19,10 @@
                     <p class="text-muted small">{{ __('locations') }} này sẽ được dùng chung để gán cho nhiều chuyến xe khác nhau.</p>
                 </div>
 
-                {{ -- Sửa route: dùng dấu gạch nối 'pickup-points' -- }}<form action="{{ route('admin.pickup-points.store') }}" method="POST">
+                {{-- Sửa route: dùng dấu gạch nối 'pickup-points' --}}<form action="{{ route('admin.pickup-points.store') }}" method="POST">
                     @csrf
                     
-                    {{ -- Tỉnh/Thành phố -- }}<div class="mb-3">
+                    {{-- Tỉnh/Thành phố --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Tỉnh/Thành phố</label>
                         <select name="location_id" class="form-select @error('location_id') is-invalid @enderror">
                             <option value="">-- Chọn vị trí --</option>
@@ -34,7 +34,7 @@
                         @error('location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- Tên điểm đón -- }}<div class="mb-3">
+                    {{-- Tên điểm đón --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">{{ __('name') }} điểm đón (Bến xe/Văn phòng)</label>
                         <input type="text" name="name" value="{{ old('name') }}" 
                                class="form-control @error('name') is-invalid @enderror" 
@@ -42,7 +42,7 @@
                         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- Địa chỉ chi tiết -- }}<div class="mb-4">
+                    {{-- Địa chỉ chi tiết --}}<div class="mb-4">
                         <label class="form-label fw-bold small text-muted">{{ __('address') }} chi tiết</label>
                         <textarea name="address" rows="3" 
                                   class="form-control @error('address') is-invalid @enderror" 

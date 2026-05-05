@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($tickets as $ticket) {{ -- BẮT BUỘC phải dùng $tickets ở đây -- }}<tr>
+                    @forelse($tickets as $ticket) {{-- BẮT BUỘC phải dùng $tickets ở đây --}}<tr>
                         <td class="ps-4 text-muted">#{{ $ticket->id }}</td>
                         <td>
                             <span class="badge bg-primary-subtle text-primary px-2">

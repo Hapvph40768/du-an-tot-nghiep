@@ -17,7 +17,7 @@
         </a>
     </div>
 
-    {{ -- Bộ lọc theo xe -- }}<div class="filter-section shadow-sm">
+    {{-- Bộ lọc theo xe --}}<div class="filter-section shadow-sm">
         <form action="{{ route('admin.seats.index') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-md-4">
                 <label class="form-label small fw-bold text-muted">{{ __('filter') }} theo Xe</label>

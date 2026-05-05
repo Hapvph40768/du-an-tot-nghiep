@@ -17,7 +17,7 @@
             </div>
 
             <div class="card-box shadow-sm">
-                {{ -- Hiển thị thông báo lỗi tổng quát nếu có -- }} @if ($errors->any())
+                {{-- Hiển thị thông báo lỗi tổng quát nếu có --}} @if ($errors->any())
                     <div class="alert alert-danger border-0 shadow-sm mb-4">
                         <ul class="mb-0 small">
                             @foreach ($errors->all() as $error)
@@ -32,7 +32,7 @@
                     @method('PUT')
 
                     <div class="row g-4">
-                        {{ -- Điểm khởi hành -- }}<div class="col-md-6">
+                        {{-- Điểm khởi hành --}}<div class="col-md-6">
                             <label class="form-label">{{ __('departure') }}</label>
                             <select name="start_location_id" class="form-select rounded-3 @error('start_location_id') is-invalid @enderror">
                                 @foreach($locations as $loc)
@@ -43,7 +43,7 @@
                             @error('start_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        {{ -- Điểm kết thúc -- }}<div class="col-md-6">
+                        {{-- Điểm kết thúc --}}<div class="col-md-6">
                             <label class="form-label">Điểm kết thúc</label>
                             <select name="end_location_id" class="form-select rounded-3 @error('end_location_id') is-invalid @enderror">
                                 @foreach($locations as $loc)
@@ -54,7 +54,7 @@
                             @error('end_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        {{ -- Khoảng cách -- }}<div class="col-md-6">
+                        {{-- Khoảng cách --}}<div class="col-md-6">
                             <label class="form-label">Khoảng cách (km)</label>
                             <div class="input-group">
                                 <input type="number" name="distance_km" value="{{ old('distance_km', $route->distance_km) }}" 
@@ -64,7 +64,7 @@
                             @error('distance_km') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                         </div>
 
-                        {{ -- Thời gian dự kiến -- }}<div class="col-md-6">
+                        {{-- Thời gian dự kiến --}}<div class="col-md-6">
                             <label class="form-label">Thời gian dự kiến (giờ)</label>
                             <div class="input-group">
                                 <input type="number" step="0.1" name="estimated_time" value="{{ old('estimated_time', $route->estimated_time) }}" 

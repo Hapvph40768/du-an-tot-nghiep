@@ -24,7 +24,7 @@
         @include('layout.customer.blocks.header')
         <!-- Hero Section with Search -->
 
-        {{ -- content -- }}
+        {{-- content --}}
         @yield('content-main')
         <!-- Contact Section -->
 

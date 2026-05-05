@@ -3,7 +3,7 @@
 @section('title', 'Đăng ký tài khoản')
 
 @section('content')
-    {{ -- VALIDATE ERROR -- }} @if ($errors->any())
+    {{-- VALIDATE ERROR --}} @if ($errors->any())
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)

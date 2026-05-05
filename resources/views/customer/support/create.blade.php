@@ -11,7 +11,7 @@
                     <form action="{{ route('customer.support.store') }}" method="POST">
                         @csrf
                         
-                        {{ -- Chọn loại vấn đề bằng Card -- }}<label class="form-label fw-bold mb-3">Vui lòng chọn danh mục hỗ trợ:</label>
+                        {{-- Chọn loại vấn đề bằng Card --}}<label class="form-label fw-bold mb-3">Vui lòng chọn danh mục hỗ trợ:</label>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <input type="radio" class="btn-check" name="type" id="type_payment" value="payment" required onclick="updateDesc('Thanh toán')">
@@ -36,11 +36,11 @@
                             </div>
                         </div>
 
-                        {{ -- Chọn mã đặt vé (nếu có) -- }}<div class="mb-4">
+                        {{-- Chọn mã đặt vé (nếu có) --}}<div class="mb-4">
                             <label class="form-label fw-bold">Chuyến đi liên quan (không bắt buộc):</label>
                             <select name="booking_id" class="form-select rounded-3">
                                 <option value="">-- Chọn chuyến đi --</option>
-                                {{ -- Giả sử bạn truyền biến $bookings từ controller qua -- }} @isset($bookings)
+                                {{-- Giả sử bạn truyền biến $bookings từ controller qua --}} @isset($bookings)
                                     @foreach($bookings as $booking)
                                         <option value="{{ $booking->id }}">Mã #{{ $booking->id }} - {{ $booking->trip->route->departure }} đi {{ $booking->trip->route->destination }}</option>
                                     @endforeach
@@ -48,7 +48,7 @@
                             </select>
                         </div>
 
-                        {{ -- Nội dung mô tả -- }}<div class="mb-4">
+                        {{-- Nội dung mô tả --}}<div class="mb-4">
                             <label class="form-label fw-bold">{{ __('description') }} chi tiết vấn đề:</label>
                             <textarea name="description" id="description" class="form-control rounded-3" rows="5" placeholder="Hãy mô tả vấn đề của bạn tại đây..." required></textarea>
                         </div>

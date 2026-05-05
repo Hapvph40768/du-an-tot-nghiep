@@ -13,7 +13,7 @@
             <h2 class="fw-bold text-dark m-0">Danh sách Đặt vé</h2>
             <p class="text-muted small mb-0">Theo dõi đơn hàng và trạng thái thanh toán từ khách hàng</p>
         </div>
-        {{ -- Có thể thêm nút Xuất Excel báo cáo ở đây -- }}<button class="btn btn-outline-secondary btn-sm rounded-3">
+        {{-- Có thể thêm nút Xuất Excel báo cáo ở đây --}}<button class="btn btn-outline-secondary btn-sm rounded-3">
             <i class='bx bx-export'></i> Xuất báo cáo
         </button>
     </div>

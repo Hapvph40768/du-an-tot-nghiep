@@ -6,7 +6,7 @@
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            {{ -- Breadcrumb để dễ quay lại -- }}<nav aria-label="breadcrumb" class="mb-3">
+            {{-- Breadcrumb để dễ quay lại --}}<nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.pickup-points.index') }}" class="text-decoration-none">Danh mục gốc</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
@@ -19,11 +19,11 @@
                     <p class="text-muted small">{{ __('update') }} thông tin bến xe/điểm dừng trong hệ thống</p>
                 </div>
 
-                {{ -- Cập nhật route sang dấu gạch nối 'pickup-points' -- }}<form action="{{ route('admin.pickup-points.update', $pickupPoint->id) }}" method="POST">
+                {{-- Cập nhật route sang dấu gạch nối 'pickup-points' --}}<form action="{{ route('admin.pickup-points.update', $pickupPoint->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
-                    {{ -- Tỉnh/Thành phố -- }}<div class="mb-3">
+                    {{-- Tỉnh/Thành phố --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">Tỉnh/Thành phố</label>
                         <select name="location_id" class="form-select @error('location_id') is-invalid @enderror">
                             @foreach($locations as $loc)
@@ -34,7 +34,7 @@
                         @error('location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- Tên điểm đón -- }}<div class="mb-3">
+                    {{-- Tên điểm đón --}}<div class="mb-3">
                         <label class="form-label fw-bold small text-muted">{{ __('name') }} điểm đón</label>
                         <input type="text" name="name" value="{{ old('name', $pickupPoint->name) }}" 
                                class="form-control @error('name') is-invalid @enderror"
@@ -42,7 +42,7 @@
                         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    {{ -- Địa chỉ chi tiết -- }}<div class="mb-4">
+                    {{-- Địa chỉ chi tiết --}}<div class="mb-4">
                         <label class="form-label fw-bold small text-muted">{{ __('address') }} chi tiết</label>
                         <textarea name="address" rows="3" 
                                   class="form-control @error('address') is-invalid @enderror"

@@ -6,7 +6,7 @@
     <div class="container-fluid py-4">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                {{ -- Điều hướng nhanh -- }}<nav aria-label="breadcrumb" class="mb-3">
+                {{-- Điều hướng nhanh --}}<nav aria-label="breadcrumb" class="mb-3">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.trips.index') }}"
                                 class="text-decoration-none">Danh sách chuyến</a></li>
@@ -21,7 +21,7 @@
                     <form action="{{ route('admin.trips.store') }}" method="POST">
                         @csrf
                         <div class="row g-4">
-                            {{ -- Chọn Tuyến đường -- }}<div class="col-md-12">
+                            {{-- Chọn Tuyến đường --}}<div class="col-md-12">
                                 <label class="form-label fw-bold small text-muted">Chọn Tuyến đường <span
                                         class="text-danger">*</span></label>
                                 <select name="route_id"
@@ -39,7 +39,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Ngày khởi hành -- }}<div class="col-md-6">
+                            {{-- Ngày khởi hành --}}<div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">{{ __('date') }} khởi hành (Không bắt buộc)</label>
                                 <input type="date" name="trip_date" value="{{ old('trip_date') }}"
                                     class="form-control rounded-3 @error('trip_date') is-invalid @enderror">
@@ -48,7 +48,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Giờ xuất bến -- }}<div class="col-md-3">
+                            {{-- Giờ xuất bến --}}<div class="col-md-3">
                                 <label class="form-label fw-bold small text-muted">{{ __('time') }} xuất bến</label>
                                 <input type="time" name="departure_time" value="{{ old('departure_time') }}"
                                     class="form-control rounded-3 @error('departure_time') is-invalid @enderror">
@@ -57,7 +57,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Giờ đến dự kiến -- }}<div class="col-md-3">
+                            {{-- Giờ đến dự kiến --}}<div class="col-md-3">
                                 <label class="form-label fw-bold small text-muted">{{ __('time') }} đến dự kiến</label>
                                 <input type="time" name="arrival_time" value="{{ old('arrival_time') }}"
                                     class="form-control rounded-3 @error('arrival_time') is-invalid @enderror">
@@ -66,7 +66,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Chọn Xe -- }}<div class="col-md-6">
+                            {{-- Chọn Xe --}}<div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">Chọn Xe vận hành <span
                                         class="text-danger">*</span></label>
                                 <select name="vehicle_id"
@@ -84,7 +84,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Tài xế -- }}<div class="col-md-6">
+                            {{-- Tài xế --}}<div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">{{ __('drivers') }} phụ trách <span
                                         class="text-danger">*</span></label>
                                 <select name="driver_id"
@@ -102,7 +102,7 @@
                                 @enderror
                             </div>
 
-                            {{ -- Giá vé -- }}<div class="col-md-6">
+                            {{-- Giá vé --}}<div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">{{ __('cost') }} niêm yết (VNĐ) <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
@@ -116,7 +116,7 @@
                                 </div>
                             </div>
 
-                            {{ -- Trạng thái -- }}<div class="col-md-6">
+                            {{-- Trạng thái --}}<div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">{{ __('status') }} ban đầu</label>
                                 <select name="status" class="form-select rounded-3">
                                     <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Mở bán

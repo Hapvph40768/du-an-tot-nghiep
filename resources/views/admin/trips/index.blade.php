@@ -110,7 +110,7 @@
             </a>
         </div>
 
-        {{ -- Bộ lọc -- }}<div class="filter-section shadow-sm">
+        {{-- Bộ lọc --}}<div class="filter-section shadow-sm">
             <form action="{{ route('admin.trips.index') }}" method="GET" class="row g-3 form-filter">
                 <div class="col-md-3">
                     <label class="small fw-bold text-muted">{{ __('search') }}</label>
@@ -177,7 +177,7 @@
                                         </span>
                                     </div>
 
-                                    {{ -- Hiển thị lộ trình đón khách thực tế -- }}<div class="route-info-mini">
+                                    {{-- Hiển thị lộ trình đón khách thực tế --}}<div class="route-info-mini">
                                         <span class="text-truncate d-block"
                                             title="{{ $trip->pickupPoints->pluck('name')->implode(' → ') }}">
                                             <strong>Dừng:</strong>

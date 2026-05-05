@@ -95,7 +95,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 text-sm">
-                                    @foreach($bookings->take(5) as $booking) {{ -- Hiển thị tối đa 5 vé mới nhất -- }}<tr class="hover:bg-amber-50 transition-colors cursor-pointer" onclick="window.location='{{ route('customer.bookings.show', $booking->id) }}'">
+                                    @foreach($bookings->take(5) as $booking) {{-- Hiển thị tối đa 5 vé mới nhất --}}<tr class="hover:bg-amber-50 transition-colors cursor-pointer" onclick="window.location='{{ route('customer.bookings.show', $booking->id) }}'">
                                             <td class="p-4 font-bold text-gray-800">#{{ $booking->id }}</td>
                                             <td class="p-4 text-gray-700">
                                                 <div class="flex items-center gap-2">

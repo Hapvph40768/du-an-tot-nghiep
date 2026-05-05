@@ -12,7 +12,7 @@
     <nav class="sidebar-menu">
         <ul class="menu-list">
 
-            {{ -- Tổng quan -- }}<li class="menu-item">
+            {{-- Tổng quan --}}<li class="menu-item">
                 <a href="{{ route('admin.dashboard.index') }}"
                     class="menu-link {{ request()->routeIs('admin.dashboard.*') ? 'active' : '' }}">
                     <i class='bx bx-grid-alt'></i>
@@ -20,7 +20,7 @@
                 </a>
             </li>
 
-            {{ -- Vận hành chính -- }}<li class="menu-item">
+            {{-- Vận hành chính --}}<li class="menu-item">
                 <a href="{{ route('admin.trips.index') }}"
                     class="menu-link {{ request()->routeIs('admin.trips.*') ? 'active' : '' }}">
                     <i class='bx bx-git-repo-forked'></i>
@@ -36,7 +36,7 @@
                 </a>
             </li>
 
-            {{ -- Quản lý tài nguyên -- }}<li class="menu-item">
+            {{-- Quản lý tài nguyên --}}<li class="menu-item">
                 <a href="{{ route('admin.vehicles.index') }}"
                     class="menu-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-bus"></i>
@@ -52,7 +52,7 @@
                 </a>
             </li>
 
-            {{ -- Quản lý Tuyến & Điểm dừng -- }}<li class="menu-item">
+            {{-- Quản lý Tuyến & Điểm dừng --}}<li class="menu-item">
                 <a href="{{ route('admin.routes.index') }}"
                     class="menu-link {{ request()->routeIs('admin.routes.*') ? 'active' : '' }}">
                     <i class='bx bx-map-alt'></i>
@@ -76,7 +76,7 @@
                 </a>
             </li>
 
-            {{ -- Hệ thống -- }}<li class="menu-item">
+            {{-- Hệ thống --}}<li class="menu-item">
                 <a href="{{ route('admin.support_tickets.index') }}"
                     class="menu-link {{ request()->routeIs('admin.support_tickets.*') ? 'active' : '' }}">
                     <i class='bx bx-support'></i>
@@ -92,7 +92,7 @@
                 </a>
             </li>
 
-            {{ -- ===== CÁC MODULE MỚI ===== -- }}<li class="menu-item" style="margin-top:10px;">
+            {{-- ===== CÁC MODULE MỚI ===== --}}<li class="menu-item" style="margin-top:10px;">
                 <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
                     Kinh doanh & Marketing
                 </span>
