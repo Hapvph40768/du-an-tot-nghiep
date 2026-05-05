@@ -49,6 +49,12 @@
 </head>
 <body class="bg-[#0a0a0a] text-white font-sans antialiased overflow-hidden">
 
+    <!-- Back to Home Button (Fixed to Top Left) -->
+    <a href="/" class="fixed top-8 left-8 flex items-center gap-2 px-5 py-2.5 rounded-full glass text-white/50 hover:text-white hover:bg-white/10 transition-all group z-[100]">
+        <i data-lucide="home" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+        <span class="text-xs font-bold uppercase tracking-widest">Trang chủ</span>
+    </a>
+
     <!-- Background Atmosphere -->
     <div class="fixed inset-0 -z-10 overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-primary/10 blur-[120px] animate-blob"></div>
@@ -93,7 +99,7 @@
             </div>
 
             <!-- Right Side: Form -->
-            <div class="p-8 md:p-16 lg:p-20 bg-white/[0.02] flex flex-col justify-center">
+            <div class="p-8 md:p-16 lg:p-20 bg-white/[0.02] flex flex-col justify-center relative">
                 <div class="max-w-md mx-auto w-full space-y-10">
                     <div class="text-center lg:text-left space-y-3">
                         <div class="lg:hidden flex justify-center mb-8">

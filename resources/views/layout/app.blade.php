@@ -18,7 +18,6 @@
 
     @livewireStyles
     @stack('styles')
-    @include('layout.partials.translator')
 </head>
 <body class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-primary/30" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)">
 
@@ -41,12 +40,11 @@
                 <span class="font-heading text-xl font-bold tracking-tight">NHÀ XE <span class="text-brand-accent">MẠNH HÙNG</span></span>
             </a>
 
-            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8 font-medium text-sm tracking-wide text-white/70">
-                <a href="/" class="hover:text-brand-accent transition-colors">{{ __('home') }}</a>
-                <a href="#routes" class="hover:text-brand-accent transition-colors">{{ __('schedules') }}</a>
+                <a href="/" class="hover:text-brand-accent transition-colors">Trang chủ</a>
+                <a href="#routes" class="hover:text-brand-accent transition-colors">Lịch trình</a>
                 <a href="{{ route('customer.bookings.index') }}" class="hover:text-brand-accent transition-colors">Tra cứu vé</a>
-                <a href="#contact" class="hover:text-brand-accent transition-colors">{{ __('contact') }}</a>
+                <a href="#contact" class="hover:text-brand-accent transition-colors">Liên hệ</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -108,18 +106,18 @@
             <div>
                 <h4 class="font-heading text-white font-semibold mb-6">Liên kết</h4>
                 <ul class="space-y-4 text-white/50 text-sm">
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('about_us') }}</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('privacy_policy') }}</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('terms_of_service') }}</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors">Về chúng tôi</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors">Chính sách bảo mật</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors">Điều khoản dịch vụ</a></li>
                 </ul>
             </div>
 
             <div>
-                <h4 class="font-heading text-white font-semibold mb-6">{{ __('support') }}</h4>
+                <h4 class="font-heading text-white font-semibold mb-6">Hỗ trợ</h4>
                 <ul class="space-y-4 text-white/50 text-sm">
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('help_center') }}</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors">Trung tâm hỗ trợ</a></li>
                     <li><a href="#" class="hover:text-brand-accent transition-colors">Câu hỏi thường gặp</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('contact') }} hỗ trợ</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors">Liên hệ hỗ trợ</a></li>
                 </ul>
             </div>
 

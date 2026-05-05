@@ -16,7 +16,7 @@
                     x-transition:enter-start="opacity-0 -translate-y-8" x-transition:enter-end="opacity-100 translate-y-0">
                     <span
                         class="inline-block px-4 py-1.5 rounded-full glass text-brand-accent text-xs font-bold tracking-widest uppercase mb-6">
-                        Luxury Travel Experience
+                        TRẢI NGHIỆM DU LỊCH ĐẲNG CẤP
                     </span>
                     <h1 class="text-6xl lg:text-8xl font-black leading-[0.9] mb-6">
                         ĐẶT VÉ NHANH <br />
@@ -73,13 +73,13 @@
                                         @endforeach
                                     </select>
                                     <i data-lucide="map-pin"
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 pointer-events-none"></i>
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <label
-                                    class="text-xs font-bold text-white/40 uppercase tracking-widest">{{ __('destination') }}</label>
+                                    class="text-xs font-bold text-white/40 uppercase tracking-widest">Điểm đến</label>
                                 <div class="relative">
                                     <select name="end_location_id" required
                                         class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all appearance-none">
@@ -90,19 +90,18 @@
                                         @endforeach
                                     </select>
                                     <i data-lucide="navigation"
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 pointer-events-none"></i>
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">{{ __('date') }} khởi
-                                hành</label>
+                            <label class="text-xs font-bold text-white/40 uppercase tracking-widest">Ngày khởi hành</label>
                             <div class="relative">
                                 <input type="date" name="trip_date" value="{{ date('Y-m-d') }}" required
                                     class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-brand-accent transition-all">
                                 <i data-lucide="calendar"
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20"></i>
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 pointer-events-none"></i>
                             </div>
                         </div>
 
@@ -121,11 +120,11 @@
     <section id="routes" class="py-32 max-w-7xl mx-auto px-6 reveal">
         <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
             <div class="space-y-4">
-                <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Hot Destinations</span>
+                <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Điểm đến nổi bật</span>
                 <h2 class="text-5xl font-black italic">TUYẾN ĐƯỜNG PHỔ BIẾN</h2>
             </div>
             <a href="#" class="group flex items-center gap-3 text-white/50 hover:text-white transition-colors">
-                <span>{{ __('view') }} tất cả</span>
+                <span>Xem tất cả</span>
                 <div
                     class="w-10 h-10 rounded-full glass flex items-center justify-center group-hover:bg-brand-accent group-hover:text-white transition-all">
                     <i data-lucide="plus" class="w-5 h-5"></i>
@@ -136,10 +135,10 @@
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
             @php
                 $popular = [
-                    ['from' => 'Hà Nội', 'to' => 'Đà Nẵng', 'price' => '350.000', 'img' => 'https://images.unsplash.com/photo-1555944191-2330ca0493ce?auto=format&fit=crop&q=80&w=600'],
-                    ['from' => 'TP. Hồ Chí Minh', 'to' => 'Đà Lạt', 'price' => '250.000', 'img' => 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=600'],
-                    ['from' => 'Hà Nội', 'to' => 'Nha Trang', 'price' => '550.000', 'img' => 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=600'],
-                    ['from' => 'TP. Hồ Chí Minh', 'to' => 'Cần Thơ', 'price' => '180.000', 'img' => 'https://images.unsplash.com/photo-1598144675549-b006c9e99593?auto=format&fit=crop&q=80&w=600']
+                    ['from' => 'Hà Nội', 'to' => 'Đà Nẵng', 'price' => '350.000', 'img' => asset('images/hanoi.jpg')],
+                    ['from' => 'TP. Hồ Chí Minh', 'to' => 'Đà Lạt', 'price' => '250.000', 'img' => asset('images/hcmc.jpg')],
+                    ['from' => 'Hà Nội', 'to' => 'Nha Trang', 'price' => '550.000', 'img' => asset('images/nhatrang.jpg')],
+                    ['from' => 'TP. Hồ Chí Minh', 'to' => 'Cần Thơ', 'price' => '180.000', 'img' => asset('images/cantho.jpg')]
                 ];
 
                 // Helper to find ID by name
@@ -166,8 +165,7 @@
 
                         <div class="pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                             <a href="{{ route('customer.trips.search', ['start_location_id' => $getLocId($route['from']), 'end_location_id' => $getLocId($route['to']), 'trip_date' => date('Y-m-d')]) }}"
-                                class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">{{ __('bookings') }}
-                                ngay</a>
+                                class="block w-full py-3 rounded-xl bg-white text-brand-dark font-black text-sm text-center transform active:scale-95 transition-transform">Đặt vé ngay</a>
                         </div>
                     </div>
 
@@ -189,7 +187,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                 <div class="space-y-12">
                     <div class="space-y-4">
-                        <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Why Choose Us</span>
+                        <span class="text-brand-accent font-black tracking-widest uppercase text-xs">Tại sao chọn chúng tôi</span>
                         <h2 class="text-5xl font-black italic">DỊCH VỤ <br /> ĐẲNG CẤP 5 SAO</h2>
                     </div>
 
@@ -246,7 +244,7 @@
             </div>
 
             <div class="relative z-10 space-y-4">
-                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">{{ __('ready_to_launch') }}
+                <h2 class="text-5xl font-black italic text-white uppercase tracking-tighter">SẴN SÀNG KHỞI HÀNH
                 </h2>
                 <p class="text-xl text-white/80 max-w-2xl mx-auto">
                     Tải ngay ứng dụng Nhà xe Mạnh Hùng để nhận ưu đãi 50.000đ cho chuyến đi đầu tiên.
@@ -258,7 +256,7 @@
                     class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
                     <div class="text-left">
-                        <p class="text-[10px] font-bold uppercase opacity-50">Download on</p>
+                        <p class="text-[10px] font-bold uppercase opacity-50">Tải về trên</p>
                         <p class="text-lg font-bold leading-tight">App Store</p>
                     </div>
                 </a>
@@ -266,7 +264,7 @@
                     class="flex items-center gap-4 bg-black text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-black transition-all">
                     <i data-lucide="play" class="w-6 h-6"></i>
                     <div class="text-left">
-                        <p class="text-[10px] font-bold uppercase opacity-50">Get it on</p>
+                        <p class="text-[10px] font-bold uppercase opacity-50">Tải về trên</p>
                         <p class="text-lg font-bold leading-tight">Google Play</p>
                     </div>
                 </a>
@@ -277,7 +275,7 @@
 <!-- Contact Section -->
 <section id="contact" class="py-32 bg-brand-dark reveal">
     <div class="max-w-7xl mx-auto px-6 text-center">
-        <h2 class="text-4xl font-bold mb-8">{{ __('contact') }}</h2>
+        <h2 class="text-4xl font-bold mb-8">LIÊN HỆ</h2>
         <p class="text-white/60 max-w-2xl mx-auto mb-12">Liên hệ với chúng tôi để được hỗ trợ nhanh nhất</p>
         <div class="flex flex-wrap justify-center gap-8">
             <div class="glass-dark p-8 rounded-2xl">
@@ -292,7 +290,7 @@
             </div>
             <div class="glass-dark p-8 rounded-2xl">
                 <i data-lucide="map-pin" class="w-8 h-8 text-brand-primary mb-4"></i>
-                <h3 class="text-white font-bold mb-2">{{ __('address') }}</h3>
+                <h3 class="text-white font-bold mb-2">Địa chỉ</h3>
                 <p class="text-white/60">123 Nguyễn Văn Linh, Q.7, TP.HCM</p>
             </div>
         </div>

@@ -13,7 +13,7 @@
             @if($bookings->isEmpty())
                 <div class="p-12 text-center text-gray-500">
                     <p class="mb-4 text-lg">Bạn chưa có đơn đặt vé nào.</p>
-                    <a href="{{ route('customer.home') }}" class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">{{ __('bookings') }} ngay</a>
+                    <a href="{{ route('customer.home') }}" class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">Đặt vé ngay</a>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -21,11 +21,11 @@
                         <thead>
                             <tr class="bg-gray-100 uppercase text-xs font-semibold text-gray-600 border-b">
                                 <th class="p-4">Mã ĐH</th>
-                                <th class="p-4">{{ __('routes') }}</th>
+                                <th class="p-4">Tuyến đường</th>
                                 <th class="p-4">Khởi hành</th>
-                                <th class="p-4 text-right">{{ __('total') }} tiền</th>
-                                <th class="p-4 text-center">{{ __('status') }}</th>
-                                <th class="p-4 text-center">{{ __('actions') }}</th>
+                                <th class="p-4 text-right">Tổng tiền</th>
+                                <th class="p-4 text-center">Trạng thái</th>
+                                <th class="p-4 text-center">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm">
@@ -52,7 +52,7 @@
                                         @endif
                                     </td>
                                     <td class="p-4 text-center">
-                                        <a href="{{ route('customer.bookings.show', $booking->id) }}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline inline-block">{{ __('details') }}</a>
+                                        <a href="{{ route('customer.bookings.show', $booking->id) }}" class="text-blue-600 hover:text-blue-800 font-medium hover:underline inline-block">Chi tiết</a>
                                     </td>
                                 </tr>
                             @endforeach
