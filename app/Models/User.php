@@ -4,21 +4,17 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Booking;
+use App\Models\SeatLock;
+use App\Models\Review;
+use App\Models\Order;
+use App\Models\Transaction;
+use App\Models\SupportTicket;
 
 class User extends Authenticatable
 {
     use Notifiable;
 
-    // Tên bảng trong CSDL
-    protected $table = 'users';
-
-    // Khóa chính
-    protected $primaryKey = 'id';
-
-    // Nếu bảng có created_at, updated_at
-    public $timestamps = true;
-
-    // Các cột cho phép insert / update
     protected $fillable = [
         'role',
         'name',
@@ -26,11 +22,51 @@ class User extends Authenticatable
         'phone',
         'password',
         'avatar',
-        'status'
+        'status',
+        'birthday',
+        'gender',
+        'address',
+        'citizen_id',
+        'employee_id',
+        'department',
+        'salary',
+        'joined_date',
+        'contract_type',
+        'last_login_at',
+        'last_login_ip'
     ];
 
-    // Ẩn khi trả dữ liệu
     protected $hidden = [
-        'password'
+        'password',
     ];
+
+    // Relationships
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    public function seatLocks()
+    {
+        return $this->hasMany(SeatLock::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+    public function supportTickets()
+    {
+        return $this->hasMany(SupportTicket::class);
+    }
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
 }

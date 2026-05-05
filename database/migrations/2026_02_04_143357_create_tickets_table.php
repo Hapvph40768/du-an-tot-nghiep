@@ -6,25 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained('bookings');
-            $table->foreignId('trip_id')->constrained('trips');
-            $table->foreignId('seat_id')->constrained('seats');
+            $table->foreignId('booking_id')->nullable()->constrained('bookings')->cascadeOnDelete();
+            $table->foreignId('trip_id')->nullable()->constrained('trips')->cascadeOnDelete();
+            $table->foreignId('seat_id')->nullable()->constrained('seats')->cascadeOnDelete();
             $table->string('ticket_code')->unique()->nullable();
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'used'])->default('pending');
+            $table->timestamps();
+
             $table->unique(['trip_id', 'seat_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('tickets');

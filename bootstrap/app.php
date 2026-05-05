@@ -1,7 +1,6 @@
 <?php
 
-
-
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,12 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-    // Thêm đoạn này vào:
-    $middleware->alias([
-        'role' => \App\Http\Middleware\CheckRole::class,
-    ]);
-})
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+        // Alias RoleMiddleware removed: file does not exist and is not used in routes
+        // Use CheckAdminRole, CheckCustomerRole, CheckStaffRole, CheckDriverRole instead
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();

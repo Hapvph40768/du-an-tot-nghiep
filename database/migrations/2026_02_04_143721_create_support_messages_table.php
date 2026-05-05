@@ -6,23 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('support_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('support_ticket_id')->constrained('support_tickets');
-            $table->foreignId('sender_id')->constrained('users');
+            $table->foreignId('support_ticket_id')->nullable()->constrained('support_tickets')->cascadeOnDelete();
+            $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->enum('sender_type', ['user', 'admin', 'ai'])->default('user');
             $table->text('message')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('support_messages');

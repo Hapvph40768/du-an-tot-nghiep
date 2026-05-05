@@ -1,109 +1,109 @@
 @extends('layout.admin.AdminLayout')
 
+@section('title', 'Cập nhật Tài xế')
+
 @section('content-main')
-<div class="container-fluid py-4">
-    <div class="row mb-3">
-        <div class="col-12">
-            <h2 class="fw-bold">Chỉnh sửa thông tin tài xế</h2>
-            <p class="text-muted">Cập nhật dữ liệu cho tài xế: <span class="text-primary fw-bold">{{ $driver->name }}</span></p>
-        </div>
-    </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-            {{-- Form gửi request cập nhật --}}
-            <form action="{{ route('drivers.update', $driver->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+    <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label fw-bold">Tên tài xế <span class="text-danger">*</span></label>
-                        <input type="text" name="name" id="name" 
-                               class="form-control @error('name') is-invalid @enderror" 
-                               value="{{ old('name', $driver->name) }}" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+        <form action="{{ route('admin.drivers.update', $driver->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-                    <div class="col-md-6 mb-3">
-                        <label for="phone" class="form-label fw-bold">Số điện thoại <span class="text-danger">*</span></label>
-                        <input type="text" name="phone" id="phone" 
-                               class="form-control @error('phone') is-invalid @enderror" 
-                               value="{{ old('phone', $driver->phone) }}" required>
-                        @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label for="license_number" class="form-label fw-bold">Số bằng lái <span class="text-danger">*</span></label>
-                        <input type="text" name="license_number" id="license_number" 
-                               class="form-control @error('license_number') is-invalid @enderror" 
-                               value="{{ old('license_number', $driver->license_number) }}" required>
-                        @error('license_number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label for="experience_years" class="form-label fw-bold">Số năm kinh nghiệm</label>
-                        <div class="input-group">
-                            <input type="number" name="experience_years" id="experience_years" min="0" max="50"
-                                   class="form-control @error('experience_years') is-invalid @enderror" 
-                                   value="{{ old('experience_years', $driver->experience_years) }}">
-                            <span class="input-group-text">Năm</span>
-                            @error('experience_years')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
-                        <select name="status" id="status" class="form-select @error('status') is-invalid @enderror" required>
-                            <option value="active" {{ old('status', $driver->status) == 'active' ? 'selected' : '' }}>Sẵn sàng (Active)</option>
-                            <option value="busy" {{ old('status', $driver->status) == 'busy' ? 'selected' : '' }}>Đang bận (Busy)</option>
-                            <option value="inactive" {{ old('status', $driver->status) == 'inactive' ? 'selected' : '' }}>Ngừng hoạt động (Inactive)</option>
-                        </select>
-                        @error('status')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label for="image" class="form-label fw-bold">Ảnh đại diện (Tùy chọn)</label>
-                        <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
-                        @error('image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        
-                        @if($driver->image)
-                            <div class="mt-2">
-                                <small class="text-muted d-block mb-1">Ảnh hiện tại:</small>
-                                <img src="{{ asset($driver->image) }}" alt="Avatar" class="img-thumbnail" style="max-height: 80px; object-fit: cover;">
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="col-12 mb-4">
-                        <label for="personal_info" class="form-label fw-bold">Thông tin cá nhân / Ghi chú</label>
-                        <textarea name="personal_info" id="personal_info" rows="3"
-                                  class="form-control @error('personal_info') is-invalid @enderror">{{ old('personal_info', $driver->personal_info) }}</textarea>
-                        @error('personal_info')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Tên tài xế <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="name"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('name', $driver->name) }}" required autofocus>
+                    @error('name')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <hr class="text-muted">
-                <div class="d-flex justify-content-end gap-2 mt-3">
-                    <a href="{{ route('drivers.index') }}" class="btn btn-secondary px-4">Hủy / Quay lại</a>
-                    <button type="submit" class="btn btn-primary px-4">Cập nhật Driver</button>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số điện thoại <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="phone"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('phone', $driver->phone) }}" required>
+                    @error('phone')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
-            </form>
-        </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số bằng lái <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <input type="text" name="license_number"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('license_number', $driver->license_number) }}" required>
+                    @error('license_number')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Số năm kinh nghiệm
+                    </label>
+                    <input type="number" name="experience_years"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        value="{{ old('experience_years', $driver->experience_years ?? 0) }}" min="0">
+                    @error('experience_years')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        Trạng thái <span style="color: #ff5b24;">*</span>
+                    </label>
+                    <select name="status"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                        required>
+                        <option value="active" {{ old('status', $driver->status) == 'active' ? 'selected' : '' }}>
+                            Đang hoạt động
+                        </option>
+                        <option value="busy" {{ old('status', $driver->status) == 'busy' ? 'selected' : '' }}>
+                            Đang chạy
+                        </option>
+                        <option value="inactive" {{ old('status', $driver->status) == 'inactive' ? 'selected' : '' }}>
+                            Đã nghỉ
+                        </option>
+                    </select>
+                    @error('status')
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    Thông tin cá nhân / Ghi chú (tùy chọn)
+                </label>
+                <textarea name="personal_info" rows="4"
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('personal_info', $driver->personal_info ?? '') }}</textarea>
+                @error('personal_info')
+                    <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-start;">
+                <button type="submit"
+                    style="background-color: #ff5b24; color: white; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                    Cập nhật tài xế
+                </button>
+                <a href="{{ route('admin.drivers.index') }}"
+                    style="display: inline-flex; align-items: center; background-color: #f0f2f5; color: #333; padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none;">
+                    Hủy
+                </a>
+            </div>
+        </form>
     </div>
-</div>
+
 @endsection

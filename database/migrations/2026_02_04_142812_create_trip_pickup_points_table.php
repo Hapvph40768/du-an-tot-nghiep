@@ -6,21 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('trip_pickup_points', function (Blueprint $table) {
-            $table->foreignId('trip_id')->constrained('trips');
-            $table->foreignId('pickup_point_id')->constrained('pickup_points');
+            $table->foreignId('trip_id')->constrained('trips')->cascadeOnDelete();
+            $table->foreignId('pickup_point_id')->constrained('pickup_points')->cascadeOnDelete();
+            
+            // Khai báo khóa chính kết hợp (composite primary key)
             $table->primary(['trip_id', 'pickup_point_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('trip_pickup_points');

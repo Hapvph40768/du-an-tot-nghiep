@@ -2,28 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Trip extends Model
 {
-    use HasFactory;
+    protected $fillable = ['route_id', 'vehicle_id', 'driver_id', 'trip_date', 'departure_time', 'arrival_time', 'price', 'status'];
 
-    protected $table = 'trips';
-
-    protected $fillable = [
-        'departure_location',
-        'destination_location',
-        'departure_date',
-        'departure_time',
-        'price',
-        'driver_id',
-        'status'
-    ];
-
-    // Mối quan hệ: Một chuyến xe thuộc về một tài xế
+    public function route()
+    {
+        return $this->belongsTo(Route::class);
+    }
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
     public function driver()
     {
-        return $this->belongsTo(Driver::class, 'driver_id');
+        return $this->belongsTo(Driver::class);
+    }
+    public function pickupPoints()
+    {
+        return $this->belongsToMany(PickupPoint::class, 'trip_pickup_points');
+    }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    public function seatLocks()
+    {
+        return $this->hasMany(SeatLock::class);
+    }
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

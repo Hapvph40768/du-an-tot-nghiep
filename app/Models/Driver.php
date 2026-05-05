@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Driver extends Model
 {
-    use HasFactory;
+    protected $fillable = ['user_id', 'name', 'phone', 'license_number', 'experience_years', 'personal_info', 'status'];
 
-    // Thêm 'experience_years' và 'personal_info' vào mảng này
-    protected $fillable = [
-        'name',
-        'phone',
-        'license_number',
-        'experience_years', // Cột mới thêm
-        'personal_info',    // Cột mới thêm
-        'status',
-        'image',
-    ];
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

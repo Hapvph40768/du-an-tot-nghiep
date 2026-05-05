@@ -5,58 +5,86 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    //hiển thì form dang nhập
-    public function loginForm()
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
+            'phone'    => 'required|unique:users',
+            'role'     => 'required|in:customer,driver',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+            'role'     => $request->role,
+        ]);
+
+        if ($user->role === 'driver') {
+            \App\Models\Driver::create([
+                'user_id' => $user->id,
+                'name'    => $user->name,
+                'phone'   => $user->phone,
+                'status'  => 'inactive',
+            ]);
+        }
+
+        return redirect()->route('login')
+            ->with('success', 'Đăng ký thành công, mời đăng nhập.');
+    }
+
+    public function showLogin()
     {
         return view('auth.login');
     }
-    //hiển thị form đăng ký
-    public function registerForm(){
-        return view('auth.register');
-    }
-    //xử lý đăng ky
-    public function register(Request $request){
-        //validate dữ liệu
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|min:6',
-        ]);
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-            'role' => 'customer',
-            'status' => 'active',
-        ]);
-        return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
-    }
-    public function login(Request $request){
-        //validate dữ liệu
-        $request->validate([
-            'email' => 'required|email',
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
-        if(Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-            'status' => 'active',
-        ])){
-            $user = Auth::user();
-            if($user->role == 'admin') return redirect('/admin');
-            if($user->role == 'staff') return redirect('/staff');
-            return redirect('/home');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Chuyển hướng dựa trên Role
+            if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
+                return redirect()->intended('/admin');
+            }
+
+            if (Auth::user()->role === 'driver') {
+                return redirect()->route('driver.home')
+                    ->with('success', 'Chúc bạn có những chuyến đi thuận lợi!');
+            }
+
+            return redirect()->route('customer.home')
+                ->with('success', 'Đăng nhập thành công!');
         }
-        return back()->with('error', 'Email hoặc mật khẩu không đúng.');
+
+        return back()
+            ->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
+            ->onlyInput('email');
     }
-    //xử lý đăng xuất
-    public function logout(){
+
+    public function logout(Request $request)
+    {
         Auth::logout();
-        return redirect('/login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Bạn đã đăng xuất thành công.');
     }
 }

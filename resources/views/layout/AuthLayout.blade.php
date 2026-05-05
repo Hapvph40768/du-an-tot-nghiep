@@ -9,9 +9,8 @@
     
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    {{-- Bootstrap (Cân nhắc gỡ bỏ nếu dùng Tailwind toàn dự án để tránh xung đột) --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">   
-
+    {{ -- boostraps -- }}<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">   
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

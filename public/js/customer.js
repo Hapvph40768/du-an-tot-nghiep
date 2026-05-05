@@ -197,27 +197,27 @@
     }
 
     // Event Listeners
-    document.getElementById('search-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const from = document.getElementById('from-city').value;
-      const to = document.getElementById('to-city').value;
-      const date = document.getElementById('travel-date').value;
-      const tickets = parseInt(document.getElementById('ticket-count').value);
-      
-      if (!from || !to || !date) {
-        showToast('Vui lòng chọn đầy đủ thông tin!');
-        return;
-      }
-      
-      if (from === to) {
-        showToast('Điểm đi và điểm đến không được trùng nhau!');
-        return;
-      }
-      
-      const trips = searchTrips(from, to, date, tickets);
-      renderResults(trips);
-    });
+    const searchForm = document.getElementById('search-form');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            // Frontend validation only
+            const from = document.getElementById('from-city').value;
+            const to = document.getElementById('to-city').value;
+            
+            if (!from || !to) {
+                e.preventDefault();
+                showToast('Vui lòng chọn đầy đủ thông tin!');
+                return;
+            }
+            
+            if (from === to) {
+                e.preventDefault();
+                showToast('Điểm đi và điểm đến không được trùng nhau!');
+                return;
+            }
+            // Let the form submit to backend
+        });
+    }
 
     document.getElementById('close-modal').addEventListener('click', closeModal);
     document.getElementById('confirm-booking').addEventListener('click', confirmBooking);
@@ -232,10 +232,7 @@
       this.reset();
     });
 
-    // Set default date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('travel-date').value = today;
-    document.getElementById('travel-date').min = today;
+    // Removed default date setter because date field was removed from view
 
     // Initialize Element SDK
     if (window.elementSdk) {
