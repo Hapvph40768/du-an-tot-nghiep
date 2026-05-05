@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'Nhà xe Mạnh Hùng - Đặt vé xe nhanh 30s' }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo e($title ?? 'Nhà xe Mạnh Hùng - Đặt vé xe nhanh 30s'); ?></title>
     
     <!-- Alpine.js -->
 
     
     <!-- Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    @livewireStyles
-    @stack('styles')
-    @include('layout.partials.translator')
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
+    <?php echo $__env->yieldPushContent('styles'); ?>
+    <?php echo $__env->make('layout.partials.translator', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </head>
 <body class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-primary/30" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)">
 
@@ -42,10 +43,10 @@
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8 font-medium text-sm tracking-wide text-white/70">
-                <a href="/" class="hover:text-brand-accent transition-colors">{{ __('home') }}</a>
-                <a href="#routes" class="hover:text-brand-accent transition-colors">{{ __('schedules') }}</a>
-                <a href="{{ route('customer.bookings.index') }}" class="hover:text-brand-accent transition-colors">Tra cứu vé</a>
-                <a href="#contact" class="hover:text-brand-accent transition-colors">{{ __('contact') }}</a>
+                <a href="/" class="hover:text-brand-accent transition-colors"><?php echo e(__('home')); ?></a>
+                <a href="#routes" class="hover:text-brand-accent transition-colors"><?php echo e(__('schedules')); ?></a>
+                <a href="<?php echo e(route('customer.bookings.index')); ?>" class="hover:text-brand-accent transition-colors">Tra cứu vé</a>
+                <a href="#contact" class="hover:text-brand-accent transition-colors"><?php echo e(__('contact')); ?></a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -53,29 +54,29 @@
                     Đặt vé ngay
                 </a>
 
-                @guest
-                    <a href="{{ route('login') }}" class="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full glass text-white font-semibold text-sm hover:bg-white/20 transition-all">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
+                    <a href="<?php echo e(route('login')); ?>" class="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full glass text-white font-semibold text-sm hover:bg-white/20 transition-all">
                         Đăng nhập
                     </a>
-                    <a href="{{ route('register') }}" class="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full liquid-gradient text-white font-semibold text-sm hover:scale-105 transition-all shadow-lg shadow-brand-primary/20">
+                    <a href="<?php echo e(route('register')); ?>" class="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full liquid-gradient text-white font-semibold text-sm hover:scale-105 transition-all shadow-lg shadow-brand-primary/20">
                         Đăng ký
                     </a>
-                @endguest
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                @auth
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
                     <div class="flex items-center gap-3">
-                        <a href="{{ route('customer.profile.edit') }}" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-white/90 hover:text-white transition-all text-sm font-medium">
+                        <a href="<?php echo e(route('customer.profile.edit')); ?>" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-white/90 hover:text-white transition-all text-sm font-medium">
                             <i data-lucide="user" class="w-4 h-4 text-brand-accent"></i>
-                            <span>{{ Auth::user()->name }}</span>
+                            <span><?php echo e(Auth::user()->name); ?></span>
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
+                        <form action="<?php echo e(route('logout')); ?>" method="POST" class="inline">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="p-2.5 rounded-full glass text-white/70 hover:text-red-400 hover:bg-red-400/10 transition-all" title="Đăng xuất">
                                 <i data-lucide="log-out" class="w-5 h-5"></i>
                             </button>
                         </form>
                     </div>
-                @endauth
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
                 <button class="md:hidden text-white">
                     <i data-lucide="menu"></i>
@@ -86,7 +87,7 @@
 
     <!-- Main Content -->
     <main class="relative pt-24 min-h-screen">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <!-- Footer -->
@@ -107,18 +108,18 @@
             <div>
                 <h4 class="font-heading text-white font-semibold mb-6">Liên kết</h4>
                 <ul class="space-y-4 text-white/50 text-sm">
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('about_us') }}</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('privacy_policy') }}</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('terms_of_service') }}</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors"><?php echo e(__('about_us')); ?></a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors"><?php echo e(__('privacy_policy')); ?></a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors"><?php echo e(__('terms_of_service')); ?></a></li>
                 </ul>
             </div>
 
             <div>
-                <h4 class="font-heading text-white font-semibold mb-6">{{ __('support') }}</h4>
+                <h4 class="font-heading text-white font-semibold mb-6"><?php echo e(__('support')); ?></h4>
                 <ul class="space-y-4 text-white/50 text-sm">
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('help_center') }}</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors"><?php echo e(__('help_center')); ?></a></li>
                     <li><a href="#" class="hover:text-brand-accent transition-colors">Câu hỏi thường gặp</a></li>
-                    <li><a href="#" class="hover:text-brand-accent transition-colors">{{ __('contact') }} hỗ trợ</a></li>
+                    <li><a href="#" class="hover:text-brand-accent transition-colors"><?php echo e(__('contact')); ?> hỗ trợ</a></li>
                 </ul>
             </div>
 
@@ -149,11 +150,12 @@
         </div>
     </footer>
 
-    @livewireScripts
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
     </script>
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
-</html>
+</html><?php /**PATH E:\code\laragon\www\du-an-tot-nghiep\resources\views/layout/app.blade.php ENDPATH**/ ?>
