@@ -18,17 +18,17 @@
                 <thead class="table-light">
                     <tr>
                         <th>Tỉnh/Thành phố</th>
-                        <th>{{{ __('name') }} điểm đón</th>
-                        <th>{{{ __('address') }}</th>
+                        <th>{{ __('name') }} điểm đón</th>
+                        <th>{{ __('address') }}</th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($pickupPoints as $point)
                     <tr>
-                        <td><span class="badge bg-light text-primary border">{{ $point->location->name }}}</span></td>
-                        <td class="fw-bold">{{ $point->name }}}</td>
-                        <td class="text-muted small">{{ $point->address }}}</td>
+                        <td><span class="badge bg-light text-primary border">{{ $point->location->name }}</span></td>
+                        <td class="fw-bold">{{ $point->name }}</td>
+                        <td class="text-muted small">{{ $point->address }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.pickup-points.edit', $point->id) }}" class="btn btn-sm btn-light border text-primary"><i class='bx bx-edit'></i></a>
                             <form action="{{ route('admin.pickup-points.destroy', $point->id) }}" method="POST" class="d-inline">
@@ -41,6 +41,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $pickupPoints->links() }}}</div>
+        {{ $pickupPoints->links() }}</div>
 </div>
 @endsection

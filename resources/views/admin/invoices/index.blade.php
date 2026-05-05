@@ -14,19 +14,19 @@
                     <tr class="text-muted small text-uppercase">
                         <th>Mã hóa đơn</th>
                         <th>Khách hàng</th>
-                        <th>{{{ __('total') }} tiền</th>
-                        <th>{{{ __('status') }}</th>
-                        <th>{{{ __('actions') }}</th>
+                        <th>{{ __('total') }} tiền</th>
+                        <th>{{ __('status') }}</th>
+                        <th>{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($invoices as $invoice)
                     <tr>
-                        <td>{{ $invoice->invoice_code }}}</td>
-                        <td>{{ $invoice->customer_name }}}</td>
-                        <td>{{ number_format($invoice->amount) }}} VNĐ</td>
-                        <td><span class="badge bg-primary">{{ $invoice->status }}}</span></td>
-                        <td><a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-outline-primary">{{{ __('view') }}</a></td>
+                        <td>{{ $invoice->invoice_code }}</td>
+                        <td>{{ $invoice->customer_name }}</td>
+                        <td>{{ number_format($invoice->amount) }} VNĐ</td>
+                        <td><span class="badge bg-primary">{{ $invoice->status }}</span></td>
+                        <td><a href="{{ route('admin.invoices.show', $invoice) }}" class="btn btn-sm btn-outline-primary">{{ __('view') }}</a></td>
                     </tr>
                     @empty
                     <tr><td colspan="5" class="text-center text-muted">Không có dữ liệu</td></tr>
@@ -34,6 +34,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $invoices->links() }}}</div>
+        {{ $invoices->links() }}</div>
 </div>
 @endsection

@@ -1,20 +1,20 @@
-@extends('layout.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
     <div class="px-6 lg:px-12 py-12 max-w-7xl mx-auto" 
          x-data="{ 
             selectedSeats: [], 
-            pricePerSeat: {{ $trip->price }},
+            pricePerSeat: <?php echo e($trip->price); ?>,
             discount: 0,
             couponCode: '',
             couponValid: false,
             couponMessage: '',
             pickupPoint: '',
             pickupPointId: '',
-            pickupAddress: '{{ $trip->route->departureLocation->name }}',
+            pickupAddress: '<?php echo e($trip->route->departureLocation->name); ?>',
             dropoffPoint: '',
             dropoffPointId: '',
-            dropoffAddress: '{{ $trip->route->destinationLocation->name }}',
+            dropoffAddress: '<?php echo e($trip->route->destinationLocation->name); ?>',
             tab: 'lower',
             get subtotal() { return this.selectedSeats.length * this.pricePerSeat },
             get total() { return Math.max(0, this.subtotal - this.discount) },
@@ -31,11 +31,11 @@
             async checkCoupon() {
                 if (!this.couponCode) return;
                 try {
-                    const response = await fetch('{{ route('customer.bookings.checkCoupon') }}', {
+                    const response = await fetch('<?php echo e(route('customer.bookings.checkCoupon')); ?>', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                         },
                         body: JSON.stringify({ code: this.couponCode, base_amount: this.subtotal })
                     });
@@ -54,16 +54,16 @@
         <!-- Navigation Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
             <div>
-                <a href="{{ route('customer.trips.search', ['start_location_id' => $trip->route->start_location_id, 'end_location_id' => $trip->route->end_location_id]) }}" 
+                <a href="<?php echo e(route('customer.trips.search', ['start_location_id' => $trip->route->start_location_id, 'end_location_id' => $trip->route->end_location_id])); ?>" 
                    class="inline-flex items-center gap-2 text-white/40 hover:text-brand-accent transition-all group mb-4">
                     <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
                     <span class="text-[10px] font-black uppercase tracking-widest">Thay đổi hành trình</span>
                 </a>
                 <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter">ĐẶT VÉ TRỰC TUYẾN</h1>
                 <p class="text-white/40 text-sm font-bold uppercase tracking-[0.2em] mt-2">
-                    <span class="text-brand-accent">{{ $trip->route->departureLocation->name }}</span> 
+                    <span class="text-brand-accent"><?php echo e($trip->route->departureLocation->name); ?></span> 
                     <i data-lucide="arrow-right" class="inline w-3 h-3 mx-2 opacity-50"></i> 
-                    <span class="text-brand-accent">{{ $trip->route->destinationLocation->name }}</span>
+                    <span class="text-brand-accent"><?php echo e($trip->route->destinationLocation->name); ?></span>
                 </p>
             </div>
             
@@ -74,8 +74,8 @@
                         <i data-lucide="calendar" class="w-5 h-5 text-brand-dark"></i>
                     </div>
                     <div>
-                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">{{ __('date') }} đi</p>
-                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</p>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest"><?php echo e(__('date')); ?> đi</p>
+                        <p class="text-sm font-black"><?php echo e(\Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y')); ?></p>
                     </div>
                 </div>
                 <div class="glass p-4 rounded-3xl border-none ring-1 ring-white/10 flex items-center gap-4">
@@ -83,16 +83,16 @@
                         <i data-lucide="clock" class="w-5 h-5 text-brand-accent"></i>
                     </div>
                     <div>
-                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest">{{ __('time') }} khởi hành</p>
-                        <p class="text-sm font-black">{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</p>
+                        <p class="text-[8px] font-black uppercase text-white/30 tracking-widest"><?php echo e(__('time')); ?> khởi hành</p>
+                        <p class="text-sm font-black"><?php echo e(\Carbon\Carbon::parse($trip->departure_time)->format('H:i')); ?></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <form action="{{ route('customer.bookings.store') }}" method="POST" id="booking-form">
-            @csrf
-            <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+        <form action="<?php echo e(route('customer.bookings.store')); ?>" method="POST" id="booking-form">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="trip_id" value="<?php echo e($trip->id); ?>">
             <template x-for="seat in selectedSeats" :key="seat.id">
                 <input type="hidden" name="seat_ids[]" :value="seat.id">
             </template>
@@ -113,7 +113,7 @@
                                 <h3 class="text-2xl font-black italic tracking-tighter">CHỌN CHỖ NGỒI</h3>
                             </div>
                             <!-- Deck Toggle -->
-                            @if($trip->vehicle->total_seats > 22)
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($trip->vehicle->total_seats > 22): ?>
                             <div class="flex bg-white/5 p-1.5 rounded-2xl border border-white/5">
                                 <button type="button" @click="tab = 'lower'" 
                                         :class="tab === 'lower' ? 'bg-white text-brand-dark shadow-lg' : 'text-white/40 hover:text-white'"
@@ -122,7 +122,7 @@
                                         :class="tab === 'upper' ? 'bg-white text-brand-dark shadow-lg' : 'text-white/40 hover:text-white'"
                                         class="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Tầng trên</button>
                             </div>
-                            @endif
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </div>
 
                         <!-- Legend -->
@@ -145,37 +145,37 @@
                         <div class="grid grid-cols-3 md:grid-cols-3 gap-6 md:gap-10 justify-items-center max-w-lg mx-auto relative py-12">
                             <div class="absolute inset-0 bg-brand-primary/5 blur-[100px] -z-10 rounded-full"></div>
                             
-                            @foreach($trip->vehicle->seats as $seat)
-                                @php
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->vehicle->seats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                <?php
                                     $isBooked = in_array($seat->id, $bookedSeatIds);
                                     $isUpper = str_contains($seat->seat_number, 'B') || (int)filter_var($seat->seat_number, FILTER_SANITIZE_NUMBER_INT) > 20;
-                                @endphp
+                                ?>
                                 <div 
-                                    @if($trip->vehicle->total_seats > 22)
-                                        x-show="tab === '{{ $isUpper ? 'upper' : 'lower' }}'"
+                                    <?php if($trip->vehicle->total_seats > 22): ?>
+                                        x-show="tab === '<?php echo e($isUpper ? 'upper' : 'lower'); ?>'"
                                         x-transition:enter="transition ease-out duration-300 transform"
                                         x-transition:enter-start="opacity-0 scale-90 translate-y-4"
                                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                                    @endif
+                                    <?php endif; ?>
                                 >
                                     <div 
-                                        @click="{{ !$isBooked ? "toggleSeat($seat->id, '$seat->seat_number')" : "" }}"
-                                        :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'selected' : '{{ $isBooked ? 'booked' : 'available' }}'"
+                                        @click="<?php echo e(!$isBooked ? "toggleSeat($seat->id, '$seat->seat_number')" : ""); ?>"
+                                        :class="selectedSeats.find(s => s.id === <?php echo e($seat->id); ?>) ? 'selected' : '<?php echo e($isBooked ? 'booked' : 'available'); ?>'"
                                         class="seat-v2 w-20 h-24 flex flex-col items-center justify-center gap-2 group"
                                     >
                                         <i data-lucide="armchair" 
-                                           :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20 group-hover:text-brand-accent'" 
+                                           :class="selectedSeats.find(s => s.id === <?php echo e($seat->id); ?>) ? 'text-brand-dark' : 'text-white/20 group-hover:text-brand-accent'" 
                                            class="w-8 h-8 transition-colors duration-300"></i>
                                         <span class="text-[10px] font-black tracking-[0.2em]"
-                                              :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'text-brand-dark' : 'text-white/20'">{{ $seat->seat_number }}</span>
+                                              :class="selectedSeats.find(s => s.id === <?php echo e($seat->id); ?>) ? 'text-brand-dark' : 'text-white/20'"><?php echo e($seat->seat_number); ?></span>
                                         
-                                        @if(!$isBooked)
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!$isBooked): ?>
                                         <div class="absolute bottom-1 left-2 right-2 h-0.5 bg-brand-accent/0 group-hover:bg-brand-accent/20 rounded-full transition-all"
-                                             :class="selectedSeats.find(s => s.id === {{ $seat->id }}) ? 'hidden' : ''"></div>
-                                        @endif
+                                             :class="selectedSeats.find(s => s.id === <?php echo e($seat->id); ?>) ? 'hidden' : ''"></div>
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     </div>
                                 </div>
-                            @endforeach
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                         </div>
                     </div>
 
@@ -185,32 +185,32 @@
                         <div class="liquid-card p-10">
                             <div class="flex items-center gap-4 mb-8">
                                 <span class="flex-none w-8 h-8 rounded-full border border-brand-accent/30 flex items-center justify-center font-black text-xs text-brand-accent">2</span>
-                                <h3 class="text-xl font-black italic uppercase tracking-tighter">{{ __('ignition_pt') }}</h3>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter"><?php echo e(__('ignition_pt')); ?></h3>
                             </div>
                             
                             <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
-                                @php $pickupPoints = $trip->pickupPoints->where('location_id', $trip->route->start_location_id); @endphp
-                                @foreach($pickupPoints as $point)
+                                <?php $pickupPoints = $trip->pickupPoints->where('location_id', $trip->route->start_location_id); ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $pickupPoints; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                                 <label class="block cursor-pointer group">
-                                    <input type="radio" name="_pickup_point" value="{{ $point->id }}" class="hidden" 
-                                           @change="pickupAddress = '{{ $point->address ?: $point->name }}'; pickupPoint = '{{ $point->name }}'; pickupPointId = '{{ $point->id }}'" required>
-                                    <div class="timeline-node" :class="pickupPointId == '{{ $point->id }}' ? 'active' : ''">
+                                    <input type="radio" name="_pickup_point" value="<?php echo e($point->id); ?>" class="hidden" 
+                                           @change="pickupAddress = '<?php echo e($point->address ?: $point->name); ?>'; pickupPoint = '<?php echo e($point->name); ?>'; pickupPointId = '<?php echo e($point->id); ?>'" required>
+                                    <div class="timeline-node" :class="pickupPointId == '<?php echo e($point->id); ?>' ? 'active' : ''">
                                         <div class="timeline-dot transition-all duration-500">
                                             <i data-lucide="map-pin" 
-                                               :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-dark w-3 h-3' : 'text-white/20 w-2 h-2'"></i>
+                                               :class="pickupPointId == '<?php echo e($point->id); ?>' ? 'text-brand-dark w-3 h-3' : 'text-white/20 w-2 h-2'"></i>
                                         </div>
                                         <div class="glass p-6 rounded-3xl border-white/5 group-hover:border-white/20 transition-all"
-                                             :class="pickupPointId == '{{ $point->id }}' ? 'bg-brand-accent/5 ring-1 ring-brand-accent/20 border-transparent shadow-[0_0_20px_rgba(34,211,238,0.05)]' : ''">
+                                             :class="pickupPointId == '<?php echo e($point->id); ?>' ? 'bg-brand-accent/5 ring-1 ring-brand-accent/20 border-transparent shadow-[0_0_20px_rgba(34,211,238,0.05)]' : ''">
                                             <div class="flex justify-between items-start mb-1">
                                                 <p class="text-lg font-black group-hover:text-brand-accent transition-colors"
-                                                   :class="pickupPointId == '{{ $point->id }}' ? 'text-brand-accent' : ''">{{ $point->name }}</p>
-                                                <span class="text-[10px] font-black text-white/30">{{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }}</span>
+                                                   :class="pickupPointId == '<?php echo e($point->id); ?>' ? 'text-brand-accent' : ''"><?php echo e($point->name); ?></p>
+                                                <span class="text-[10px] font-black text-white/30"><?php echo e(\Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i')); ?></span>
                                             </div>
-                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                            <p class="text-[11px] text-white/40 leading-relaxed"><?php echo e($point->address); ?></p>
                                         </div>
                                     </div>
                                 </label>
-                                @endforeach
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             </div>
                         </div>
 
@@ -218,33 +218,33 @@
                         <div class="liquid-card p-10">
                             <div class="flex items-center gap-4 mb-8">
                                 <span class="flex-none w-8 h-8 rounded-full border border-red-500/30 flex items-center justify-center font-black text-xs text-red-400">3</span>
-                                <h3 class="text-xl font-black italic uppercase tracking-tighter">{{ __('terminal_pt') }}</h3>
+                                <h3 class="text-xl font-black italic uppercase tracking-tighter"><?php echo e(__('terminal_pt')); ?></h3>
                             </div>
                             
                             <div class="space-y-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar text-red-400">
-                                @php $dropoffPoints = $trip->pickupPoints->where('location_id', $trip->route->end_location_id); @endphp
-                                @foreach($dropoffPoints as $point)
+                                <?php $dropoffPoints = $trip->pickupPoints->where('location_id', $trip->route->end_location_id); ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $dropoffPoints; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $point): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                                 <label class="block cursor-pointer group">
-                                    <input type="radio" name="_dropoff_point" value="{{ $point->id }}" class="hidden" 
-                                           @change="dropoffAddress = '{{ $point->address ?: $point->name }}'; dropoffPoint = '{{ $point->name }}'; dropoffPointId = '{{ $point->id }}'" required>
-                                    <div class="timeline-node" :class="dropoffPointId == '{{ $point->id }}' ? 'active' : ''">
+                                    <input type="radio" name="_dropoff_point" value="<?php echo e($point->id); ?>" class="hidden" 
+                                           @change="dropoffAddress = '<?php echo e($point->address ?: $point->name); ?>'; dropoffPoint = '<?php echo e($point->name); ?>'; dropoffPointId = '<?php echo e($point->id); ?>'" required>
+                                    <div class="timeline-node" :class="dropoffPointId == '<?php echo e($point->id); ?>' ? 'active' : ''">
                                         <div class="timeline-dot transition-all duration-500" 
-                                             :class="dropoffPointId == '{{ $point->id }}' ? 'bg-red-500 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : ''">
+                                             :class="dropoffPointId == '<?php echo e($point->id); ?>' ? 'bg-red-500 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : ''">
                                             <i data-lucide="flag" 
-                                               :class="dropoffPointId == '{{ $point->id }}' ? 'text-white w-3 h-3' : 'text-red-500/20 w-2 h-2'"></i>
+                                               :class="dropoffPointId == '<?php echo e($point->id); ?>' ? 'text-white w-3 h-3' : 'text-red-500/20 w-2 h-2'"></i>
                                         </div>
                                         <div class="glass p-6 rounded-3xl border-white/5 group-hover:border-white/20 transition-all text-white"
-                                             :class="dropoffPointId == '{{ $point->id }}' ? 'bg-red-500/5 ring-1 ring-red-500/20 border-transparent' : ''">
+                                             :class="dropoffPointId == '<?php echo e($point->id); ?>' ? 'bg-red-500/5 ring-1 ring-red-500/20 border-transparent' : ''">
                                             <div class="flex justify-between items-start mb-1">
                                                 <p class="text-lg font-black group-hover:text-red-400 transition-colors"
-                                                   :class="dropoffPointId == '{{ $point->id }}' ? 'text-red-400' : ''">{{ $point->name }}</p>
+                                                   :class="dropoffPointId == '<?php echo e($point->id); ?>' ? 'text-red-400' : ''"><?php echo e($point->name); ?></p>
                                                 <span class="text-[10px] font-black text-white/30 italic">Kết thúc</span>
                                             </div>
-                                            <p class="text-[11px] text-white/40 leading-relaxed">{{ $point->address }}</p>
+                                            <p class="text-[11px] text-white/40 leading-relaxed"><?php echo e($point->address); ?></p>
                                         </div>
                                     </div>
                                 </label>
-                                @endforeach
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -263,7 +263,7 @@
                             <div class="space-y-8">
                                 <div class="flex justify-between items-end">
                                     <div>
-                                        <p class="text-[10px] font-black uppercase tracking-widest text-brand-accent mb-1">{{ __('seats') }} đã chọn</p>
+                                        <p class="text-[10px] font-black uppercase tracking-widest text-brand-accent mb-1"><?php echo e(__('seats')); ?> đã chọn</p>
                                         <p class="text-4xl font-black italic tracking-tighter" x-text="selectedSeats.length > 0 ? selectedSeats.map(s => s.number).join(', ') : '---'"></p>
                                     </div>
                                     <div class="text-right">
@@ -315,11 +315,11 @@
                                     </div>
                                 </div>
 
-                                @guest
-                                    <a href="{{ route('login') }}" class="w-full py-6 rounded-3xl bg-white text-brand-dark text-center font-black italic block hover:bg-brand-accent hover:text-white transition-all transform hover:-translate-y-1 shadow-xl uppercase tracking-widest text-xs">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
+                                    <a href="<?php echo e(route('login')); ?>" class="w-full py-6 rounded-3xl bg-white text-brand-dark text-center font-black italic block hover:bg-brand-accent hover:text-white transition-all transform hover:-translate-y-1 shadow-xl uppercase tracking-widest text-xs">
                                         Đăng nhập để đặt vé
                                     </a>
-                                @else
+                                <?php else: ?>
                                     <button type="submit" 
                                             :disabled="selectedSeats.length === 0 || !pickupPointId || !dropoffPointId" 
                                             :class="selectedSeats.length === 0 || !pickupPointId || !dropoffPointId ? 'opacity-20 cursor-not-allowed grayscale' : ''"
@@ -327,7 +327,7 @@
                                         <span x-text="selectedSeats.length === 0 ? 'HÃY CHỌN GHẾ' : (!pickupPointId || !dropoffPointId ? 'CHỌN ĐIỂM DỪNG' : 'TIẾP TỤC')"></span>
                                         <i data-lucide="chevron-right" class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
                                     </button>
-                                @endguest
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                         </div>
 
@@ -351,13 +351,15 @@
 
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }} .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 10px; }} .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.2); border-radius: 10px; }} .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.4); }}</style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     // Lucide initialization is handled by Alpine x-init and individual component calls
     document.addEventListener('alpine:init', () => {
         lucide.createIcons();
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layout.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\code\laragon\www\du-an-tot-nghiep\resources\views/customer/trips/show.blade.php ENDPATH**/ ?>

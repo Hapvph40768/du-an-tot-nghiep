@@ -15,7 +15,7 @@
                         <select name="vehicle_id" class="form-select rounded-3">
                             @foreach($vehicles as $vehicle)
                                 <option value="{{ $vehicle->id }}" {{ $seat->vehicle_id == $vehicle->id ? 'selected' : '' }}>
-                                    {{ $vehicle->license_plate }}} ({{ $vehicle->type }})
+                                    {{ $vehicle->license_plate }} ({{ $vehicle->type }})
                                 </option>
                             @endforeach
                         </select>
@@ -27,8 +27,8 @@
                     </div>
 
                     <div class="pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">{{{ __('update') }}</button>
-                        <a href="{{ route('admin.seats.index', ['vehicle_id' => $seat->vehicle_id]) }}" class="btn btn-light px-4 border ms-2">{{{ __('back') }}</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">{{ __('update') }}</button>
+                        <a href="{{ route('admin.seats.index', ['vehicle_id' => $seat->vehicle_id]) }}" class="btn btn-light px-4 border ms-2">{{ __('back') }}</a>
                     </div>
                 </form>
             </div>

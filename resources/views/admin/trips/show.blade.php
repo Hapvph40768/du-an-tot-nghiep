@@ -15,11 +15,11 @@
                 <i class='bx bx-left-arrow-alt'></i> QUAY LẠI DANH SÁCH
             </a>
             <h2 class="fw-bold text-dark m-0 mt-2">
-                {{ $trip->route->departureLocation->name }}}<i class='bx bx-right-arrow-alt text-primary'></i> 
-                {{ $trip->route->destinationLocation->name }}}</h2>
+                {{ $trip->route->departureLocation->name }}<i class='bx bx-right-arrow-alt text-primary'></i> 
+                {{ $trip->route->destinationLocation->name }}</h2>
             <div class="mt-1">
-                <span class="badge bg-primary rounded-pill">Mã chuyến: #TRIP-{{ $trip->id }}}</span>
-                <span class="badge bg-light text-dark border rounded-pill ms-1">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}}</span>
+                <span class="badge bg-primary rounded-pill">Mã chuyến: #TRIP-{{ $trip->id }}</span>
+                <span class="badge bg-light text-dark border rounded-pill ms-1">{{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</span>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -34,24 +34,24 @@
                 <h5 class="fw-bold mb-4 border-bottom pb-2">Vận hành & Tài chính</h5>
                 <div class="row g-4">
                     <div class="col-6">
-                        <span class="label-custom">{{{ __('time') }} xuất bến</span>
-                        <span class="value-custom text-primary fs-4">{{ $trip->departure_time }}}</span>
+                        <span class="label-custom">{{ __('time') }} xuất bến</span>
+                        <span class="value-custom text-primary fs-4">{{ $trip->departure_time }}</span>
                     </div>
                     <div class="col-6">
-                        <span class="label-custom">{{{ __('time') }} đến dự kiến</span>
-                        <span class="value-custom">{{ $trip->arrival_time }}}</span>
+                        <span class="label-custom">{{ __('time') }} đến dự kiến</span>
+                        <span class="value-custom">{{ $trip->arrival_time }}</span>
                     </div>
                     <div class="col-12">
-                        <span class="label-custom">{{{ __('cost') }} niêm yết</span>
-                        <span class="value-custom text-danger fs-5">{{ number_format($trip->price) }}} VNĐ</span>
+                        <span class="label-custom">{{ __('cost') }} niêm yết</span>
+                        <span class="value-custom text-danger fs-5">{{ number_format($trip->price) }} VNĐ</span>
                     </div>
                     <div class="col-12">
                         <div class="p-3 bg-light rounded-3">
-                            <span class="label-custom">{{{ __('vehicles') }}</span>
-                            <span class="value-custom">{{ $trip->vehicle->license_plate }}} ({{ $trip->vehicle->type }})</span>
+                            <span class="label-custom">{{ __('vehicles') }}</span>
+                            <span class="value-custom">{{ $trip->vehicle->license_plate }} ({{ $trip->vehicle->type }})</span>
                             <hr class="my-2">
-                            <span class="label-custom">{{{ __('drivers') }} phụ trách</span>
-                            <span class="value-custom">{{ $trip->driver->name }}}</span>
+                            <span class="label-custom">{{ __('drivers') }} phụ trách</span>
+                            <span class="value-custom">{{ $trip->driver->name }}</span>
                         </div>
                     </div>
                 </div>
@@ -64,8 +64,8 @@
                 <div class="ps-2 mt-3">
                     @forelse($trip->pickupPoints as $point)
                         <div class="timeline-item">
-                            <div class="fw-bold text-dark">{{ $point->name }}}</div>
-                            <div class="text-muted small">{{ $point->address }}}</div>
+                            <div class="fw-bold text-dark">{{ $point->name }}</div>
+                            <div class="text-muted small">{{ $point->address }}</div>
                         </div>
                     @empty
                         <div class="text-center py-4">
@@ -92,7 +92,7 @@
                         @endphp
                         <div class="seat-box {{ $isBooked ? 'seat-occupied' : 'seat-available' }}" title="Ghế {{ $seat->seat_number }}">
                             <i class='bx bx-chair fs-5'></i>
-                            {{ $seat->seat_number }}}</div>
+                            {{ $seat->seat_number }}</div>
                     @endforeach
                 </div>
 

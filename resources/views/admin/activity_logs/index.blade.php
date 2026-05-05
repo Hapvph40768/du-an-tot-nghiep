@@ -10,27 +10,27 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>Thời gian</th>
-                        <th>{{{ __('users') }}</th>
+                        <th>{{ __('users') }}</th>
                         <th>Hành động</th>
-                        <th>{{{ __('description') }}</th>
-                        <th>{{{ __('address') }} IP</th>
+                        <th>{{ __('description') }}</th>
+                        <th>{{ __('address') }} IP</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($logs as $log)
                     <tr>
-                        <td><small class="text-muted">{{ $log->created_at->format('d/m/Y H:i') }}}</small></td>
+                        <td><small class="text-muted">{{ $log->created_at->format('d/m/Y H:i') }}</small></td>
                         <td>
                             @if($log->user)
-                                <div class="fw-bold">{{ $log->user->name }}}</div>
-                                <small class="text-muted">{{ $log->user->email }}}</small>
+                                <div class="fw-bold">{{ $log->user->name }}</div>
+                                <small class="text-muted">{{ $log->user->email }}</small>
                             @else
                                 <span class="text-muted">—</span>
                             @endif
                         </td>
-                        <td><span class="badge bg-dark">{{ $log->action }}}</span></td>
-                        <td class="text-muted small">{{ $log->description ?? '—' }}}</td>
-                        <td><small>{{ $log->ip_address ?? '—' }}}</small></td>
+                        <td><span class="badge bg-dark">{{ $log->action }}</span></td>
+                        <td class="text-muted small">{{ $log->description ?? '—' }}</td>
+                        <td><small>{{ $log->ip_address ?? '—' }}</small></td>
                     </tr>
                     @empty
                     <tr><td colspan="5" class="text-center text-muted py-4">Chưa có log nào</td></tr>
@@ -38,7 +38,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">{{ $logs->links() }}}</div>
+        <div class="mt-3">{{ $logs->links() }}</div>
     </div>
 </div>
 @endsection

@@ -13,14 +13,14 @@
             <h2 class="fw-bold text-dark m-0">Danh sách Đặt vé</h2>
             <p class="text-muted small mb-0">Theo dõi đơn hàng và trạng thái thanh toán từ khách hàng</p>
         </div>
-        {{-- Có thể thêm nút Xuất Excel báo cáo ở đây --}}}<button class="btn btn-outline-secondary btn-sm rounded-3">
+        {{ -- Có thể thêm nút Xuất Excel báo cáo ở đây -- }}<button class="btn btn-outline-secondary btn-sm rounded-3">
             <i class='bx bx-export'></i> Xuất báo cáo
         </button>
     </div>
 
     @if (session('success'))
         <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}}</div>
+            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}</div>
     @endif
 
     <div class="card-box">
@@ -30,10 +30,10 @@
                     <tr>
                         <th style="width: 12%;">Mã Đơn</th>
                         <th style="width: 20%;">Khách hàng</th>
-                        <th style="width: 20%;">{{{ __('trips') }} / Tuyến</th>
-                        <th style="width: 13%;">{{{ __('total') }} tiền</th>
-                        <th style="width: 15%;">{{{ __('status') }}</th>
-                        <th style="width: 12%;">{{{ __('date') }} đặt</th>
+                        <th style="width: 20%;">{{ __('trips') }} / Tuyến</th>
+                        <th style="width: 13%;">{{ __('total') }} tiền</th>
+                        <th style="width: 15%;">{{ __('status') }}</th>
+                        <th style="width: 12%;">{{ __('date') }} đặt</th>
                         <th class="text-end" style="width: 8%;"></th>
                     </tr>
                 </thead>
@@ -41,17 +41,17 @@
                     @forelse ($bookings as $booking)
                         <tr>
                             <td>
-                                <span class="booking-id">#BK{{ str_pad($booking->id, 5, '0', STR_PAD_LEFT) }}}</span>
+                                <span class="booking-id">#BK{{ str_pad($booking->id, 5, '0', STR_PAD_LEFT) }}</span>
                             </td>
                             <td>
-                                <div class="fw-bold text-dark">{{ $booking->user->name }}}</div>
-                                <div class="text-muted small">{{ $booking->user->phone }}}</div>
+                                <div class="fw-bold text-dark">{{ $booking->user->name }}</div>
+                                <div class="text-muted small">{{ $booking->user->phone }}</div>
                             </td>
                             <td>
                                 <div class="small fw-bold text-truncate">
-                                    {{ $booking->trip->route->departureLocation->name }}} → {{ $booking->trip->route->destinationLocation->name }}}</div>
+                                    {{ $booking->trip->route->departureLocation->name }} → {{ $booking->trip->route->destinationLocation->name }}</div>
                                 <div class="text-muted small">
-                                    {{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }}} | {{ $booking->trip->departure_time }}}</div>
+                                    {{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }} | {{ $booking->trip->departure_time }}</div>
                             </td>
                             <td>
                                 <span class="price-total">{{ number_format($booking->total_amount) }}đ</span>
@@ -65,8 +65,8 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="text-muted small">{{ $booking->created_at->format('d/m/Y') }}}</div>
-                                <div class="text-muted" style="font-size: 10px;">{{ $booking->created_at->format('H:i') }}}</div>
+                                <div class="text-muted small">{{ $booking->created_at->format('d/m/Y') }}</div>
+                                <div class="text-muted" style="font-size: 10px;">{{ $booking->created_at->format('H:i') }}</div>
                             </td>
                             <td class="text-end">
                                 <a href="{{ route('admin.bookings.show', $booking->id) }}" class="btn btn-sm btn-light border shadow-sm">
@@ -87,7 +87,7 @@
         </div>
 
         <div class="mt-4">
-            {{ $bookings->links('pagination::bootstrap-5') }}}</div>
+            {{ $bookings->links('pagination::bootstrap-5') }}</div>
     </div>
 </div>
 @endsection

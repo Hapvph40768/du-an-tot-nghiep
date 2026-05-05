@@ -17,7 +17,7 @@ class TripController extends Controller
             'trip_date' => 'nullable|date',
         ]);
 
-        // Nếu request gửi date lên thì dùng, nếu không thì lấy danh sách từ hôm nay trở đi
+        // Tìm chuyến từ hôm nay trở đi (trong vòng 30 ngày), không chỉ riêng 1 ngày
         $query = Trip::with(['route.departureLocation', 'route.destinationLocation', 'vehicle'])
             ->withCount(['seatLocks' => function ($q) {
                 $q->where('locked_until', '>', now());
@@ -26,27 +26,30 @@ class TripController extends Controller
                 $q->where('start_location_id', $request->start_location_id)
                       ->where('end_location_id', $request->end_location_id);
             })
-            ->where('status', 'active');
+            ->where('status', 'active')
+            ->whereBetween('trip_date', [now()->toDateString(), now()->addDays(30)->toDateString()]);
 
-        // Bỏ việc fix cứng $tripDate = now() vì các chuyến xe chạy hàng ngày và người dùng không nhập ngày
-        if ($request->filled('trip_date')) {
-            $query->where('trip_date', $request->trip_date);
-        }
-
-        $trips = $query->orderBy('trip_date', 'desc')->get();
+        $trips = $query->orderBy('trip_date', 'asc')->orderBy('departure_time', 'asc')->get();
 
         return view('customer.trips.search_result', compact('trips'));
     }
 
-    // Xem chi tiết 1 chuyến xe (hiển thị sơ đồ ghế và chọn điểm đón)
+    // Xem chi tiết 1 chuyến xe (hiển thị sơ đồ ghế và chọn điểm đón/trả)
     public function show(Trip $trip)
     {
-        // Load kèm xe, danh sách ghế, và các điểm đón trả khách
+        // Load kèm xe, danh sách ghế, điểm đón, và thông tin tuyến
         $trip->load(['vehicle.seats', 'pickupPoints.location', 'route.departureLocation', 'route.destinationLocation']);
-        
+
         // Lấy danh sách ID các ghế đã được đặt hoặc đang bị khóa
         $bookedSeatIds = $trip->seatLocks()->where('locked_until', '>', now())->pluck('seat_id')->toArray();
 
-        return view('customer.trips.show', compact('trip', 'bookedSeatIds'));
+        // Lấy tất cả điểm đón thuộc địa điểm đi và địa điểm đến
+        $departureLocationId = $trip->route->start_location_id;
+        $destinationLocationId = $trip->route->end_location_id;
+
+        $pickupPointsDeparture = \App\Models\PickupPoint::where('location_id', $departureLocationId)->get();
+        $pickupPointsArrival = \App\Models\PickupPoint::where('location_id', $destinationLocationId)->get();
+
+        return view('customer.trips.show', compact('trip', 'bookedSeatIds', 'pickupPointsDeparture', 'pickupPointsArrival'));
     }
 }

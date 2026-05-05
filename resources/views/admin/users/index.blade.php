@@ -13,22 +13,22 @@
             </div>
             <div>
                 <h2 class="text-3xl font-black italic tracking-tighter">NGƯỜI DÙNG</h2>
-                <p class="text-xs text-white/30 font-bold uppercase tracking-widest">Hệ thống có {{ $users->total() }}} thành viên</p>
+                <p class="text-xs text-white/30 font-bold uppercase tracking-widest">Hệ thống có {{ $users->total() }} thành viên</p>
             </div>
         </div>
         
         <div class="flex items-center gap-4">
             <div class="bg-white/5 px-6 py-3 rounded-2xl border border-white/5 space-y-1">
-                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest leading-none">{{{ __('active') }}</p>
-                <p class="text-sm font-bold">{{ $users->where('status', 'active')->count() }}} Active</p>
+                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest leading-none">{{ __('active') }}</p>
+                <p class="text-sm font-bold">{{ $users->where('status', 'active')->count() }} Active</p>
             </div>
         </div>
     </div>
 
-    {{-- Thông báo --}}} @if (session('success'))
+    {{ -- Thông báo -- }} @if (session('success'))
         <div class="glass-dark border-l-4 border-emerald-500 p-6 rounded-3xl animate-fade-in flex items-center gap-4">
             <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
-            <span class="text-sm font-bold">{{ session('success') }}}</span>
+            <span class="text-sm font-bold">{{ session('success') }}</span>
         </div>
     @endif
 
@@ -39,10 +39,10 @@
                 <thead>
                     <tr class="border-b border-white/5">
                         <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">Họ tên / Email</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('role') }}</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('contact') }}</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{{ __('status') }}</th>
-                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">{{{ __('actions') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{ __('role') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{ __('contact') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20">{{ __('status') }}</th>
+                        <th class="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-white/20 text-right">{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/[0.02]">
@@ -50,8 +50,8 @@
                     <tr class="group hover:bg-white/[0.02] transition-colors">
                         <td class="px-8 py-6">
                             <div class="flex flex-col">
-                                <span class="font-bold text-sm">{{ $user->name }}}</span>
-                                <span class="text-[10px] font-medium text-white/30">{{ $user->email }}}</span>
+                                <span class="font-bold text-sm">{{ $user->name }}</span>
+                                <span class="text-[10px] font-medium text-white/30">{{ $user->email }}</span>
                             </div>
                         </td>
                         <td class="px-8 py-6">
@@ -62,11 +62,11 @@
                                     'customer' => ['bg' => 'bg-white/5', 'text' => 'text-white/40', 'label' => 'Khách hàng'],
                                 ][$user->role] ?? ['bg' => 'bg-white/5', 'text' => 'text-white/20', 'label' => $user->role];
                             @endphp
-                            <span class="px-3 py-1 rounded-full {{ $roleConfig['bg'] }}} {{ $roleConfig['text'] }}} text-[10px] font-black uppercase tracking-widest border border-white/5">
-                                {{ $roleConfig['label'] }}}</span>
+                            <span class="px-3 py-1 rounded-full {{ $roleConfig['bg'] }} {{ $roleConfig['text'] }} text-[10px] font-black uppercase tracking-widest border border-white/5">
+                                {{ $roleConfig['label'] }}</span>
                         </td>
                         <td class="px-8 py-6">
-                            <span class="text-xs font-bold text-white/60 italic tracking-tighter">{{ $user->phone ?? '—' }}}</span>
+                            <span class="text-xs font-bold text-white/60 italic tracking-tighter">{{ $user->phone ?? '—' }}</span>
                         </td>
                         <td class="px-8 py-6">
                             @if($user->status == 'active')
@@ -107,7 +107,7 @@
         </div>
 
         <div class="px-8 py-6 border-t border-white/5">
-            {{ $users->links() }}}</div>
+            {{ $users->links() }}</div>
     </div>
 </div>
 @endsection

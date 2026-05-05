@@ -8,7 +8,7 @@
 <div class="container-fluid">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <div class="col-md-3 text-end">
-                    <button type="submit" class="btn btn-primary w-100">{{{ __('filter') }} Dữ Liệu</button>
+                    <button type="submit" class="btn btn-primary w-100">{{ __('filter') }} Dữ Liệu</button>
                 </div>
             </form>
         </div>
@@ -44,29 +44,29 @@
                     <tr>
                         <th class="px-3">Mã ĐH</th>
                         <th>Khách hàng</th>
-                        <th>{{{ __('trips') }}</th>
-                        <th>{{{ __('seats') }}</th>
-                        <th>{{{ __('total') }} tiền</th>
-                        <th>{{{ __('date') }} đặt</th>
-                        <th>{{{ __('status') }}</th>
+                        <th>{{ __('trips') }}</th>
+                        <th>{{ __('seats') }}</th>
+                        <th>{{ __('total') }} tiền</th>
+                        <th>{{ __('date') }} đặt</th>
+                        <th>{{ __('status') }}</th>
                         <th class="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($orders as $order)
                     <tr>
-                        <td class="px-3 fw-bold text-primary">{{ $order->order_code }}}</td>
+                        <td class="px-3 fw-bold text-primary">{{ $order->order_code }}</td>
                         <td>
-                            <div class="fw-bold">{{ $order->user ? $order->user->name : 'Khách vãng lai' }}}</div>
-                            <small class="text-muted">{{ $order->user ? $order->user->phone : '' }}}</small>
+                            <div class="fw-bold">{{ $order->user ? $order->user->name : 'Khách vãng lai' }}</div>
+                            <small class="text-muted">{{ $order->user ? $order->user->phone : '' }}</small>
                         </td>
                         <td><span class="text-muted">Đang cập nhật...</span></td>
                         <td><span class="text-muted">...</span></td>
                         
-                        <td class="fw-bold text-danger">{{ number_format($order->amount, 0, ',', '.') }}} đ</td>
+                        <td class="fw-bold text-danger">{{ number_format($order->amount, 0, ',', '.') }} đ</td>
                         <td>
-                            <div>{{ $order->created_at->format('d/m/Y') }}}</div>
-                            <small class="text-muted">{{ $order->created_at->format('H:i') }}}</small>
+                            <div>{{ $order->created_at->format('d/m/Y') }}</div>
+                            <small class="text-muted">{{ $order->created_at->format('H:i') }}</small>
                         </td>
                         <td>
                             @if($order->status == 'pending')
@@ -87,7 +87,7 @@
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="="{{{ __('delete') }">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="="{{ __('delete') }}">
                                     <i class='bx bx-trash'></i> Xóa
                                 </button>
                             </form>
@@ -98,7 +98,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="editModalLabel{{ $order->id }}">Cập nhật Đơn hàng: {{ $order->order_code }}}</h5>
+                                    <h5 class="modal-title" id="editModalLabel{{ $order->id }}">Cập nhật Đơn hàng: {{ $order->order_code }}</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <form action="{{ route('orders.update', $order->id) }}" method="POST">
@@ -107,11 +107,11 @@
                                     <div class="modal-body">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="form-label fw-bold">{{{ __('total') }} tiền (VNĐ)</label>
+                                                <label class="form-label fw-bold">{{ __('total') }} tiền (VNĐ)</label>
                                                 <input type="number" name="amount" class="form-control" value="{{ $order->amount }}">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label fw-bold">{{{ __('status') }}</label>
+                                                <label class="form-label fw-bold">{{ __('status') }}</label>
                                                 <select name="status" class="form-select">
                                                     <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
                                                     <option value="paid" {{ $order->status == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
@@ -122,8 +122,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{{ __('cancel') }}</button>
-                                        <button type="submit" class="btn btn-primary">{{{ __('save') }} Thay Đổi</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('cancel') }}</button>
+                                        <button type="submit" class="btn btn-primary">{{ __('save') }} Thay Đổi</button>
                                     </div>
                                 </form>
                             </div>
@@ -138,7 +138,7 @@
             </table>
         </div>
         <div class="card-footer bg-white border-0 py-3">
-            {{ $orders->links('pagination::bootstrap-5') }}}</div>
+            {{ $orders->links('pagination::bootstrap-5') }}</div>
     </div>
 </div>
 @endsection

@@ -7,23 +7,23 @@
         </a>
 
         <div class="row">
-            {{-- Thông tin khách hàng & Booking --}}}<div class="col-md-4">
+            {{ -- Thông tin khách hàng & Booking -- }}<div class="col-md-4">
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white fw-bold">Thông tin yêu cầu</div>
                     <div class="card-body">
-                        {{-- Sửa thành $supportTicket --}}}<p><strong>Khách hàng:</strong> {{ $supportTicket->user->name ?? 'Không có thông tin' }}}</p>
-                        <p><strong>Số điện thoại:</strong> {{ $supportTicket->user->phone ?? 'Không có thông tin' }}}</p>
-                        <p><strong>Vấn đề:</strong> {{ $supportTicket->description }}}</p>
+                        {{ -- Sửa thành $supportTicket -- }}<p><strong>Khách hàng:</strong> {{ $supportTicket->user->name ?? 'Không có thông tin' }}</p>
+                        <p><strong>Số điện thoại:</strong> {{ $supportTicket->user->phone ?? 'Không có thông tin' }}</p>
+                        <p><strong>Vấn đề:</strong> {{ $supportTicket->description }}</p>
                         <hr>
                         @if ($supportTicket->booking)
                             <p class="text-primary fw-bold">Thông tin vé xe:</p>
-                            <p>Mã đặt vé: #{{ $supportTicket->booking->id }}}</p>
+                            <p>Mã đặt vé: #{{ $supportTicket->booking->id }}</p>
                         @endif
                     </div>
                 </div>
             </div>
 
-            {{-- Khung Chat --}}}<div class="col-md-8">
+            {{ -- Khung Chat -- }}<div class="col-md-8">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white d-flex justify-content-between">
                         <span class="fw-bold text-primary">Lịch sử trò chuyện</span>
@@ -39,10 +39,10 @@
                                 <div class="p-3 rounded-4 shadow-sm {{ $msg->sender_type == 'admin' ? 'bg-primary text-white' : 'bg-white' }}"
                                     style="max-width: 75%;">
                                     <div class="small fw-bold mb-1">
-                                        {{ $msg->sender_type == 'admin' ? 'Bạn' : $supportTicket->user->name }}}</div>
-                                    <div>{{ $msg->message }}}</div>
+                                        {{ $msg->sender_type == 'admin' ? 'Bạn' : $supportTicket->user->name }}</div>
+                                    <div>{{ $msg->message }}</div>
                                     <div class="text-end" style="font-size: 10px; opacity: 0.7;">
-                                        {{ $msg->created_at->format('H:i') }}}</div>
+                                        {{ $msg->created_at->format('H:i') }}</div>
                                 </div>
                             </div>
                         @endforeach
@@ -53,7 +53,7 @@
                             <div class="input-group">
                                 <input name="message" type="text" class="form-control border-0 bg-light"
                                     placeholder="Nhập phản hồi cho khách hàng..." required>
-                                <button class="btn btn-primary px-4">{{{ __('submit') }}</button>
+                                <button class="btn btn-primary px-4">{{ __('submit') }}</button>
                             </div>
                         </form>
                     </div>

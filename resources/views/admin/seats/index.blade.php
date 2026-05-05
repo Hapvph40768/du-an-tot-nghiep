@@ -17,15 +17,15 @@
         </a>
     </div>
 
-    {{-- Bộ lọc theo xe --}}}<div class="filter-section shadow-sm">
+    {{ -- Bộ lọc theo xe -- }}<div class="filter-section shadow-sm">
         <form action="{{ route('admin.seats.index') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-md-4">
-                <label class="form-label small fw-bold text-muted">{{{ __('filter') }} theo Xe</label>
+                <label class="form-label small fw-bold text-muted">{{ __('filter') }} theo Xe</label>
                 <select name="vehicle_id" class="form-select rounded-3">
                     <option value="">-- Tất cả các xe --</option>
                     @foreach($vehicles as $vehicle)
                         <option value="{{ $vehicle->id }}" {{ request('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                            {{ $vehicle->license_plate }}} ({{ $vehicle->type }})
+                            {{ $vehicle->license_plate }} ({{ $vehicle->type }})
                         </option>
                     @endforeach
                 </select>
@@ -37,7 +37,7 @@
             </div>
             @if(request('vehicle_id'))
                 <div class="col-md-2">
-                    <a href="{{ route('admin.seats.index') }}" class="btn btn-light border w-100 rounded-3">{{{ __('delete') }} lọc</a>
+                    <a href="{{ route('admin.seats.index') }}" class="btn btn-light border w-100 rounded-3">{{ __('delete') }} lọc</a>
                 </div>
             @endif
         </form>
@@ -45,12 +45,12 @@
 
     @if (session('success'))
         <div class="alert alert-success border-0 shadow-sm mb-4">
-            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}}</div>
+            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}</div>
     @endif
     
     @if (session('error'))
         <div class="alert alert-danger border-0 shadow-sm mb-4">
-            <i class='bx bx-error-circle me-2'></i> {{ session('error') }}}</div>
+            <i class='bx bx-error-circle me-2'></i> {{ session('error') }}</div>
     @endif
 
     <div class="card-box">
@@ -61,23 +61,23 @@
                         <th style="width: 10%;">ID</th>
                         <th style="width: 25%;">Mã ghế (Số ghế)</th>
                         <th style="width: 35%;">Thuộc xe (Biển số)</th>
-                        <th style="width: 20%;">{{{ __('created_at') }}</th>
+                        <th style="width: 20%;">{{ __('created_at') }}</th>
                         <th class="text-end" style="width: 10%;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($seats as $seat)
                         <tr>
-                            <td>#{{ $seat->id }}}</td>
+                            <td>#{{ $seat->id }}</td>
                             <td>
                                 <div class="seat-badge">
-                                    <i class='bx bx-chair'></i> {{ $seat->seat_number }}}</div>
+                                    <i class='bx bx-chair'></i> {{ $seat->seat_number }}</div>
                             </td>
                             <td>
-                                <div class="fw-bold text-dark">{{ $seat->vehicle->license_plate }}}</div>
-                                <div class="text-muted small">{{ $seat->vehicle->type }}}</div>
+                                <div class="fw-bold text-dark">{{ $seat->vehicle->license_plate }}</div>
+                                <div class="text-muted small">{{ $seat->vehicle->type }}</div>
                             </td>
-                            <td class="text-muted small">{{ $seat->created_at->format('d/m/Y H:i') }}}</td>
+                            <td class="text-muted small">{{ $seat->created_at->format('d/m/Y H:i') }}</td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{{ route('admin.seats.edit', $seat->id) }}" class="btn btn-sm btn-light border">
@@ -101,7 +101,7 @@
             </table>
         </div>
         <div class="mt-4">
-            {{ $seats->appends(request()->query())->links('pagination::bootstrap-5') }}}</div>
+            {{ $seats->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
     </div>
 </div>
 @endsection

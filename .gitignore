@@ -22,3 +22,15 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# AI Tools
+.agent/
+.claude/
+.qoder/
+.stitch/
+
+# SQL Dump
+*.sql
+
+# Python scripts
+fix_*.py

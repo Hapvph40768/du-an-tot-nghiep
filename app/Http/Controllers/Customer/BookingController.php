@@ -48,7 +48,7 @@ class BookingController extends Controller
     // AJAX: Kiểm tra mã giảm giá
     public function checkCoupon(Request $request)
     {
-        $code       = trim($request->input('code', ''));
+        $code = trim($request->input('code', ''));
         $baseAmount = (float) $request->input('base_amount', 0);
 
         if (empty($code)) {
@@ -81,14 +81,14 @@ class BookingController extends Controller
         $finalAmount = max(0, $baseAmount - $discount);
 
         return response()->json([
-            'valid'        => true,
-            'message'      => 'Mã hợp lệ! ' . ($promo->type === 'percent' ? 'Giảm ' . $promo->value . '%' : 'Giảm ' . number_format($promo->value, 0, ',', '.') . 'đ'),
-            'discount'     => $discount,
+            'valid' => true,
+            'message' => 'Mã hợp lệ! ' . ($promo->type === 'percent' ? 'Giảm ' . $promo->value . '%' : 'Giảm ' . number_format($promo->value, 0, ',', '.') . 'đ'),
+            'discount' => $discount,
             'final_amount' => $finalAmount,
-            'promo_id'     => $promo->id,
-            'promo_label'  => $promo->type === 'percent'
-                                ? "Giảm {$promo->value}%"
-                                : 'Giảm ' . number_format($promo->value, 0, ',', '.') . 'đ',
+            'promo_id' => $promo->id,
+            'promo_label' => $promo->type === 'percent'
+                ? "Giảm {$promo->value}%"
+                : 'Giảm ' . number_format($promo->value, 0, ',', '.') . 'đ',
         ]);
     }
 
@@ -96,32 +96,35 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'trip_id'          => 'required|exists:trips,id',
-            'pickup_point_id'  => 'required|exists:pickup_points,id',
+            'trip_id' => 'required|exists:trips,id',
+            'pickup_point_id' => 'required|exists:pickup_points,id',
             'dropoff_point_id' => 'nullable|exists:pickup_points,id',
-            'coupon_code'      => 'nullable|string|max:50',
-            'seat_ids'         => 'required|array|min:1',
-            'seat_ids.*'       => 'exists:seats,id',
-            'contact_name'     => 'required|string|max:255',
-            'contact_phone'    => 'required|string|max:20',
+            'coupon_code' => 'nullable|string|max:50',
+            'seat_ids' => 'required|array|min:1',
+            'seat_ids.*' => 'exists:seats,id',
+            'contact_name' => 'required|string|max:255',
+            'contact_phone' => 'required|string|max:20',
         ]);
 
-        $trip        = Trip::findOrFail($request->trip_id);
-        $baseAmount  = $trip->price * count($request->seat_ids);
-        $discount    = 0;
+        $trip = Trip::findOrFail($request->trip_id);
+        $baseAmount = $trip->price * count($request->seat_ids);
+        $discount = 0;
         $promotionId = null;
 
         if ($request->filled('coupon_code')) {
             $promo = Promotion::where('code', trim($request->coupon_code))->first();
             if ($promo) {
-                $now   = Carbon::now();
+                $now = Carbon::now();
                 $valid = true;
-                if ($promo->start_date && $now->lt($promo->start_date)) $valid = false;
-                if ($promo->end_date   && $now->gt($promo->end_date))   $valid = false;
-                if ($promo->max_uses !== null && $promo->current_uses >= $promo->max_uses) $valid = false;
+                if ($promo->start_date && $now->lt($promo->start_date))
+                    $valid = false;
+                if ($promo->end_date && $now->gt($promo->end_date))
+                    $valid = false;
+                if ($promo->max_uses !== null && $promo->current_uses >= $promo->max_uses)
+                    $valid = false;
 
                 if ($valid) {
-                    $discount    = $promo->type === 'percent'
+                    $discount = $promo->type === 'percent'
                         ? round(($baseAmount * $promo->value) / 100)
                         : min((float) $promo->value, $baseAmount);
                     $promotionId = $promo->id;
@@ -134,16 +137,16 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             $booking = Booking::create([
-                'user_id'          => Auth::id(),
-                'trip_id'          => $trip->id,
-                'pickup_point_id'  => $request->pickup_point_id,
+                'user_id' => Auth::id(),
+                'trip_id' => $trip->id,
+                'pickup_point_id' => $request->pickup_point_id,
                 'dropoff_point_id' => $request->dropoff_point_id ?: null,
-                'promotion_id'     => $promotionId,
-                'discount_amount'  => $discount,
-                'contact_name'     => $request->contact_name,
-                'contact_phone'    => $request->contact_phone,
-                'total_amount'     => $totalAmount,
-                'status'           => 'pending',
+                'promotion_id' => $promotionId,
+                'discount_amount' => $discount,
+                'contact_name' => $request->contact_name,
+                'contact_phone' => $request->contact_phone,
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
             ]);
 
             if ($promotionId) {
@@ -157,34 +160,35 @@ class BookingController extends Controller
                 }
 
                 SeatLock::create([
-                    'trip_id'      => $trip->id,
-                    'seat_id'      => $seatId,
-                    'user_id'      => Auth::id(),
-                    'booking_id'   => $booking->id,
+                    'trip_id' => $trip->id,
+                    'seat_id' => $seatId,
+                    'user_id' => Auth::id(),
+                    'booking_id' => $booking->id,
                     'locked_until' => now()->addMinutes(15),
                 ]);
 
                 Ticket::create([
                     'booking_id' => $booking->id,
-                    'trip_id'    => $trip->id,
-                    'seat_id'    => $seatId,
-                    'status'     => 'pending',
+                    'trip_id' => $trip->id,
+                    'seat_id' => $seatId,
+                    'status' => 'pending',
                 ]);
             }
 
             DB::commit();
             return redirect()->route('customer.payment.checkout', $booking->id)
-                             ->with('success', 'Giữ chỗ thành công. Vui lòng thanh toán trong 15 phút.');
+                ->with('success', 'Giữ chỗ thành công. Vui lòng thanh toán trong 15 phút.');
         } catch (\Exception $e) {
 
-    DB::rollBack();
+            DB::rollBack();
 
-    return back()->with('error', $e->getMessage());
-}
-}
+            return back()->with('error', $e->getMessage());
+        }
+    }
     public function cancel(Request $request, Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->user_id !== Auth::id())
+            abort(403);
         if ($booking->status !== 'paid') {
             return back()->with('error', 'Chỉ có thể hủy vé đã thanh toán.');
         }
@@ -225,7 +229,8 @@ class BookingController extends Controller
 
     public function changeDate(Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->user_id !== Auth::id())
+            abort(403);
         if ($booking->status !== 'paid') {
             return back()->with('error', 'Chỉ có thể đổi vé đã thanh toán.');
         }
@@ -254,7 +259,8 @@ class BookingController extends Controller
 
     public function processChangeDate(Request $request, Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->user_id !== Auth::id())
+            abort(403);
         if ($booking->status !== 'paid') {
             return back()->with('error', 'Chỉ có thể đổi vé đã thanh toán.');
         }
@@ -271,18 +277,18 @@ class BookingController extends Controller
         ]);
 
         $newTrip = Trip::findOrFail($request->new_trip_id);
-        
+
         // Cùng tuyến?
         if ($newTrip->route_id !== $booking->trip->route_id) {
             return back()->with('error', 'Chuyến xe thay thế phải cùng tuyến đường.');
         }
 
         $baseAmount = $newTrip->price * count($request->seat_ids);
-        
+
         // Phụ phí 10% của vé cũ
         $penaltyFee = $booking->total_amount * 0.10;
         $creditAmount = max(0, $booking->total_amount - $penaltyFee);
-        
+
         // Số tiền bù = Giá vé mới - Tiền còn lại từ vé cũ
         $extraPay = max(0, $baseAmount - $creditAmount);
 
@@ -332,10 +338,10 @@ class BookingController extends Controller
             DB::commit();
             if ($extraPay > 0) {
                 return redirect()->route('customer.payment.checkout', $newBooking->id)
-                             ->with('success', 'Tạo yêu cầu đổi vé thành công. Vui lòng thanh toán khoản tiền bù để hoàn tất.');
+                    ->with('success', 'Tạo yêu cầu đổi vé thành công. Vui lòng thanh toán khoản tiền bù để hoàn tất.');
             } else {
                 return redirect()->route('customer.bookings.show', $newBooking->id)
-                             ->with('success', 'Đổi vé thành công. Bạn không cần thanh toán thêm.');
+                    ->with('success', 'Đổi vé thành công. Bạn không cần thanh toán thêm.');
             }
         } catch (\Exception $e) {
             DB::rollBack();

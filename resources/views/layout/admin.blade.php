@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Admin Hub - {{ config('app.name') }}}</title>
+    <title>Admin Hub - {{ config('app.name') }}</title>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -40,30 +40,30 @@
 
         <!-- Navigation -->
         <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
-            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mb-4">{{{ __('operation_hub') }}</div>
+            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mb-4">{{ __('operation_hub') }}</div>
             
             <a href="{{ route('admin.dashboard.index') }}" class="group flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-white/5 transition-all {{ request()->routeIs('admin.dashboard.*') ? 'liquid-gradient' : '' }}">
                 <i data-lucide="layout-grid" class="w-5 h-5 {{ request()->routeIs('admin.dashboard.*') ? 'text-white' : 'text-white/40 group-hover:text-brand-accent' }}"></i>
                 <span x-show="sidebarOpen" class="font-bold text-sm">Dashboard</span>
             </a>
 
-            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mt-8 mb-4">{{{ __('transport_fleet') }}</div>
+            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mt-8 mb-4">{{ __('transport_fleet') }}</div>
             
             <a href="{{ route('admin.trips.index') }}" class="group flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-white/5 transition-all {{ request()->is('admin/trips*') ? 'bg-white/10 text-brand-accent' : '' }}">
                 <i data-lucide="bus" class="w-5 h-5 text-white/40 group-hover:text-brand-accent"></i>
-                <span x-show="sidebarOpen" class="font-bold text-sm">{{{ __('trips') }}</span>
+                <span x-show="sidebarOpen" class="font-bold text-sm">{{ __('trips') }}</span>
             </a>
 
             <a href="{{ route('admin.vehicles.index') }}" class="group flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-white/5 transition-all">
                 <i data-lucide="car-front" class="w-5 h-5 text-white/40 group-hover:text-brand-accent"></i>
-                <span x-show="sidebarOpen" class="font-bold text-sm">{{{ __('vehicles') }}</span>
+                <span x-show="sidebarOpen" class="font-bold text-sm">{{ __('vehicles') }}</span>
             </a>
 
-            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mt-8 mb-4">{{{ __('personnel_customers') }}</div>
+            <div x-show="sidebarOpen" class="text-[10px] font-black uppercase tracking-widest text-white/20 px-4 mt-8 mb-4">{{ __('personnel_customers') }}</div>
 
             <a href="{{ route('admin.drivers.index') }}" class="group flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-white/5 transition-all {{ request()->is('admin/drivers*') ? 'bg-white/10 text-brand-accent' : '' }}">
                 <i data-lucide="user-square-2" class="w-5 h-5 text-white/40 group-hover:text-brand-accent"></i>
-                <span x-show="sidebarOpen" class="font-bold text-sm">{{{ __('drivers') }}</span>
+                <span x-show="sidebarOpen" class="font-bold text-sm">{{ __('drivers') }}</span>
             </a>
 
             <a href="{{ route('admin.users.index') }}" class="group flex items-center gap-4 px-4 py-4 rounded-2xl hover:bg-white/5 transition-all {{ request()->is('admin/users*') ? 'bg-white/10 text-brand-accent' : '' }}">
@@ -79,8 +79,8 @@
                     <i data-lucide="user" class="w-5 h-5"></i>
                 </div>
                 <div x-show="sidebarOpen" class="flex-1 overflow-hidden">
-                    <p class="text-xs font-black truncate">{{ Auth::user()->name }}}</p>
-                    <p class="text-[10px] text-white/30 uppercase tracking-widest">{{ Auth::user()->role }}}</p>
+                    <p class="text-xs font-black truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-[10px] text-white/30 uppercase tracking-widest">{{ Auth::user()->role }}</p>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" x-show="sidebarOpen">
                     @csrf
@@ -108,7 +108,7 @@
                         <span class="text-[10px] font-black uppercase tracking-tighter">System Live</span>
                     </div>
                     <div class="h-4 w-px bg-white/10"></div>
-                    <p class="text-[10px] font-bold text-white/40">{{ date('d M Y') }}}</p>
+                    <p class="text-[10px] font-bold text-white/40">{{ date('d M Y') }}</p>
                 </div>
                 
                 <button class="w-12 h-12 rounded-2xl glass flex items-center justify-center relative hover:bg-white/5 transition-all">

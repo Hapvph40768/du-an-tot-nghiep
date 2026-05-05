@@ -7,14 +7,14 @@
 
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Chỉnh sửa xe: {{ $vehicle->license_plate }}}</h4>
+                <h4 class="mb-0">Chỉnh sửa xe: {{ $vehicle->license_plate }}</h4>
             </div>
 
             <div class="card-body">
 
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show mb-4">
-                        <i class='bx bx-check-circle me-1'></i> {{ session('success') }}}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <i class='bx bx-check-circle me-1'></i> {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
@@ -23,7 +23,7 @@
                         <strong>Có lỗi xảy ra:</strong>
                         <ul class="mb-0 mt-2">
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}}</li>
+                                <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{{ __('status') }}<span class="text-danger">*</span></label>
+                            <label class="form-label">{{ __('status') }}<span class="text-danger">*</span></label>
                             <select name="status" class="form-select" required>
                                 <option value="active" {{ old('status', $vehicle->status) == 'active' ? 'selected' : '' }}>
                                     Hoạt động
@@ -81,11 +81,11 @@
                                 <option value="">-- Không xếp bãi --</option>
                                 @foreach ($parkings as $parking)
                                     @if ($parking->slots->count() > 0)
-                                        <optgroup label="{{ $parking->name }}} ({{ $parking->location }})">
+                                        <optgroup label="{{ $parking->name }} ({{ $parking->location }})">
                                             @foreach ($parking->slots as $slot)
                                                 <option value="{{ $slot->id }}"
                                                     {{ old('parking_slot_id') == $slot->id || ($vehicle->parkingSlot && $vehicle->parkingSlot->id == $slot->id) ? 'selected' : '' }}>
-                                                    {{ $slot->slot_code }}} - {{ $slot->zone }}}</option>
+                                                    {{ $slot->slot_code }} - {{ $slot->zone }}</option>
                                             @endforeach
                                         </optgroup>
                                     @endif

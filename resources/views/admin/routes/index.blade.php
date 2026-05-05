@@ -23,14 +23,14 @@
                 <tbody>
                     @foreach($routes as $route)
                     <tr>
-                        <td>#{{ $route->id }}}</td>
+                        <td>#{{ $route->id }}</td>
                         <td>
                             <div class="fw-bold text-dark">
-                                {{ $route->departureLocation->name }}}<i class='bx bx-right-arrow-alt text-primary'></i> 
-                                {{ $route->destinationLocation->name }}}</div>
+                                {{ $route->departureLocation->name }}<i class='bx bx-right-arrow-alt text-primary'></i> 
+                                {{ $route->destinationLocation->name }}</div>
                         </td>
-                        <td>{{ $route->distance_km }}} km</td>
-                        <td>{{ $route->estimated_time }}} giờ</td>
+                        <td>{{ $route->distance_km }} km</td>
+                        <td>{{ $route->estimated_time }} giờ</td>
                         <td class="text-end">
                             <a href="{{ route('admin.routes.edit', $route->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
                             <form action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" class="d-inline">
@@ -43,6 +43,6 @@
                 </tbody>
             </table>
         </div>
-        {{-- <div class="mt-3">{{ $routes->links() }}}</div> --}}}</div>
+        {{ -- <div class="mt-3">{{ $routes->links() }}</div> --}}</div>
 </div>
 @endsection

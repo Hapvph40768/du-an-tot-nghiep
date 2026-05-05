@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,31 +6,45 @@
 @source '../**/*.js';
 
 @theme {
-    /* Brand Colors */
-    --color-brand-primary: #006992;
-    --color-brand-dark: #0b0f11;
-    --color-brand-accent: #22d3ee;
-
+    /* Cyberpunk Brand Colors */
+    --color-brand-primary: #0bf8ff; /* Neon Cyan */
+    --color-brand-secondary: #006992; /* Deep Blue */
+    --color-brand-dark: #05070a; /* True Void */
+    --color-brand-darker: #020305;
+    --color-brand-accent: #b026ff; /* Neon Purple/Pink */
+    
     /* Typography */
     --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
     /* Custom Radius */
     --radius-3xl: 1.5rem;
     --radius-4xl: 2rem;
+    --radius-5xl: 3rem;
 
     /* Animation Easing */
+    --ease-cyber: cubic-bezier(0.19, 1, 0.22, 1);
     --ease-apple: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Base Styles */
 @layer base {
     body {
-        @apply bg-brand-dark text-white font-sans antialiased;
+        @apply bg-brand-dark text-slate-200 font-sans antialiased selection:bg-brand-primary/30 selection:text-white min-h-screen relative overflow-x-hidden;
         background-image: 
-            radial-gradient(circle at 0% 0%, rgba(0, 105, 146, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 100% 100%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+            radial-gradient(circle at 15% 50%, rgba(11, 248, 255, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 85% 30%, rgba(176, 38, 255, 0.08) 0%, transparent 40%);
         background-attachment: fixed;
+        background-color: var(--color-brand-dark);
+    }
+    
+    /* Cyber Grid Background Detail */
+    body::before {
+        content: '';
+        @apply fixed inset-0 pointer-events-none z-[-1] opacity-[0.03];
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px);
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -39,23 +52,30 @@
     }
 }
 
-/* Liquid Utilities */
+/* Cyberpunk Liquid Utilities */
 @layer utilities {
+    /* Glassmorphism */
     .glass {
-        @apply bg-white/5 backdrop-blur-xl border border-white/10;
+        @apply bg-white/5 backdrop-blur-[20px] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)];
     }
     .glass-dark {
-        @apply bg-black/20 backdrop-blur-2xl border border-white/5;
+        @apply bg-black/40 backdrop-blur-[30px] border border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)];
     }
+    .glass-panel {
+        @apply bg-brand-darker/60 backdrop-blur-3xl border-y border-white/10;
+        box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+    }
+
+    /* Gradients */
     .liquid-bg {
-        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
-        background-size: 200% auto;
-        animation: liquid 4s linear infinite;
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-secondary), var(--color-brand-primary));
+        background-size: 300% 300%;
+        animation: cyber-liquid 8s ease infinite;
         color: white;
     }
 
     .liquid-text {
-        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent), #ffffff);
         background-size: 200% auto;
         -webkit-background-clip: text;
         background-clip: text;
@@ -64,60 +84,107 @@
     }
 
     .liquid-gradient {
-        background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
         background-size: 200% auto;
         animation: liquid 4s linear infinite;
     }
 
+    /* Glowing Effects */
+    .glow-primary {
+        box-shadow: 0 0 20px rgba(11, 248, 255, 0.4), 0 0 40px rgba(11, 248, 255, 0.1);
+    }
+    .text-glow {
+        text-shadow: 0 0 15px rgba(11, 248, 255, 0.6);
+    }
+
+    /* Interactive Elements */
+    .cyber-btn {
+        @apply relative overflow-hidden bg-white/5 backdrop-blur-[20px] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:bg-white/10 transition-all duration-300 font-bold tracking-wider uppercase text-sm;
+    }
+    .cyber-btn::after {
+        content: '';
+        @apply absolute top-0 left-0 w-full h-[2px];
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background-size: 200% auto;
+        animation: liquid 4s linear infinite;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s var(--ease-cyber);
+    }
+    .cyber-btn:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
     .liquid-card {
-        @apply bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)];
-        transition: all var(--ease-apple) 0.5s;
+        @apply bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden;
+        transition: all 0.6s var(--ease-cyber);
     }
 
     .liquid-card:hover {
-        @apply border-white/20 bg-white/[0.05];
-        transform: translateY(-4px);
+        @apply border-brand-primary/30 bg-white/[0.04];
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 30px 60px -15px rgba(11, 248, 255, 0.1);
     }
 
+    /* Seat Selection (Booking) */
     .seat-v2 {
-        @apply relative transition-all duration-500 cursor-pointer overflow-hidden rounded-2xl;
+        @apply relative transition-all duration-500 cursor-pointer overflow-hidden rounded-xl border border-white/10;
         aspect-ratio: 1/1.2;
     }
 
     .seat-v2.available {
-        @apply bg-white/5 border border-white/10 hover:bg-white/10 hover:scale-105;
+        @apply bg-white/5 hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:scale-105;
     }
 
     .seat-v2.selected {
-        @apply liquid-gradient scale-110 shadow-[0_0_30px_rgba(34,211,238,0.4)] border-transparent;
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent));
+        background-size: 200% auto;
+        animation: liquid 3s ease infinite;
+        @apply scale-110 shadow-[0_0_20px_rgba(11,248,255,0.6)] border-transparent text-black font-black;
     }
 
     .seat-v2.booked {
-        @apply bg-red-500/10 border border-red-500/20 opacity-30 cursor-not-allowed;
+        @apply bg-red-900/20 border-red-500/20 text-red-500/50 cursor-not-allowed opacity-40;
     }
 
+    /* Timeline (Journey Tracking) */
     .timeline-node {
-        @apply relative pl-8 pb-8 last:pb-0;
+        @apply relative pl-10 pb-10 last:pb-0;
     }
 
     .timeline-node::before {
         content: '';
-        @apply absolute left-[11px] top-6 bottom-0 w-[2px] bg-white/5;
+        @apply absolute left-[15px] top-8 bottom-0 w-[1px] bg-white/10;
     }
 
     .timeline-node.active::before {
-        @apply bg-brand-accent/30;
+        @apply w-[2px] opacity-70 left-[14.5px];
+        background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-accent), var(--color-brand-primary));
+        background-size: 200% auto;
+        animation: liquid 4s linear infinite;
     }
 
     .timeline-dot {
-        @apply absolute left-0 top-1 w-6 h-6 rounded-full glass flex items-center justify-center z-10;
+        @apply absolute left-0 top-1 w-8 h-8 rounded-full border border-white/10 bg-brand-darker flex items-center justify-center z-10 font-mono text-[10px] text-white/50 tracking-tighter;
+        transition: all 0.4s var(--ease-cyber);
     }
 
     .timeline-node.active .timeline-dot {
-        @apply bg-brand-accent border-brand-accent shadow-[0_0_15px_#22d3ee];
+        @apply border-brand-primary text-black shadow-[0_0_20px_#0bf8ff];
+        box-shadow: 0 0 20px rgba(11, 248, 255, 0.4), 0 0 40px rgba(11, 248, 255, 0.1);
+        background: var(--color-brand-primary);
     }
 
+    /* Animations */
     @keyframes liquid {
         to { background-position: 200% center; }
     }
+    
+    @keyframes cyber-liquid {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 }
+

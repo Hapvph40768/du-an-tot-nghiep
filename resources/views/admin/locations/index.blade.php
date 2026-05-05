@@ -101,8 +101,8 @@
             </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">{{{ __('home') }}</a></li>
-                    <li class="breadcrumb-item active text-primary">{{{ __('locations') }}</li>
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">{{ __('home') }}</a></li>
+                    <li class="breadcrumb-item active text-primary">{{ __('locations') }}</li>
                 </ol>
             </nav>
         </div>
@@ -111,13 +111,13 @@
 
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class='bx bx-check-circle me-1'></i> {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
             <div class="toolbar-area">
                 <div class="text-muted small">
-                    Tổng cộng: <strong>{{ $locations->total() }}}</strong> địa điểm
+                    Tổng cộng: <strong>{{ $locations->total() }}</strong> địa điểm
                 </div>
                 <a href="{{ route('admin.locations.create') }}" class="btn btn-primary-custom">
                     <i class='bx bx-plus-circle'></i> Thêm mới
@@ -129,21 +129,21 @@
                     <thead>
                         <tr>
                             <th class="ps-4" style="width: 10%;">ID</th>
-                            <th style="width: 45%;">{{{ __('name') }} địa điểm / Bến xe</th>
-                            <th style="width: 25%;">{{{ __('created_at') }}</th>
+                            <th style="width: 45%;">{{ __('name') }} địa điểm / Bến xe</th>
+                            <th style="width: 25%;">{{ __('created_at') }}</th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($locations as $location)
                             <tr>
-                                <td class="ps-4 text-muted">#{{ $location->id }}}</td>
+                                <td class="ps-4 text-muted">#{{ $location->id }}</td>
                                 <td>
-                                    <div class="fw-bold text-dark">{{ $location->name }}}</div>
+                                    <div class="fw-bold text-dark">{{ $location->name }}</div>
                                 </td>
                                 <td>
                                     <span class="text-muted small">
-                                        {{ $location->created_at->format('d/m/Y H:i') }}}</span>
+                                        {{ $location->created_at->format('d/m/Y H:i') }}</span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="action-group">
@@ -156,7 +156,7 @@
                                             class="d-inline" onsubmit="return confirm('Xóa địa điểm này?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="action-btn delete-btn" title="="{{{ __('delete') }">
+                                            <button type="submit" class="action-btn delete-btn" title="="{{ __('delete') }}">
                                                 <i class='bx bx-trash fs-5'></i>
                                             </button>
                                         </form>
@@ -175,7 +175,7 @@
             </div>
 
             <div class="mt-4">
-                {{ $locations->links('pagination::bootstrap-5') }}}</div>
+                {{ $locations->links('pagination::bootstrap-5') }}</div>
 
         </div>
     </div>

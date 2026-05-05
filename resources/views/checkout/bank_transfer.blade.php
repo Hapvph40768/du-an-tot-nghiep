@@ -10,7 +10,7 @@
         <div class="col-md-6 col-lg-5">
             
             <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 text-center">
-                <h3 class="fw-black text-dark text-uppercase mb-1">{{{ __('payments') }} chuyển khoản</h3>
+                <h3 class="fw-black text-dark text-uppercase mb-1">{{ __('payments') }} chuyển khoản</h3>
                 <p class="text-muted small mb-4">Vui lòng quét mã QR bên dưới bằng app ngân hàng</p>
 
                 <div class="p-3 border rounded-4 bg-light mb-4 shadow-sm" style="border-color: #ffb347 !important;">
@@ -20,12 +20,12 @@
 
                 <div class="bg-light rounded-4 p-3 text-start mb-4 border">
                     <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-                        <span class="text-muted fw-medium">{{{ __('amount') }:</span>
-                        <span class="text-dark fw-bold fs-5">{{ number_format($order->amount) }}} VNĐ</span>
+                        <span class="text-muted fw-medium">{{ __('amount') }}:</span>
+                        <span class="text-dark fw-bold fs-5">{{ number_format($order->amount) }} VNĐ</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="text-muted fw-medium">Nội dung CK:</span>
-                        <span class="fw-bold fs-5" style="color: #ff7a18;">{{ $order->order_code }}}</span>
+                        <span class="fw-bold fs-5" style="color: #ff7a18;">{{ $order->order_code }}</span>
                     </div>
                 </div>
 

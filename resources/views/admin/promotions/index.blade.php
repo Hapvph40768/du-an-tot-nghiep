@@ -2,7 +2,7 @@
 @section('content-main')
 <div class="container-fluid py-4">
     @if(session('success'))
-        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}}</div>
+        <div class="alert alert-success rounded-3 shadow-sm">{{ session('success') }}</div>
     @endif
     <div class="card shadow-sm border-0 rounded-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -27,16 +27,16 @@
                 <tbody>
                     @forelse($promotions as $p)
                     <tr>
-                        <td>#{{ $p->id }}}</td>
-                        <td><span class="badge bg-warning text-dark fw-bold">{{ $p->code }}}</span></td>
-                        <td>{{ $p->type == 'percent' ? 'Phần trăm (%)' : 'Cố định (VNĐ)' }}}</td>
-                        <td>{{ $p->type == 'percent' ? $p->value.'%' : number_format($p->value).' ₫' }}}</td>
+                        <td>#{{ $p->id }}</td>
+                        <td><span class="badge bg-warning text-dark fw-bold">{{ $p->code }}</span></td>
+                        <td>{{ $p->type == 'percent' ? 'Phần trăm (%)' : 'Cố định (VNĐ)' }}</td>
+                        <td>{{ $p->type == 'percent' ? $p->value.'%' : number_format($p->value).' ₫' }}</td>
                         <td>
-                            <small>{{ $p->start_date ? \Carbon\Carbon::parse($p->start_date)->format('d/m/Y') : '—' }}}</small>
+                            <small>{{ $p->start_date ? \Carbon\Carbon::parse($p->start_date)->format('d/m/Y') : '—' }}</small>
                             →
-                            <small>{{ $p->end_date ? \Carbon\Carbon::parse($p->end_date)->format('d/m/Y') : '—' }}}</small>
+                            <small>{{ $p->end_date ? \Carbon\Carbon::parse($p->end_date)->format('d/m/Y') : '—' }}</small>
                         </td>
-                        <td>{{ $p->current_uses }}} / {{ $p->max_uses ?? '∞' }}}</td>
+                        <td>{{ $p->current_uses }} / {{ $p->max_uses ?? '∞' }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.promotions.edit', $p->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
                             <form action="{{ route('admin.promotions.destroy', $p->id) }}" method="POST" class="d-inline">
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">{{ $promotions->links() }}}</div>
+        <div class="mt-3">{{ $promotions->links() }}</div>
     </div>
 </div>
 @endsection

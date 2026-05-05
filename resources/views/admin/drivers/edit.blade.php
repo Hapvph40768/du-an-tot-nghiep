@@ -19,7 +19,7 @@
                         style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
                         value="{{ old('name', $driver->name) }}" required autofocus>
                     @error('name')
-                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -31,7 +31,7 @@
                         style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
                         value="{{ old('phone', $driver->phone) }}" required>
                     @error('phone')
-                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -43,7 +43,7 @@
                         style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
                         value="{{ old('license_number', $driver->license_number) }}" required>
                     @error('license_number')
-                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -55,7 +55,7 @@
                         style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
                         value="{{ old('experience_years', $driver->experience_years ?? 0) }}" min="0">
                     @error('experience_years')
-                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -77,7 +77,7 @@
                         </option>
                     </select>
                     @error('status')
-                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                        <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -87,9 +87,9 @@
                     Thông tin cá nhân / Ghi chú (tùy chọn)
                 </label>
                 <textarea name="personal_info" rows="4"
-                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('personal_info', $driver->personal_info ?? '') }}}</textarea>
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical;">{{ old('personal_info', $driver->personal_info ?? '') }}</textarea>
                 @error('personal_info')
-                    <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}}</div>
+                    <div style="color: #c33; font-size: 12px; margin-top: 4px;">{{ $message }}</div>
                 @enderror
             </div>
 

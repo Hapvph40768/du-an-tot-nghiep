@@ -5,7 +5,7 @@
     <a href="{{ route('staff.trips.index') }}" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/></svg>
     </a>
-    <h1 class="text-2xl font-bold">Chi tiết Chuyến xe: {{ $trip->route->startLocation->name }}} &rarr; {{ $trip->route->endLocation->name }}}</h1>
+    <h1 class="text-2xl font-bold">Chi tiết Chuyến xe: {{ $trip->route->startLocation->name }} &rarr; {{ $trip->route->endLocation->name }}</h1>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -22,7 +22,7 @@
                             {{ in_array($seat->id, $occupiedSeatIds) 
                                 ? 'bg-blue-600 text-white shadow-blue-500/50 scale-105' 
                                 : 'bg-white dark:bg-[#262626] border border-gray-200 dark:border-[#333] opacity-60' }}">
-                            {{ $seat->seat_number }}}</div>
+                            {{ $seat->seat_number }}</div>
                     @endforeach
                 </div>
             </div>
@@ -45,22 +45,22 @@
             <h2 class="text-xl font-bold mb-6">Thông tin vận hành</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{{ __('vehicles') }}</div>
-                    <div class="text-lg font-bold">{{ $trip->vehicle->license_plate ?? 'N/A' }}}</div>
-                    <div class="text-sm opacity-60">{{ $trip->vehicle->type ?? '' }}}</div>
+                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{ __('vehicles') }}</div>
+                    <div class="text-lg font-bold">{{ $trip->vehicle->license_plate ?? 'N/A' }}</div>
+                    <div class="text-sm opacity-60">{{ $trip->vehicle->type ?? '' }}</div>
                 </div>
                 <div>
-                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{{ __('drivers') }}</div>
-                    <div class="text-lg font-bold">{{ $trip->driver->name ?? 'N/A' }}}</div>
-                    <div class="text-sm opacity-60">{{ $trip->driver->phone ?? '' }}}</div>
+                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{ __('drivers') }}</div>
+                    <div class="text-lg font-bold">{{ $trip->driver->name ?? 'N/A' }}</div>
+                    <div class="text-sm opacity-60">{{ $trip->driver->phone ?? '' }}</div>
                 </div>
                 <div>
-                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{{ __('cost') }}</div>
+                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{ __('cost') }}</div>
                     <div class="text-lg font-bold text-blue-600">{{ number_format($trip->price) }}đ</div>
                 </div>
                 <div>
-                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{{ __('status') }} chuyến</div>
-                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase">{{ $trip->status }}}</span>
+                    <div class="text-xs font-bold uppercase opacity-40 mb-2">{{ __('status') }} chuyến</div>
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase">{{ $trip->status }}</span>
                 </div>
             </div>
         </div>
@@ -71,18 +71,18 @@
                 <table class="w-full text-left">
                     <thead class="text-xs uppercase opacity-40 font-bold">
                         <tr>
-                            <th class="pb-4">{{{ __('seats') }}</th>
+                            <th class="pb-4">{{ __('seats') }}</th>
                             <th class="pb-4">Mã Vé</th>
                             <th class="pb-4">Khách hàng</th>
-                            <th class="pb-4">{{{ __('status') }}</th>
+                            <th class="pb-4">{{ __('status') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#e3e3e0] dark:divide-[#262626]">
                         @foreach($trip->tickets as $ticket)
                             <tr>
-                                <td class="py-4 font-bold text-blue-600 text-lg">#{{ $ticket->seat->seat_number }}}</td>
-                                <td class="py-4 font-mono text-sm opacity-60">{{ $ticket->ticket_code }}}</td>
-                                <td class="py-4 font-medium">{{ $ticket->booking->contact_name }}}</td>
+                                <td class="py-4 font-bold text-blue-600 text-lg">#{{ $ticket->seat->seat_number }}</td>
+                                <td class="py-4 font-mono text-sm opacity-60">{{ $ticket->ticket_code }}</td>
+                                <td class="py-4 font-medium">{{ $ticket->booking->contact_name }}</td>
                                 <td class="py-4">
                                     @if($ticket->status === 'used')
                                         <span class="text-green-600 font-bold text-xs uppercase underline">Đã lên xe</span>

@@ -34,7 +34,7 @@
             <a href="{{ route('admin.vehicles.index') }}" class="text-decoration-none text-muted small fw-bold">
                 <i class='bx bx-left-arrow-alt'></i> QUAY LẠI DANH SÁCH
             </a>
-            <h2 class="fw-bold text-dark m-0 mt-2">Chi tiết phương tiện: {{ $vehicle->license_plate }}}</h2>
+            <h2 class="fw-bold text-dark m-0 mt-2">Chi tiết phương tiện: {{ $vehicle->license_plate }}</h2>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-light border px-4 rounded-3">
@@ -47,33 +47,33 @@
     </div>
 
     <div class="row g-4">
-        {{-- Thông tin tóm tắt xe --}}}<div class="col-md-4">
+        {{ -- Thông tin tóm tắt xe -- }}<div class="col-md-4">
             <div class="card-box">
                 <h5 class="fw-bold mb-4 border-bottom pb-2">Thông tin chung</h5>
                 <div class="row g-3">
                     <div class="col-6">
                         <div class="info-label">Biển số</div>
-                        <div class="info-value">{{ $vehicle->license_plate }}}</div>
+                        <div class="info-value">{{ $vehicle->license_plate }}</div>
                     </div>
                     <div class="col-6">
                         <div class="info-label">Loại xe</div>
-                        <div class="info-value">{{ $vehicle->type }}}</div>
+                        <div class="info-value">{{ $vehicle->type }}</div>
                     </div>
                     <div class="col-6">
                         <div class="info-label">Số chỗ ngồi</div>
-                        <div class="info-value text-primary">{{ $vehicle->total_seats }}} ghế</div>
+                        <div class="info-value text-primary">{{ $vehicle->total_seats }} ghế</div>
                     </div>
                     <div class="col-6">
                         <div class="info-label">Số điện thoại</div>
                         <div class="info-value">
                             @if($vehicle->phone_vehicles)
-                                <i class='bx bxs-phone-call text-success me-1'></i> {{ $vehicle->phone_vehicles }}} @else
+                                <i class='bx bxs-phone-call text-success me-1'></i> {{ $vehicle->phone_vehicles }} @else
                                 <span class="text-muted">N/A</span>
                             @endif
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="info-label">{{{ __('status') }}</div>
+                        <div class="info-label">{{ __('status') }}</div>
                         <div>
                             @if($vehicle->status == 'active')
                                 <span class="badge bg-success small">Sẵn sàng</span>
@@ -90,18 +90,18 @@
             </div>
         </div>
 
-        {{-- Hiển thị sơ đồ ghế --}}}<div class="col-md-8">
+        {{ -- Hiển thị sơ đồ ghế -- }}<div class="col-md-8">
             <div class="card-box">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0">Sơ đồ ghế thực tế</h5>
-                    <span class="text-muted small">Tổng số: {{ $vehicle->seats->count() }}} vị trí</span>
+                    <span class="text-muted small">Tổng số: {{ $vehicle->seats->count() }} vị trí</span>
                 </div>
 
                 <div class="seat-container">
                     @forelse ($vehicle->seats as $seat)
                         <div class="seat-card">
                             <i class='bx bx-chair seat-icon'></i>
-                            <div class="seat-name">{{ $seat->seat_number }}}</div>
+                            <div class="seat-name">{{ $seat->seat_number }}</div>
                             <span class="status-tag bg-light text-muted border mt-1 d-inline-block">Trống</span>
                         </div>
                     @empty

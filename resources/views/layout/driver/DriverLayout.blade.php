@@ -56,10 +56,10 @@
                         <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : Storage::url(Auth::user()->avatar) }}" class="w-12 h-12 rounded-2xl object-cover" alt="Avatar">
                     @else
                         <div class="w-12 h-12 bg-amber-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold">
-                            {{ strtoupper(substr(Auth::user()->name ?? 'D', 0, 1)) }}}</div>
+                            {{ strtoupper(substr(Auth::user()->name ?? 'D', 0, 1)) }}</div>
                     @endif
                     <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-gray-800 truncate">{{ Auth::user()->name ?? 'Tài xế' }}}</p>
+                        <p class="font-semibold text-gray-800 truncate">{{ Auth::user()->name ?? 'Tài xế' }}</p>
                         <p class="text-sm flex items-center gap-2 font-medium text-gray-600">
                             <span class="w-2.5 h-2.5 rounded-full animate-pulse 
                                 {{ in_array(Auth::user()->driver?->status, ['active', 'ready', 'available'])
@@ -68,7 +68,7 @@
                                         ? 'bg-amber-500'
                                         : 'bg-emerald-500') }}">
                             </span>
-                            {{ in_array(Auth::user()->driver?->status, ['inactive']) ? 'Offline' : 'Online' }}}</p>
+                            {{ in_array(Auth::user()->driver?->status, ['inactive']) ? 'Offline' : 'Online' }}</p>
                     </div>
                 </div>
             </div>
@@ -78,21 +78,21 @@
                 <ul class="space-y-1">
                     <li>
                         <a href="{{ route('driver.trips.index') }}" onclick="window.location.href='{{ route('driver.trips.index') }}'; return false;"
-                            class="{{ request()->routeIs('driver.trips.index', 'driver.trips.show') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }}} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
+                            class="{{ request()->routeIs('driver.trips.index', 'driver.trips.show') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-bus text-2xl'></i>
-                            <span>{{{ __('trips') }} của tôi</span>
+                            <span>{{ __('trips') }} của tôi</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('driver.trips.history') }}" onclick="window.location.href='{{ route('driver.trips.history') }}'; return false;"
-                            class="{{ request()->routeIs('driver.trips.history') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }}} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
+                            class="{{ request()->routeIs('driver.trips.history') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-history text-2xl'></i>
                             <span>Lịch sử chuyến</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('driver.revenue.index') }}" onclick="window.location.href='{{ route('driver.revenue.index') }}'; return false;"
-                            class="{{ request()->routeIs('driver.revenue.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }}} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
+                            class="{{ request()->routeIs('driver.revenue.*') ? 'bg-amber-50 text-amber-700 border-l-4 border-amber-500' : 'text-gray-600 hover:bg-gray-50' }} flex items-center gap-3 px-5 py-4 rounded-2xl font-medium transition-all cursor-pointer">
                             <i class='bx bx-wallet text-2xl'></i>
                             <span>Doanh thu</span>
                         </a>
@@ -107,7 +107,7 @@
                     <button type="submit"
                         class="w-full flex items-center justify-center gap-3 bg-red-50 hover:bg-red-100 text-red-600 font-medium py-4 rounded-2xl transition-all">
                         <i class='bx bx-log-out text-xl'></i>
-                        <span>{{{ __('logout') }}</span>
+                        <span>{{ __('logout') }}</span>
                     </button>
                 </form>
             </div>

@@ -6,14 +6,14 @@
         <a href="{{ route('staff.bookings.index') }}" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/></svg>
         </a>
-        <h1 class="text-3xl font-bold">{{{ __('bookings') }} Offline (Hỗ trợ khách)</h1>
+        <h1 class="text-3xl font-bold">{{ __('bookings') }} Offline (Hỗ trợ khách)</h1>
     </div>
     <p class="text-gray-500 italic">Dành cho nhân viên trực tổng đài hỗ trợ đặt vé qua điện thoại.</p>
 </div>
 
 @if(session('error'))
     <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl font-bold">
-        {{ session('error') }}}</div>
+        {{ session('error') }}</div>
 @endif
 
 <form action="{{ route('staff.bookings.store') }}" method="POST" id="bookingForm">
@@ -30,20 +30,20 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{{ __('trips') }}</label>
+                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{ __('trips') }}</label>
                         <select name="trip_id" id="tripSelect" required class="w-full px-4 py-3 bg-gray-50 dark:bg-[#0a0a0a] border border-[#e3e3e0] dark:border-[#262626] rounded-xl font-bold">
                             <option value="">-- Chọn chuyến đi --</option>
                             @foreach($trips as $trip)
                                 <option value="{{ $trip->id }}">
                                     [{{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}] 
-                                    {{ $trip->route->startLocation->name }}} → {{ $trip->route->endLocation->name }}} ({{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }})
+                                    {{ $trip->route->startLocation->name }} → {{ $trip->route->endLocation->name }} ({{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m') }})
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{{ __('pickup_points') }} khách</label>
+                        <label class="block text-xs font-bold uppercase opacity-40 mb-2">{{ __('pickup_points') }} khách</label>
                         <select name="pickup_point_id" id="pickupSelect" required disabled class="w-full px-4 py-3 bg-gray-50 dark:bg-[#0a0a0a] border border-[#e3e3e0] dark:border-[#262626] rounded-xl font-medium">
                             <option value="">Chọn điểm đón...</option>
                         </select>
@@ -222,5 +222,5 @@ document.addEventListener('DOMContentLoaded', function() {
     .seat-checkbox:checked + .seat-ui {
         animation: pulseSelect 0.2s ease-out;
     }} @keyframes pulseSelect {
-        0% { transform: scale(1); }} 50% { transform: scale(0.9); }} 100% { transform: scale(1); }}}</style>
+        0% { transform: scale(1); }} 50% { transform: scale(0.9); }} 100% { transform: scale(1); }}</style>
 @endsection

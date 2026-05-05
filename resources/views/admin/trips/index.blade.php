@@ -101,7 +101,7 @@
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark m-0">{{{ __('schedules') }} Chuyến xe</h2>
+                <h2 class="fw-bold text-dark m-0">{{ __('schedules') }} Chuyến xe</h2>
                 <p class="text-muted small mb-0">Quản lý lộ trình và điều phối vận hành thực tế</p>
             </div>
             <a href="{{ route('admin.trips.create') }}" class="btn btn-primary px-4 py-2"
@@ -110,10 +110,10 @@
             </a>
         </div>
 
-        {{-- Bộ lọc --}}}<div class="filter-section shadow-sm">
+        {{ -- Bộ lọc -- }}<div class="filter-section shadow-sm">
             <form action="{{ route('admin.trips.index') }}" method="GET" class="row g-3 form-filter">
                 <div class="col-md-3">
-                    <label class="small fw-bold text-muted">{{{ __('search') }}</label>
+                    <label class="small fw-bold text-muted">{{ __('search') }}</label>
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control"
                         placeholder="Biển số xe, tên tài xế...">
                 </div>
@@ -122,7 +122,7 @@
                     <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control">
                 </div>
                 <div class="col-md-2">
-                    <label class="small fw-bold text-muted">{{{ __('status') }}</label>
+                    <label class="small fw-bold text-muted">{{ __('status') }}</label>
                     <select name="status" class="form-select">
                         <option value="">Tất cả</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Đang mở bán</option>
@@ -133,14 +133,14 @@
                 </div>
                 <div class="col-md-3 d-flex align-items-end gap-2">
                     <button type="submit" class="btn btn-dark px-3 rounded-3"><i class='bx bx-filter-alt'></i> Lọc</button>
-                    <a href="{{ route('admin.trips.index') }}" class="btn btn-outline-secondary px-3 rounded-3">{{{ __('delete') }} lọc</a>
+                    <a href="{{ route('admin.trips.index') }}" class="btn btn-outline-secondary px-3 rounded-3">{{ __('delete') }} lọc</a>
                 </div>
             </form>
         </div>
 
         @if (session('success'))
             <div class="alert alert-success border-0 shadow-sm mb-4">
-                <i class='bx bx-check-circle me-2'></i> {{ session('success') }}}</div>
+                <i class='bx bx-check-circle me-2'></i> {{ session('success') }}</div>
         @endif
 
         <div class="card-box shadow-sm">
@@ -148,11 +148,11 @@
                 <table class="custom-table w-100">
                     <thead>
                         <tr>
-                            <th style="width: 28%;">{{{ __('routes') }} / Lịch trình</th>
+                            <th style="width: 28%;">{{ __('routes') }} / Lịch trình</th>
                             <th style="width: 15%;">Thời gian</th>
                             <th style="width: 18%;">Xe & Tài xế</th>
-                            <th style="width: 12%;">{{{ __('cost') }}</th>
-                            <th style="width: 12%;">{{{ __('status') }}</th>
+                            <th style="width: 12%;">{{ __('cost') }}</th>
+                            <th style="width: 12%;">{{ __('status') }}</th>
                             <th style="width: 15%; text-align: right;">Hành động</th>
                         </tr>
                     </thead>
@@ -161,38 +161,38 @@
                             <tr>
                                 <td>
                                     <div class="fw-bold text-dark" style="font-size: 15px;">
-                                        {{ $trip->route->departureLocation->name }}}<i
+                                        {{ $trip->route->departureLocation->name }}<i
                                             class='bx bx-right-arrow-alt text-muted'></i>
-                                        {{ $trip->route->destinationLocation->name }}}</div>
+                                        {{ $trip->route->destinationLocation->name }}</div>
                                     <div class="d-flex align-items-center mt-1">
                                         <span class="text-muted small">
                                             <i class='bx bx-calendar'></i>
                                             @if ($trip->trip_date)
-                                                {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}} @else
+                                                {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }} @else
                                                 <span class="text-warning fw-bold">Chưa xếp lịch</span>
                                             @endif
                                         </span>
                                         <span class="pickup-count" title="Số điểm đón">
-                                            <i class='bx bx-map-pin'></i> {{ $trip->pickupPoints->count() }}} điểm
+                                            <i class='bx bx-map-pin'></i> {{ $trip->pickupPoints->count() }} điểm
                                         </span>
                                     </div>
 
-                                    {{-- Hiển thị lộ trình đón khách thực tế --}}}<div class="route-info-mini">
+                                    {{ -- Hiển thị lộ trình đón khách thực tế -- }}<div class="route-info-mini">
                                         <span class="text-truncate d-block"
                                             title="{{ $trip->pickupPoints->pluck('name')->implode(' → ') }}">
                                             <strong>Dừng:</strong>
-                                            {{ $trip->pickupPoints->pluck('name')->implode(' → ') ?: 'Chưa thiết lập' }}}</span>
+                                            {{ $trip->pickupPoints->pluck('name')->implode(' → ') ?: 'Chưa thiết lập' }}</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-bold text-primary" style="font-size: 15px;">{{ $trip->departure_time }}}</div>
-                                    <div class="text-muted small mt-1">Đến dự kiến: {{ $trip->arrival_time }}}</div>
+                                    <div class="fw-bold text-primary" style="font-size: 15px;">{{ $trip->departure_time }}</div>
+                                    <div class="text-muted small mt-1">Đến dự kiến: {{ $trip->arrival_time }}</div>
                                 </td>
                                 <td>
                                     <div class="fw-bold" style="font-size: 13px;"><i class='bx bx-bus text-muted'></i>
-                                        {{ $trip->vehicle->license_plate }}}</div>
+                                        {{ $trip->vehicle->license_plate }}</div>
                                     <div class="text-muted small mt-1"><i class='bx bx-user-pin text-muted'></i>
-                                        {{ $trip->driver->name }}}</div>
+                                        {{ $trip->driver->name }}</div>
                                 </td>
                                 <td><span class="price-text">{{ number_format($trip->price) }}đ</span></td>
                                 <td>
@@ -212,16 +212,16 @@
                                             <i class='bx bx-show text-info'></i>
                                         </a>
                                         <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}"
-                                            title="="{{{ __('pickup_points') }">
+                                            title="="{{ __('pickup_points') }}">
                                             <i class='bx bx-map-alt text-warning'></i>
                                         </a>
-                                        <a href="{{ route('admin.trips.edit', $trip->id) }}" title="="{{{ __('edit') }">
+                                        <a href="{{ route('admin.trips.edit', $trip->id) }}" title="="{{ __('edit') }}">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
                                         <form action="{{ route('admin.trips.destroy', $trip->id) }}" method="POST"
                                             onsubmit="return confirm('Hủy chuyến xe này?')">
                                             @csrf @method('DELETE')
-                                            <button type="submit" title="="{{{ __('cancel') }">
+                                            <button type="submit" title="="{{ __('cancel') }}">
                                                 <i class='bx bx-trash text-danger'></i>
                                             </button>
                                         </form>
@@ -237,7 +237,7 @@
                 </table>
             </div>
             <div class="mt-4">
-                {{ $trips->appends(request()->query())->links('pagination::bootstrap-5') }}}</div>
+                {{ $trips->appends(request()->query())->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 @endsection

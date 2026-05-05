@@ -11,23 +11,23 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>{{{ __('users') }}</th>
-                        <th>{{{ __('amount') }}</th>
+                        <th>{{ __('users') }}</th>
+                        <th>{{ __('amount') }}</th>
                         <th>Loại</th>
-                        <th>{{{ __('status') }}</th>
-                        <th>{{{ __('actions') }}</th>
+                        <th>{{ __('status') }}</th>
+                        <th>{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($transactions as $transaction)
                     <tr>
-                        <td>{{ $transaction->id }}}</td>
-                        <td>{{ $transaction->user->name ?? 'N/A' }}}</td>
-                        <td>{{ number_format($transaction->amount) }}} VND</td>
-                        <td>{{ $transaction->type }}}</td>
-                        <td><span class="badge bg-{{ $transaction->status == 'success' ? 'success' : 'warning' }}">{{ $transaction->status }}}</span></td>
+                        <td>{{ $transaction->id }}</td>
+                        <td>{{ $transaction->user->name ?? 'N/A' }}</td>
+                        <td>{{ number_format($transaction->amount) }} VND</td>
+                        <td>{{ $transaction->type }}</td>
+                        <td><span class="badge bg-{{ $transaction->status == 'success' ? 'success' : 'warning' }}">{{ $transaction->status }}</span></td>
                         <td>
-                            <a href="{{ route('admin.transactions.show', $transaction) }}" class="btn btn-sm btn-outline-primary">{{{ __('view') }}</a>
+                            <a href="{{ route('admin.transactions.show', $transaction) }}" class="btn btn-sm btn-outline-primary">{{ __('view') }}</a>
                         </td>
                     </tr>
                     @empty
@@ -36,6 +36,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $transactions->links() }}}</div>
+        {{ $transactions->links() }}</div>
 </div>
 @endsection

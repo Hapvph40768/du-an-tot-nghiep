@@ -12,20 +12,20 @@
                     <tr class="text-muted small text-uppercase">
                         <th>Mã thanh toán</th>
                         <th>Booking</th>
-                        <th>{{{ __('amount') }}</th>
+                        <th>{{ __('amount') }}</th>
                         <th>Phương thức</th>
-                        <th>{{{ __('status') }}</th>
-                        <th>{{{ __('actions') }}</th>
+                        <th>{{ __('status') }}</th>
+                        <th>{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($payments as $payment)
                     <tr>
-                        <td>{{ $payment->id }}}</td>
-                        <td>{{ $payment->booking->booking_code ?? 'N/A' }}}</td>
-                        <td>{{ number_format($payment->amount) }}} VND</td>
-                        <td>{{ $payment->payment_method }}}</td>
-                        <td><span class="badge bg-{{ $payment->status == 'success' ? 'success' : 'warning' }}">{{ $payment->status }}}</span></td>
+                        <td>{{ $payment->id }}</td>
+                        <td>{{ $payment->booking->booking_code ?? 'N/A' }}</td>
+                        <td>{{ number_format($payment->amount) }} VND</td>
+                        <td>{{ $payment->payment_method }}</td>
+                        <td><span class="badge bg-{{ $payment->status == 'success' ? 'success' : 'warning' }}">{{ $payment->status }}</span></td>
                         <td>
                             <form method="POST" action="{{ route('admin.payments.update', $payment) }}">
                                 @csrf @method('PUT')
@@ -43,6 +43,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $payments->links() }}}</div>
+        {{ $payments->links() }}</div>
 </div>
 @endsection

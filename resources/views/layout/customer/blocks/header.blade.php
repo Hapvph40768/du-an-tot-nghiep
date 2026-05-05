@@ -17,10 +17,10 @@
                 </div>
 
                 <nav class="hidden md:flex items-center gap-6 text-sm">
-                    <a href="{{ url('/#search') }}" class="hover:text-amber-300 transition-colors">{{{ __('bookings') }}</a>
-                    <a href="{{ url('/#routes') }}" class="hover:text-amber-300 transition-colors">{{{ __('routes') }}</a>
+                    <a href="{{ url('/#search') }}" class="hover:text-amber-300 transition-colors">{{ __('bookings') }}</a>
+                    <a href="{{ url('/#routes') }}" class="hover:text-amber-300 transition-colors">{{ __('routes') }}</a>
                     <a href="{{ url('/#features') }}" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
-                    {{-- <a href="{{ route('customer.support.index') }}" class="hover:text-amber-300 transition-colors @yield('active-support-index')">{{{ __('contact') }}</a> --}}}</nav>
+                    {{ -- <a href="{{ route('customer.support.index') }}" class="hover:text-amber-300 transition-colors @yield('active-support-index')">{{ __('contact') }}</a> --}}</nav>
 
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
@@ -33,7 +33,7 @@
 
                     <!-- Logout -->
                     <div class="flex items-center gap-3">
-                        {{-- Hiển thị khi CHƯA đăng nhập --}}} @guest
+                        {{ -- Hiển thị khi CHƯA đăng nhập -- }} @guest
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('login') }}"
                                     class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
@@ -46,21 +46,21 @@
                             </div>
                         @endguest
 
-                        {{-- Hiển thị khi ĐÃ đăng nhập --}}} @auth
+                        {{ -- Hiển thị khi ĐÃ đăng nhập -- }} @auth
                             <div class="flex items-center gap-4">
                                 <a href="{{ route('customer.bookings.index') }}"
                                     class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Vé của tôi
                                 </a>
                                 <a href="{{ route('customer.profile.edit') }}" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
-                                    Chào, {{ Auth::user()->name }}}</a>
+                                    Chào, {{ Auth::user()->name }}</a>
 
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit"
                                         class="flex items-center gap-2 text-sm font-bold bg-white/10 hover:bg-red-500/20 text-white px-4 py-2 rounded-lg border border-white/20 transition-all">
                                         <i class='bx bx-log-out text-lg'></i>
-                                        <span>{{{ __('logout') }}</span>
+                                        <span>{{ __('logout') }}</span>
                                     </button>
                                 </form>
                             </div>

@@ -9,7 +9,7 @@
         <form method="POST" action="{{ route('admin.invoices.store') }}">
             @csrf
             <div class="mb-3">
-                <label class="form-label">{{{ __('name') }} khách hàng</label>
+                <label class="form-label">{{ __('name') }} khách hàng</label>
                 <input type="text" name="customer_name" class="form-control" required>
             </div>
             <div class="mb-3">
@@ -17,7 +17,7 @@
                 <input type="text" name="booking_code" class="form-control">
             </div>
             <div class="mb-3">
-                <label class="form-label">{{{ __('amount') }}</label>
+                <label class="form-label">{{ __('amount') }}</label>
                 <input type="number" name="amount" class="form-control" required>
             </div>
             <div class="mb-3">

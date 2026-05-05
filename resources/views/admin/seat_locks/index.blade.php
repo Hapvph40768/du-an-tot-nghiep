@@ -15,7 +15,7 @@
                 <option value="">-- Chọn chuyến đi --</option>
                 @foreach($trips as $trip)
                     <option value="{{ $trip->id }}" {{ request('trip_id') == $trip->id ? 'selected' : '' }}>
-                        {{ $trip->route->departureLocation->name ?? '' }}} - {{ $trip->route->destinationLocation->name ?? '' }}} ({{ $trip->trip_date }})
+                        {{ $trip->route->departureLocation->name ?? '' }} - {{ $trip->route->destinationLocation->name ?? '' }} ({{ $trip->trip_date }})
                     </option>
                 @endforeach
             </select>
@@ -27,20 +27,20 @@
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
                         <th>Chuyến đi</th>
-                        <th>{{{ __('seats') }}</th>
+                        <th>{{ __('seats') }}</th>
                         <th>Người khóa</th>
                         <th>Hết hạn</th>
-                        <th>{{{ __('actions') }}</th>
+                        <th>{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($seatLocks as $lock)
                     <tr>
-                        <td>{{ $lock->id }}}</td>
-                        <td>{{ $lock->trip->route->departureLocation->name ?? '' }}} - {{ $lock->trip->route->destinationLocation->name ?? '' }}}</td>
-                        <td>{{ $lock->seat->seat_code ?? 'N/A' }}}</td>
-                        <td>{{ $lock->user->name ?? 'Khách vãng lai' }}}</td>
-                        <td>{{ $lock->locked_until->format('H:i d/m') }}}</td>
+                        <td>{{ $lock->id }}</td>
+                        <td>{{ $lock->trip->route->departureLocation->name ?? '' }} - {{ $lock->trip->route->destinationLocation->name ?? '' }}</td>
+                        <td>{{ $lock->seat->seat_code ?? 'N/A' }}</td>
+                        <td>{{ $lock->user->name ?? 'Khách vãng lai' }}</td>
+                        <td>{{ $lock->locked_until->format('H:i d/m') }}</td>
                         <td>
                             <form method="POST" action="{{ route('admin.seat-locks.destroy', $lock) }}">
                                 @csrf
@@ -55,6 +55,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $seatLocks->links() }}}</div>
+        {{ $seatLocks->links() }}</div>
 </div>
 @endsection

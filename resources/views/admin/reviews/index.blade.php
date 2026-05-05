@@ -9,17 +9,17 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-dark m-0">{{{ __('reviews') }} từ khách hàng</h2>
+            <h2 class="fw-bold text-dark m-0">{{ __('reviews') }} từ khách hàng</h2>
             <p class="text-muted small mb-0">Lắng nghe phản hồi và xử lý các đánh giá vi phạm</p>
         </div>
         <div class="badge bg-white border text-dark p-2 rounded-3 shadow-sm">
-            <span class="text-muted">{{{ __('total') }} số:</span> <span class="fw-bold">{{ $reviews->total() }}}</span>
+            <span class="text-muted">{{ __('total') }} số:</span> <span class="fw-bold">{{ $reviews->total() }}</span>
         </div>
     </div>
 
     @if (session('success'))
         <div class="alert alert-success border-0 shadow-sm mb-4">
-            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}}</div>
+            <i class='bx bx-check-circle me-2'></i> {{ session('success') }}</div>
     @endif
 
     <div class="card-box">
@@ -38,8 +38,8 @@
                     @forelse ($reviews as $review)
                         <tr>
                             <td>
-                                <div class="fw-bold text-dark">{{ $review->user->name }}}</div>
-                                <div class="text-muted" style="font-size: 11px;">{{ $review->created_at->format('d/m/Y H:i') }}}</div>
+                                <div class="fw-bold text-dark">{{ $review->user->name }}</div>
+                                <div class="text-muted" style="font-size: 11px;">{{ $review->created_at->format('d/m/Y H:i') }}</div>
                             </td>
                             <td>
                                 <div class="star-rating">
@@ -57,9 +57,9 @@
                             <td>
                                 @if($review->booking && $review->booking->trip)
                                     <div class="trip-info mb-1">
-                                        <i class='bx bx-map-pin'></i> {{ $review->booking->trip->route->departureLocation->name ?? 'N/A' }}} → {{ $review->booking->trip->route->destinationLocation->name ?? 'N/A' }}}</div>
+                                        <i class='bx bx-map-pin'></i> {{ $review->booking->trip->route->departureLocation->name ?? 'N/A' }} → {{ $review->booking->trip->route->destinationLocation->name ?? 'N/A' }}</div>
                                     <div class="small text-muted">
-                                        Ngày: {{ \Carbon\Carbon::parse($review->booking->trip->trip_date)->format('d/m/Y') }}}</div>
+                                        Ngày: {{ \Carbon\Carbon::parse($review->booking->trip->trip_date)->format('d/m/Y') }}</div>
                                 @else
                                     <span class="text-muted italic small">Dữ liệu chuyến đi đã bị xóa</span>
                                 @endif
@@ -87,7 +87,7 @@
         </div>
 
         <div class="mt-4">
-            {{ $reviews->links('pagination::bootstrap-5') }}}</div>
+            {{ $reviews->links('pagination::bootstrap-5') }}</div>
     </div>
 </div>
 @endsection

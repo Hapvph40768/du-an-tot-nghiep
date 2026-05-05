@@ -3,11 +3,11 @@
 @section('content-main')
     <section class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Chi tiết đơn đặt vé #{{ $booking->id }}}</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">Chi tiết đơn đặt vé #{{ $booking->id }}</h2>
 
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">
-                    {{ session('success') }}}</div>
+                    {{ session('success') }}</div>
             @endif
 
             <div class="grid md:grid-cols-2 gap-6">
@@ -15,21 +15,21 @@
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Thông tin chuyến đi</h3>
                     <div class="space-y-3 text-sm">
                         <p class="flex justify-between"><span class="text-gray-500">Tuyến:</span> <span
-                                class="font-bold text-gray-800 text-right">{{ $booking->trip->route->departureLocation->name ?? '...' }}} → {{ $booking->trip->route->destinationLocation->name ?? '...' }}}</span></p>
+                                class="font-bold text-gray-800 text-right">{{ $booking->trip->route->departureLocation->name ?? '...' }} → {{ $booking->trip->route->destinationLocation->name ?? '...' }}</span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Khởi hành:</span> <span
-                                class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }}} lúc {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}}</span></p>
+                                class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }} lúc {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}</span></p>
                         <p class="flex justify-between"><span class="text-gray-500">Số điện thoại xe:</span> <span
                                 class="font-medium text-gray-800"><a
                                     href="tel:{{ $booking->trip->vehicle->phone_vehicles ?? '' }}"
-                                    class="text-indigo-700">{{ $booking->trip->vehicle->phone_vehicles ?? 'Chưa có' }}}</a></span>
+                                    class="text-indigo-700">{{ $booking->trip->vehicle->phone_vehicles ?? 'Chưa có' }}</a></span>
                         </p>
-                        <p class="flex justify-between border-t pt-3"><span class="text-gray-500">{{{ __('pickup_points') }:</span> <span
-                                class="font-medium text-indigo-700 text-right">{{ $booking->pickupPoint->name ?? 'Không có thông tin' }}}<br><span
+                        <p class="flex justify-between border-t pt-3"><span class="text-gray-500">{{ __('pickup_points') }}:</span> <span
+                                class="font-medium text-indigo-700 text-right">{{ $booking->pickupPoint->name ?? 'Không có thông tin' }}<br><span
                                     class="text-xs text-gray-500">({{ $booking->pickupPoint->address ?? '' }})</span></span>
                         </p>
                         @if($booking->dropoffPoint)
                         <p class="flex justify-between pt-2"><span class="text-gray-500">Điểm trả khách:</span> <span
-                                class="font-medium text-rose-600 text-right">{{ $booking->dropoffPoint->name }}}<br><span
+                                class="font-medium text-rose-600 text-right">{{ $booking->dropoffPoint->name }}<br><span
                                     class="text-xs text-gray-500">({{ $booking->dropoffPoint->address ?? '' }})</span></span>
                         </p>
                         @else
@@ -44,10 +44,10 @@
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Thông tin khách hàng & Thanh toán</h3>
                     <div class="space-y-3 text-sm">
                         <p class="flex justify-between"><span class="text-gray-500">Người đặt:</span> <span
-                                class="font-medium text-gray-800">{{ $booking->contact_name }}}</span></p>
-                        <p class="flex justify-between"><span class="text-gray-500">{{{ __('phone') }:</span> <span
-                                class="font-medium text-gray-800">{{ $booking->contact_phone }}}</span></p>
-                        <p class="flex justify-between items-center"><span class="text-gray-500">{{{ __('status') }:</span>
+                                class="font-medium text-gray-800">{{ $booking->contact_name }}</span></p>
+                        <p class="flex justify-between"><span class="text-gray-500">{{ __('phone') }}:</span> <span
+                                class="font-medium text-gray-800">{{ $booking->contact_phone }}</span></p>
+                        <p class="flex justify-between items-center"><span class="text-gray-500">{{ __('status') }}:</span>
                             @if ($booking->status == 'pending')
                                 <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Chờ thanh
                                     toán</span>
@@ -56,13 +56,13 @@
                                     toán</span>
                             @else
                                 <span
-                                    class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold">{{ $booking->status }}}</span>
+                                    class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold">{{ $booking->status }}</span>
                             @endif
                         </p>
                         <p class="flex justify-between items-center border-t pt-3">
-                            <span class="text-gray-500">{{{ __('total') }} tiền:</span>
+                            <span class="text-gray-500">{{ __('total') }} tiền:</span>
                             <span
-                                class="font-bold text-amber-600 text-xl">{{ number_format($booking->total_amount, 0, ',', '.') }}} đ</span>
+                                class="font-bold text-amber-600 text-xl">{{ number_format($booking->total_amount, 0, ',', '.') }} đ</span>
                         </p>
 
                         @if ($booking->status == 'pending')
@@ -110,10 +110,10 @@
                                     class="absolute top-0 right-0 bg-green-500 text-white text-[10px] uppercase tracking-wider px-2 py-1 rounded-bl-lg font-bold">
                                     Xác nhận</div>
                                 <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Mã vé điện tử</p>
-                                <p class="font-mono font-bold text-lg text-gray-800 mb-2">{{ $ticket->ticket_code }}}</p>
+                                <p class="font-mono font-bold text-lg text-gray-800 mb-2">{{ $ticket->ticket_code }}</p>
                                 <div class="flex items-end justify-between border-t border-indigo-100 pt-2 mt-2">
-                                    <span class="text-xs text-gray-600">{{{ __('seats') }} ngồi</span>
-                                    <span class="font-bold text-2xl text-amber-600">{{ $ticket->seat->seat_number }}}</span>
+                                    <span class="text-xs text-gray-600">{{ __('seats') }} ngồi</span>
+                                    <span class="font-bold text-2xl text-amber-600">{{ $ticket->seat->seat_number }}</span>
                                 </div>
                             </div>
                         @endforeach
@@ -121,7 +121,7 @@
                 @endif
             </div>
 
-            {{-- Lưu ý quầy check-in --}}}<div class="rounded-xl p-5 mt-6 flex gap-4 items-start shadow-sm border
+            {{ -- Lưu ý quầy check-in -- }}<div class="rounded-xl p-5 mt-6 flex gap-4 items-start shadow-sm border
                 {{ $booking->status == 'paid' ? 'bg-amber-50 border-amber-300' : 'bg-blue-50 border-blue-300' }}">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center
                     {{ $booking->status == 'paid' ? 'bg-amber-400' : 'bg-blue-400' }}">
@@ -146,23 +146,23 @@
                         @if($booking->tickets->isNotEmpty())
                         <li class="flex items-start gap-2">
                             <i class="fas fa-ticket-alt mt-0.5 flex-shrink-0"></i>
-                            <span>{{{ __('export') }} trình <strong>mã vé điện tử</strong>:
-                                <span class="font-mono font-bold">{{ $booking->tickets->pluck('ticket_code')->join(', ') }}}</span>
+                            <span>{{ __('export') }} trình <strong>mã vé điện tử</strong>:
+                                <span class="font-mono font-bold">{{ $booking->tickets->pluck('ticket_code')->join(', ') }}</span>
                                 — hoặc CCCD/Hộ chiếu.
                             </span>
                         </li>
                         @endif
                         <li class="flex items-start gap-2">
                             <i class="fas fa-map-marker-alt mt-0.5 flex-shrink-0"></i>
-                            <span>{{{ __('pickup_points') }: <strong>{{ $booking->pickupPoint->name ?? 'Chưa xác định' }}}</strong>
+                            <span>{{ __('pickup_points') }}: <strong>{{ $booking->pickupPoint->name ?? 'Chưa xác định' }}</strong>
                                 @if($booking->pickupPoint?->address)
-                                — {{ $booking->pickupPoint->address }}} @endif
+                                — {{ $booking->pickupPoint->address }} @endif
                             </span>
                         </li>
                         @if($booking->dropoffPoint)
                         <li class="flex items-start gap-2">
                             <i class="fas fa-flag-checkered mt-0.5 flex-shrink-0"></i>
-                            <span>Điểm trả khách: <strong>{{ $booking->dropoffPoint->name }}}</strong> — nhớ thông báo tài xế trước khi lên xe.</span>
+                            <span>Điểm trả khách: <strong>{{ $booking->dropoffPoint->name }}</strong> — nhớ thông báo tài xế trước khi lên xe.</span>
                         </li>
                         @endif
                         <li class="flex items-start gap-2">
@@ -170,7 +170,7 @@
                             <span>Hotline nhà xe:
                                 <a href="tel:{{ $booking->trip->vehicle->phone_vehicles ?? '' }}"
                                    class="font-bold underline {{ $booking->status == 'paid' ? 'text-amber-800' : 'text-blue-800' }}">
-                                    {{ $booking->trip->vehicle->phone_vehicles ?? 'Xem trên vé' }}}</a>
+                                    {{ $booking->trip->vehicle->phone_vehicles ?? 'Xem trên vé' }}</a>
                             </span>
                         </li>
                     </ul>
@@ -187,9 +187,9 @@
             @if ($parking && $parking->slots && $parking->slots->count() > 0)
                 <div class="bg-white rounded-xl shadow-sm p-6 mt-6 border border-gray-100">
                     <h3 class="font-bold text-lg border-b pb-3 mb-4 text-gray-800">Sơ đồ bãi đỗ xe hiện tại:
-                        {{ $parking->name }}}</h3>
+                        {{ $parking->name }}</h3>
                     <p class="text-sm text-gray-500 mb-6"><i class="fas fa-map-marker-alt text-amber-500 mr-2"></i>
-                        {{ $parking->location ?? '' }}} - {{ $parking->description ?? '' }}}</p>
+                        {{ $parking->location ?? '' }} - {{ $parking->description ?? '' }}</p>
 
                     <!-- Map Legend -->
                     <div class="flex flex-wrap items-center gap-4 mb-8 text-sm bg-gray-50 p-4 rounded-lg">
@@ -223,7 +223,7 @@
                         <div class="mb-8 last:mb-0">
                             <h4
                                 class="font-bold text-md mb-4 text-indigo-700 bg-indigo-50 inline-block px-4 py-1.5 rounded-full">
-                                {{ $zoneName }}}</h4>
+                                {{ $zoneName }}</h4>
 
                             <div class="overflow-x-auto pb-4">
                                 @php
@@ -235,7 +235,7 @@
                                     $grid = [];
                                     foreach ($zoneSlots as $slot) {
                                         $grid[$slot->row][$slot->column] = $slot;
-                                    }} @endphp
+                                    } @endphp
 
                                 <table class="border-collapse border-spacing-2 mx-auto">
                                     @for ($r = $zoneMinRow; $r <= $zoneMaxRow; $r++)
@@ -251,22 +251,22 @@
                                                             if ($isMyCar) {
                                                                 $bgColor =
                                                                     'bg-blue-500 text-white border-blue-600 font-bold shadow-md transform scale-105';
-                                                            }} else {
+                                                            } else {
                                                                 if ($slot->status == 'available') {
                                                                     $bgColor =
                                                                         'bg-green-100 border-green-300 text-green-800';
-                                                                }} elseif ($slot->status == 'occupied') {
+                                                                } elseif ($slot->status == 'occupied') {
                                                                     $bgColor = 'bg-red-100 border-red-300 text-red-800';
-                                                                }} elseif ($slot->status == 'reserved') {
+                                                                } elseif ($slot->status == 'reserved') {
                                                                     $bgColor =
                                                                         'bg-yellow-100 border-yellow-300 text-yellow-800';
-                                                                }}} @endphp
-                                                        <div class="w-16 h-16 sm:w-24 sm:h-24 flex flex-col items-center justify-center border-2 rounded-xl shadow-sm {{ $bgColor }}} transition-all"
-                                                            title="Vị trí: {{ $slot->slot_code }}} - Trạng thái: {{ ucfirst($slot->status) }}">
+                                                                } @endphp
+                                                        <div class="w-16 h-16 sm:w-24 sm:h-24 flex flex-col items-center justify-center border-2 rounded-xl shadow-sm {{ $bgColor }} transition-all"
+                                                            title="Vị trí: {{ $slot->slot_code }} - Trạng thái: {{ ucfirst($slot->status) }}">
                                                             <span
-                                                                class="text-[10px] sm:text-xs {{ $isMyCar ? 'text-blue-100' : 'text-gray-500' }}} block mb-1 uppercase font-semibold">{{ $slot->slot_type }}}</span>
+                                                                class="text-[10px] sm:text-xs {{ $isMyCar ? 'text-blue-100' : 'text-gray-500' }} block mb-1 uppercase font-semibold">{{ $slot->slot_type }}</span>
                                                             <span
-                                                                class="font-mono text-sm sm:text-lg">{{ $slot->slot_code }}}</span>
+                                                                class="font-mono text-sm sm:text-lg">{{ $slot->slot_code }}</span>
                                                             @if ($isMyCar)
                                                                 <i
                                                                     class="fas fa-bus-alt mt-1 sm:mt-2 text-sm sm:text-base"></i>

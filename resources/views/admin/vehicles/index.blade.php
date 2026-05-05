@@ -78,7 +78,7 @@
 
         @if (session('success'))
             <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-                <i class='bx bx-check-circle'></i> {{ session('success') }}}</div>
+                <i class='bx bx-check-circle'></i> {{ session('success') }}</div>
         @endif
 
         <div class="card-box">
@@ -90,7 +90,7 @@
                             <th style="width: 25%;">Loại xe</th>
                             <th style="width: 15%;">Số ghế</th>
                             <th style="width: 20%;">Số điện thoại</th>
-                            <th style="width: 20%;">{{{ __('status') }}</th>
+                            <th style="width: 20%;">{{ __('status') }}</th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
                     </thead>
@@ -98,16 +98,16 @@
                         @forelse ($vehicles as $vehicle)
                             <tr>
                                 <td class="ps-4">
-                                    <div class="fw-bold text-dark">{{ $vehicle->license_plate }}}</div>
+                                    <div class="fw-bold text-dark">{{ $vehicle->license_plate }}</div>
                                 </td>
 
                                 <td>
-                                    <span class="text-muted small fw-bold">{{ $vehicle->type }}}</span>
+                                    <span class="text-muted small fw-bold">{{ $vehicle->type }}</span>
                                 </td>
 
                                 <td>
                                     <span class="badge bg-light text-dark border">
-                                        {{ $vehicle->total_seats }}} ghế
+                                        {{ $vehicle->total_seats }} ghế
                                     </span>
                                 </td>
 
@@ -115,7 +115,7 @@
                                 <td>
                                     @if ($vehicle->phone_vehicles)
                                         <i class='bx bxs-phone-call text-success me-1'></i>
-                                        {{ $vehicle->phone_vehicles }}} @else
+                                        {{ $vehicle->phone_vehicles }} @else
                                         <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
@@ -140,7 +140,7 @@
                                         </a>
 
                                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                            class="btn btn-sm btn-light border" title="="{{{ __('edit') }">
+                                            class="btn btn-sm btn-light border" title="="{{ __('edit') }}">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
 
@@ -148,7 +148,7 @@
                                             onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-sm btn-light border text-danger" title="="{{{ __('delete') }">
+                                            <button class="btn btn-sm btn-light border text-danger" title="="{{ __('delete') }}">
                                                 <i class='bx bx-trash'></i>
                                             </button>
                                         </form>
@@ -167,7 +167,7 @@
                 </table>
             </div>
             <div class="mt-4">
-                {{ $vehicles->links('pagination::bootstrap-5') }}}</div>
+                {{ $vehicles->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 @endsection

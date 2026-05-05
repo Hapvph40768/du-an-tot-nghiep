@@ -25,38 +25,38 @@
             
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    {{ session('success') }}}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
             <div class="card order-card bg-white">
                 <div class="card-header bg-gradient-orange text-white text-center py-4 border-0" style="border-radius: 1.25rem 1.25rem 0 0;">
                     <h4 class="mb-0 fw-bold text-uppercase">Chi Tiết Đơn Hàng</h4>
-                    <p class="mb-0 mt-1 opacity-75 small">Mã: {{ $order->order_code }}}</p>
+                    <p class="mb-0 mt-1 opacity-75 small">Mã: {{ $order->order_code }}</p>
                 </div>
 
                 <div class="card-body p-4 p-md-5">
                     <ul class="list-group list-group-flush mb-4">
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                             <span class="text-muted fw-semibold">Khách hàng</span>
-                            <span class="fw-bold">{{ $order->user->name ?? 'Khách vãng lai' }}}</span>
+                            <span class="fw-bold">{{ $order->user->name ?? 'Khách vãng lai' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                            <span class="text-muted fw-semibold">{{{ __('amount') }}</span>
-                            <span class="fw-bold fs-5" style="color: #ff7a18;">{{ number_format($order->amount) }}} VNĐ</span>
+                            <span class="text-muted fw-semibold">{{ __('amount') }}</span>
+                            <span class="fw-bold fs-5" style="color: #ff7a18;">{{ number_format($order->amount) }} VNĐ</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
                             <span class="text-muted fw-semibold">Phương thức</span>
-                            <span class="badge bg-secondary badge-status text-uppercase">{{ $order->payment_method }}}</span>
+                            <span class="badge bg-secondary badge-status text-uppercase">{{ $order->payment_method }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom-0">
-                            <span class="text-muted fw-semibold">{{{ __('status') }}</span>
+                            <span class="text-muted fw-semibold">{{ __('status') }}</span>
                             @if($order->status == 'pending')
                                 <span class="badge bg-warning text-dark badge-status">⏳ Chờ xử lý</span>
                             @elseif($order->status == 'paid' || $order->status == 'completed')
                                 <span class="badge bg-success badge-status">✅ Đã thanh toán</span>
                             @else
-                                <span class="badge bg-info text-dark badge-status">{{ ucfirst($order->status) }}}</span>
+                                <span class="badge bg-info text-dark badge-status">{{ ucfirst($order->status) }}</span>
                             @endif
                         </li>
                     </ul>

@@ -18,10 +18,12 @@ class TripController extends Controller
         // Tìm kiếm theo biển số xe hoặc tên tài xế
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('vehicle', function ($q) use ($search) {
-                $q->where('license_plate', 'like', "%{$search}%");
-            })->orWhereHas('driver', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('vehicle', function ($q2) use ($search) {
+                    $q2->where('license_plate', 'like', "%{$search}%");
+                })->orWhereHas('driver', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%{$search}%");
+                });
             });
         }
 
@@ -70,11 +72,11 @@ class TripController extends Controller
             'route_id' => 'required|exists:routes,id',
             'vehicle_id' => 'required|exists:vehicles,id',
             'driver_id' => 'required|exists:drivers,id',
-            'trip_date' => 'nullable|date',
-            'departure_time' => 'nullable|date_format:H:i',
-            'arrival_time' => 'nullable|date_format:H:i',
+            'trip_date' => 'required|date|after_or_equal:today',
+            'departure_time' => 'required|date_format:H:i',
+            'arrival_time' => 'required|date_format:H:i',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:active,completed,cancelled',
+            'status' => 'required|in:active,running,broken,completed,cancelled',
         ]);
 
         Trip::create($validated);
@@ -100,7 +102,7 @@ class TripController extends Controller
             'departure_time' => 'required|date_format:H:i',
             'arrival_time' => 'required|date_format:H:i',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|in:active,completed,cancelled',
+            'status' => 'required|in:active,running,broken,completed,cancelled',
         ]);
 
         $trip->update($validated);

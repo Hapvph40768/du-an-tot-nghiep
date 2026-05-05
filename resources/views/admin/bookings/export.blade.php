@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>In Vé Khách Hàng - Đơn #{{ $booking->id }}}</title>
+    <title>In Vé Khách Hàng - Đơn #{{ $booking->id }}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -27,7 +27,7 @@
             border-top: 1px solid #ccc;
             padding-top: 10px;
         }} .text-right { text-align: right; }} .text-center { text-align: center; }} @media print {
-            body { padding: 0; }} .ticket-wrapper { border: none; }} button.print-btn { display: none; }}}</style>
+            body { padding: 0; }} .ticket-wrapper { border: none; }} button.print-btn { display: none; }}</style>
 </head>
 <body>
     <div style="text-align: center; margin-bottom: 20px;">
@@ -40,46 +40,46 @@
         <div class="header">
             <h1>VÉ ĐIỆN TỬ / E-TICKET</h1>
             <p>Hệ thống Đặt Vé Xe Khách Chuyên Nghiệp</p>
-            <p><strong>Mã đơn hàng: #{{ $booking->id }}}</strong> | Ngày đặt: {{ $booking->created_at->format('d/m/Y H:i') }}}</p>
+            <p><strong>Mã đơn hàng: #{{ $booking->id }}</strong> | Ngày đặt: {{ $booking->created_at->format('d/m/Y H:i') }}</p>
         </div>
 
         <div class="row">
             <div class="col">
                 <div class="label">Khách hàng</div>
-                <div class="value">{{ $booking->contact_name }}}</div>
+                <div class="value">{{ $booking->contact_name }}</div>
             </div>
             <div class="col">
-                <div class="label">{{{ __('phone') }}</div>
-                <div class="value">{{ $booking->contact_phone }}}</div>
+                <div class="label">{{ __('phone') }}</div>
+                <div class="value">{{ $booking->contact_phone }}</div>
             </div>
             <div class="col">
-                <div class="label">{{{ __('status') }} thanh toán</div>
-                <div class="value">{{ strtoupper($booking->status) }}}</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <div class="label">{{{ __('routes') }}</div>
-                <div class="value">{{ $booking->trip->route->startLocation->name ?? 'N/A' }}} ➔ {{ $booking->trip->route->endLocation->name ?? 'N/A' }}}</div>
+                <div class="label">{{ __('status') }} thanh toán</div>
+                <div class="value">{{ strtoupper($booking->status) }}</div>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <div class="label">{{{ __('date') }/Giờ xuất phát</div>
-                <div class="value">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }}} - {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}}</div>
+                <div class="label">{{ __('routes') }}</div>
+                <div class="value">{{ $booking->trip->route->startLocation->name ?? 'N/A' }} ➔ {{ $booking->trip->route->endLocation->name ?? 'N/A' }}</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="label">{{ __('date') }}/Giờ xuất phát</div>
+                <div class="value">{{ \Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i') }}</div>
             </div>
             <div class="col">
                 <div class="label">Biển số xe / SĐT Xe</div>
-                <div class="value">{{ $booking->trip->vehicle->license_plate ?? 'N/A' }}} / {{ $booking->trip->vehicle->phone_vehicles ?? 'N/A' }}}</div>
+                <div class="value">{{ $booking->trip->vehicle->license_plate ?? 'N/A' }} / {{ $booking->trip->vehicle->phone_vehicles ?? 'N/A' }}</div>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <div class="label">{{{ __('pickup_points') }}</div>
-                <div class="value">{{ $booking->pickupPoint->name ?? ' Tại bến' }}} ({{ $booking->pickupPoint->address ?? '' }})</div>
+                <div class="label">{{ __('pickup_points') }}</div>
+                <div class="value">{{ $booking->pickupPoint->name ?? ' Tại bến' }} ({{ $booking->pickupPoint->address ?? '' }})</div>
             </div>
         </div>
 
@@ -95,24 +95,24 @@
             <tbody>
                 @foreach($booking->tickets as $index => $ticket)
                 <tr>
-                    <td>{{ $index + 1 }}}</td>
-                    <td><strong>{{ $ticket->ticket_code }}}</strong></td>
-                    <td class="text-center"><strong>{{ $ticket->seat->seat_number }}}</strong></td>
-                    <td class="text-right">{{ number_format($ticket->trip->price) }}} VNĐ</td>
+                    <td>{{ $index + 1 }}</td>
+                    <td><strong>{{ $ticket->ticket_code }}</strong></td>
+                    <td class="text-center"><strong>{{ $ticket->seat->seat_number }}</strong></td>
+                    <td class="text-right">{{ number_format($ticket->trip->price) }} VNĐ</td>
                 </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="3" class="text-right"><strong>TỔNG TIỀN (BAO GỒM GIẢM GIÁ NẾU CÓ):</strong></td>
-                    <td class="text-right"><strong>{{ number_format($booking->total_amount) }}} VNĐ</strong></td>
+                    <td class="text-right"><strong>{{ number_format($booking->total_amount) }} VNĐ</strong></td>
                 </tr>
             </tfoot>
         </table>
 
         <div class="footer">
             <p>Vui lòng có mặt tại điểm đón trước 30 phút để sắp xếp hành lý. Xin cảm ơn quý khách!</p>
-            <p><i>Phần mềm quản lý bán vé xe - Printed at {{ now()->format('d/m/Y H:i:s') }}}</i></p>
+            <p><i>Phần mềm quản lý bán vé xe - Printed at {{ now()->format('d/m/Y H:i:s') }}</i></p>
         </div>
     </div>
     

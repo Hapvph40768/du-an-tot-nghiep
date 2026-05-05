@@ -16,7 +16,7 @@
                 <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
             </select>
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">{{{ __('filter') }}</button>
+            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">{{ __('filter') }}</button>
         </form>
     </div>
 </div>
@@ -27,30 +27,30 @@
             <tr>
                 <th class="px-6 py-4 text-center">ID</th>
                 <th class="px-6 py-4">Khách hàng</th>
-                <th class="px-6 py-4">{{{ __('trips') }}</th>
-                <th class="px-6 py-4 text-right">{{{ __('total') }} tiền</th>
-                <th class="px-6 py-4 text-center">{{{ __('status') }}</th>
+                <th class="px-6 py-4">{{ __('trips') }}</th>
+                <th class="px-6 py-4 text-right">{{ __('total') }} tiền</th>
+                <th class="px-6 py-4 text-center">{{ __('status') }}</th>
                 <th class="px-6 py-4 text-center">Hành động</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-[#e3e3e0] dark:divide-[#262626]">
             @forelse($bookings as $booking)
                 <tr class="hover:bg-gray-50 dark:hover:bg-[#161616] transition-colors">
-                    <td class="px-6 py-4 text-center font-medium opacity-60">#{{ $booking->id }}}</td>
+                    <td class="px-6 py-4 text-center font-medium opacity-60">#{{ $booking->id }}</td>
                     <td class="px-6 py-4">
-                        <div class="font-bold">{{ $booking->contact_name }}}</div>
-                        <div class="text-xs opacity-60 mb-1">{{ $booking->contact_phone }}}</div>
+                        <div class="font-bold">{{ $booking->contact_name }}</div>
+                        <div class="text-xs opacity-60 mb-1">{{ $booking->contact_phone }}</div>
                         @if($booking->tickets->count() > 0)
                             <div class="flex flex-wrap gap-1 mt-1">
                                 @foreach($booking->tickets as $ticket)
-                                    <span class="px-1.5 py-0.5 bg-gray-100 dark:bg-[#222] border border-gray-200 dark:border-[#333] text-[10px] font-bold rounded">{{ $ticket->seat->seat_number ?? '?' }}}</span>
+                                    <span class="px-1.5 py-0.5 bg-gray-100 dark:bg-[#222] border border-gray-200 dark:border-[#333] text-[10px] font-bold rounded">{{ $ticket->seat->seat_number ?? '?' }}</span>
                                 @endforeach
                             </div>
                         @endif
                     </td>
                     <td class="px-6 py-4">
-                        <div class="font-medium text-sm">{{ $booking->trip->route->startLocation->name }}} &rarr; {{ $booking->trip->route->endLocation->name }}}</div>
-                        <div class="text-xs opacity-60">{{ $booking->trip->trip_date }}} | {{ $booking->trip->departure_time }}}</div>
+                        <div class="font-medium text-sm">{{ $booking->trip->route->startLocation->name }} &rarr; {{ $booking->trip->route->endLocation->name }}</div>
+                        <div class="text-xs opacity-60">{{ $booking->trip->trip_date }} | {{ $booking->trip->departure_time }}</div>
                     </td>
                     <td class="px-6 py-4 text-right font-bold text-blue-600">
                         {{ number_format($booking->total_amount) }}đ
@@ -88,6 +88,6 @@
         </tbody>
     </table>
     <div class="p-6 border-t border-[#e3e3e0] dark:border-[#262626]">
-        {{ $bookings->links() }}}</div>
+        {{ $bookings->links() }}</div>
 </div>
 @endsection

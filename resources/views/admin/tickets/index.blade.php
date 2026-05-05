@@ -13,21 +13,21 @@
                         <th>Mã vé</th>
                         <th>Khách hàng</th>
                         <th>Chuyến đi</th>
-                        <th>{{{ __('seats') }}</th>
-                        <th>{{{ __('status') }}</th>
-                        <th>{{{ __('actions') }}</th>
+                        <th>{{ __('seats') }}</th>
+                        <th>{{ __('status') }}</th>
+                        <th>{{ __('actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($tickets as $ticket)
                     <tr>
-                        <td>{{ $ticket->id }}}</td>
-                        <td>{{ $ticket->booking->user->name ?? 'N/A' }}}</td>
-                        <td>{{ $ticket->trip->route->departureLocation->name ?? '' }}} - {{ $ticket->trip->route->destinationLocation->name ?? '' }}}</td>
-                        <td>{{ $ticket->seat->seat_code ?? 'N/A' }}}</td>
-                        <td><span class="badge bg-primary">{{ $ticket->status }}}</span></td>
+                        <td>{{ $ticket->id }}</td>
+                        <td>{{ $ticket->booking->user->name ?? 'N/A' }}</td>
+                        <td>{{ $ticket->trip->route->departureLocation->name ?? '' }} - {{ $ticket->trip->route->destinationLocation->name ?? '' }}</td>
+                        <td>{{ $ticket->seat->seat_code ?? 'N/A' }}</td>
+                        <td><span class="badge bg-primary">{{ $ticket->status }}</span></td>
                         <td>
-                            <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">{{{ __('view') }}</a>
+                            <a href="{{ route('admin.tickets.show', $ticket) }}" class="btn btn-sm btn-outline-primary">{{ __('view') }}</a>
                         </td>
                     </tr>
                     @empty
@@ -36,6 +36,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $tickets->links() }}}</div>
+        {{ $tickets->links() }}</div>
 </div>
 @endsection

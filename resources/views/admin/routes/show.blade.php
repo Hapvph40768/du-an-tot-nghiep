@@ -12,7 +12,7 @@
             <i class='bx bx-left-arrow-alt'></i> QUAY LẠI DANH SÁCH
         </a>
         <div class="d-flex justify-content-between align-items-center mt-2">
-            <h2 class="fw-bold text-dark m-0">{{{ __('details') }} tuyến đường</h2>
+            <h2 class="fw-bold text-dark m-0">{{ __('details') }} tuyến đường</h2>
             <div class="d-flex gap-2">
                 <a href="{{ route('admin.routes.edit', $route->id) }}" class="btn btn-outline-primary rounded-3 px-3">
                     <i class='bx bx-edit'></i> Chỉnh sửa
@@ -24,13 +24,13 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card-box mb-4">
-                <h5 class="fw-bold mb-4">{{{ __('trajectory_mobile') }} di chuyển</h5>
+                <h5 class="fw-bold mb-4">{{ __('trajectory_mobile') }} di chuyển</h5>
                 
-                {{-- Sơ đồ điểm đi - điểm đến --}}}<div class="route-path">
+                {{ -- Sơ đồ điểm đi - điểm đến -- }}<div class="route-path">
                     <div class="location-box">
                         <i class='bx bxs-map text-danger fs-2'></i>
-                        <div class="small text-muted text-uppercase">{{{ __('departure') }}</div>
-                        <div class="location-name">{{ $route->departureLocation->name }}}</div>
+                        <div class="small text-muted text-uppercase">{{ __('departure') }}</div>
+                        <div class="location-name">{{ $route->departureLocation->name }}</div>
                     </div>
                     
                     <div class="arrow-icon">
@@ -40,18 +40,18 @@
                     <div class="location-box">
                         <i class='bx bxs-map-pin text-success fs-2'></i>
                         <div class="small text-muted text-uppercase">Điểm kết thúc</div>
-                        <div class="location-name">{{ $route->destinationLocation->name }}}</div>
+                        <div class="location-name">{{ $route->destinationLocation->name }}</div>
                     </div>
                 </div>
 
                 <div class="row g-4">
                     <div class="col-md-6 border-end">
                         <div class="info-label"><i class='bx bx-navigation'></i> Khoảng cách quãng đường</div>
-                        <div class="info-value text-primary fs-4">{{ $route->distance }}}<span class="small fw-normal text-muted">km</span></div>
+                        <div class="info-value text-primary fs-4">{{ $route->distance }}<span class="small fw-normal text-muted">km</span></div>
                     </div>
                     <div class="col-md-6">
                         <div class="info-label"><i class='bx bx-time-five'></i> Thời gian hành trình dự kiến</div>
-                        <div class="info-value text-primary fs-4">{{ $route->duration }}}<span class="small fw-normal text-muted">giờ</span></div>
+                        <div class="info-value text-primary fs-4">{{ $route->duration }}<span class="small fw-normal text-muted">giờ</span></div>
                     </div>
                 </div>
             </div>
@@ -61,17 +61,17 @@
                 <div class="row">
                     <div class="col-6 mb-3">
                         <div class="info-label">Mã ID hệ thống</div>
-                        <div class="fw-bold">#{{ $route->id }}}</div>
+                        <div class="fw-bold">#{{ $route->id }}</div>
                     </div>
                     <div class="col-6 mb-3">
-                        <div class="info-label">{{{ __('date') }} khởi tạo</div>
-                        <div class="fw-bold text-muted small">{{ $route->created_at->format('d/m/Y H:i:s') }}}</div>
+                        <div class="info-label">{{ __('date') }} khởi tạo</div>
+                        <div class="fw-bold text-muted small">{{ $route->created_at->format('d/m/Y H:i:s') }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Cột bên phải (Dùng để hiển thị thống kê hoặc lịch trình chuyến đi sau này) --}}}<div class="col-md-4">
+        {{ -- Cột bên phải (Dùng để hiển thị thống kê hoặc lịch trình chuyến đi sau này) -- }}<div class="col-md-4">
             <div class="card-box bg-light border-0">
                 <h6 class="fw-bold text-dark mb-3">Ghi chú vận hành</h6>
                 <p class="small text-muted mb-0">
