@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('trip_id')->nullable()->constrained('trips')->cascadeOnDelete();
             $table->foreignId('seat_id')->nullable()->constrained('seats')->cascadeOnDelete();
             $table->string('ticket_code')->unique()->nullable();
-            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'used'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'used', 'no_show'])->default('pending');
             $table->timestamps();
 
             $table->unique(['trip_id', 'seat_id']);

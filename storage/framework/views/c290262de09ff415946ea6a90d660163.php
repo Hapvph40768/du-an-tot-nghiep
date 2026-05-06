@@ -56,8 +56,7 @@
                                     class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
                                     Vé của tôi
                                 </a>
-                                <a href="<?php echo e(route('customer.profile.edit')); ?>"
-                                    class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
+                                <a href="<?php echo e(route('customer.profile.edit')); ?>" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
                                     Chào, <?php echo e(Auth::user()->name); ?>
 
                                 </a>

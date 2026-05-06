@@ -11,9 +11,13 @@ class TicketController extends Controller
     // Xem danh sách toàn bộ vé (có thể thêm bộ lọc theo chuyến đi ở View)
     public function index(Request $request)
     {
-        $tickets = Ticket::with(['booking.user', 'trip.route', 'seat'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(30);
+        $query = Ticket::with(['booking.user', 'trip.route', 'seat']);
+        
+        if ($request->filled('trip_id')) {
+            $query->where('trip_id', $request->trip_id);
+        }
+
+        $tickets = $query->orderBy('created_at', 'desc')->paginate(30);
 
         return view('admin.tickets.index', compact('tickets'));
     }

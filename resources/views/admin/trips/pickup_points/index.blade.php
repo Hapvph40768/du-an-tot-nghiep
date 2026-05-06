@@ -3,7 +3,7 @@
 @section('content-main')
 <div class="container-fluid py-4">
     <div class="mb-4">
-        <a href="{{ route('admin.trips.index') }}" class="text-decoration-none text-muted small fw-bold"><i class='bx bx-left-arrow-alt'></i> QUAY LẠI LỊCH TRÌNH</a>
+        <a href="{{ route('admin.trips.show', $trip->id) }}" class="text-decoration-none text-muted small fw-bold"><i class='bx bx-left-arrow-alt'></i> QUAY LẠI CHI TIẾT CHUYẾN</a>
         <h2 class="fw-bold text-dark mt-2">Thiết lập lộ trình dừng đón</h2>
         <p class="text-muted">Chuyến: <span class="text-primary fw-bold">{{ $trip->route->departureLocation->name }} → {{ $trip->route->destinationLocation->name }}</span></p>
     </div>

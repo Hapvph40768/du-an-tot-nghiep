@@ -2,12 +2,14 @@
 
 @section('content-main')
 <section class="py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto px-4">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Ký gửi hàng hóa</h1>
-            <p class="text-gray-600 mt-2">Điền thông tin gửi hàng và chọn tuyến đi. Chúng tôi sẽ xử lý yêu cầu ký gửi của bạn.</p>
+    <div class="max-w-3xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Tạo Đơn Ký gửi hàng hóa</h2>
+            <a href="{{ route('customer.parcels.index') }}" class="text-amber-600 hover:text-amber-800 font-medium">
+                &larr; Quay lại
+            </a>
         </div>
-
+        
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">{{ session('success') }}</div>
         @endif
@@ -22,75 +24,70 @@
             </div>
         @endif
 
-        <div class="bg-white shadow-sm rounded-3xl border border-gray-100 p-8">
+        <div class="bg-white rounded-xl shadow-sm p-8">
             <form action="{{ route('customer.parcels.store') }}" method="POST">
                 @csrf
-
-                <div class="grid gap-6 md:grid-cols-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Sender Info -->
                     <div>
-                        <label for="sender_name" class="block text-gray-700 font-medium mb-2">Người gửi</label>
-                        <input type="text" name="sender_name" id="sender_name" value="{{ old('sender_name', Auth::user()->name ?? '') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người gửi</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người gửi <span class="text-red-500">*</span></label>
+                            <input type="text" name="sender_name" value="{{ old('sender_name', Auth::user()->name ?? '') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                            <input type="text" name="sender_phone" value="{{ old('sender_phone', Auth::user()->phone ?? '') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                        </div>
                     </div>
 
+                    <!-- Receiver Info -->
                     <div>
-                        <label for="sender_phone" class="block text-gray-700 font-medium mb-2">Số điện thoại người gửi</label>
-                        <input type="text" name="sender_phone" id="sender_phone" value="{{ old('sender_phone', Auth::user()->phone ?? '') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
-                    </div>
-
-                    <div>
-                        <label for="receiver_name" class="block text-gray-700 font-medium mb-2">Người nhận</label>
-                        <input type="text" name="receiver_name" id="receiver_name" value="{{ old('receiver_name') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
-                    </div>
-
-                    <div>
-                        <label for="receiver_phone" class="block text-gray-700 font-medium mb-2">Số điện thoại người nhận</label>
-                        <input type="text" name="receiver_phone" id="receiver_phone" value="{{ old('receiver_phone') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
-                    </div>
-                </div>
-
-                <div class="grid gap-6 md:grid-cols-3 mt-6">
-                    <div>
-                        <label for="weight" class="block text-gray-700 font-medium mb-2">Trọng lượng (kg)</label>
-                        <input type="number" step="0.01" min="0" name="weight" id="weight" value="{{ old('weight') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
-                    </div>
-
-                    <div>
-                        <label for="price" class="block text-gray-700 font-medium mb-2">Giá ước tính (VNĐ)</label>
-                        <input type="number" step="1000" min="0" name="price" id="price" value="{{ old('price') }}" required
-                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm" />
-                    </div>
-
-                    <div>
-                        <label for="route_id" class="block text-gray-700 font-medium mb-2">Chọn tuyến</label>
-                        <select name="route_id" id="route_id" required
-                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm">
-                            <option value="">-- Chọn tuyến --</option>
-                            @foreach($routes as $route)
-                                <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
-                                    {{ $route->departureLocation->name ?? '...' }} → {{ $route->destinationLocation->name ?? '...' }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người nhận</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người nhận <span class="text-red-500">*</span></label>
+                            <input type="text" name="receiver_name" value="{{ old('receiver_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                            <input type="text" name="receiver_phone" value="{{ old('receiver_phone') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                        </div>
                     </div>
                 </div>
 
                 <div class="mt-6">
-                    <label for="description" class="block text-gray-700 font-medium mb-2">Mô tả hàng hóa</label>
-                    <textarea name="description" id="description" rows="4"
-                        class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm">{{ old('description') }}</textarea>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Thông tin hàng hóa</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tuyến đường gửi <span class="text-red-500">*</span></label>
+                            <select name="route_id" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                                <option value="">-- Chọn tuyến đường --</option>
+                                @foreach($routes as $route)
+                                    <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
+                                        {{ $route->departureLocation->name ?? '...' }} &rarr; {{ $route->destinationLocation->name ?? '...' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cân nặng (kg) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.1" name="weight" value="{{ old('weight') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                            <p class="text-xs text-gray-500 mt-1">Cước phí ước tính: ~10.000đ/kg (Tối thiểu 20.000đ)</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả hàng hóa</label>
+                        <textarea name="description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500" placeholder="Loại hàng hóa: quần áo, tài liệu, thực phẩm...">{{ old('description') }}</textarea>
+                    </div>
                 </div>
 
-                <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <p class="text-sm text-gray-500">Tất cả yêu cầu ký gửi sẽ được xử lý bởi bộ phận vận chuyển của chúng tôi.</p>
-                    <button type="submit"
-                        class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-6 py-3 text-white font-semibold shadow-sm shadow-amber-500/20 hover:bg-amber-600 transition-colors">
-                        Gửi yêu cầu ký gửi
+                <div class="text-center pt-4 border-t">
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-colors text-lg inline-flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Tạo đơn ký gửi
                     </button>
+                    <p class="text-sm text-gray-500 mt-3">Sau khi tạo, vui lòng mang hàng hóa ra văn phòng để nhân viên kiểm tra và thanh toán báo giá chính thức.</p>
                 </div>
             </form>
         </div>

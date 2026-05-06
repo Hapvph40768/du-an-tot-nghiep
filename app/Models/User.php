@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Booking;
@@ -21,12 +22,25 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'google_id',
         'avatar',
-        'status'
+        'status',
+        'birthday',
+        'gender',
+        'address',
+        'citizen_id',
+        'employee_id',
+        'department',
+        'salary',
+        'joined_date',
+        'contract_type',
+        'last_login_at',
+        'last_login_ip'
     ];
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     // Relationships

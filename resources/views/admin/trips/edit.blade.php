@@ -47,6 +47,20 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
+                                <label class="form-label fw-bold">Tài xế phụ trách</label>
+                                <select name="driver_id" class="form-select rounded-3">
+                                    @foreach ($drivers as $driver)
+                                        <option value="{{ $driver->id }}"
+                                            {{ $trip->driver_id == $driver->id ? 'selected' : '' }}>
+                                            {{ $driver->name }} (SĐT: {{ $driver->phone }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('driver_id')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label fw-bold">Trạng thái chuyến đi</label>
                                 <select name="status" class="form-select rounded-3 fw-bold text-primary">
                                     <option value="active" {{ $trip->status == 'active' ? 'selected' : '' }}>Đang mở bán

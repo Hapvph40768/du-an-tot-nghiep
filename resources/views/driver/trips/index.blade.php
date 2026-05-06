@@ -5,6 +5,18 @@
 @section('content-main')
     <div class="max-w-7xl mx-auto px-4 py-8">
 
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('driver.home') }}" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-600 transition-colors">
+                    <i class='bx bx-chevron-left text-2xl'></i>
+                </a>
+                <h2 class="text-2xl font-bold text-gray-800">Chuyến xe Sắp/Đang chạy</h2>
+            </div>
+            <a href="{{ route('driver.trips.history') }}" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition flex items-center gap-2">
+                <i class='bx bx-history'></i> Lịch sử chuyến đi
+            </a>
+        </div>
+
         <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
 
@@ -36,18 +48,6 @@
                         <button onclick="applyFilters()" data-status="running"
                             class="status-btn flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm font-medium transition-all border border-gray-200 hover:border-emerald-300">
                             Đang chạy
-                        </button>
-                        <button onclick="applyFilters()" data-status="broken"
-                            class="status-btn flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm font-medium transition-all border border-gray-200 hover:border-red-300">
-                            Hỏng / Gián đoạn
-                        </button>
-                        <button onclick="applyFilters()" data-status="completed"
-                            class="status-btn flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm font-medium transition-all border border-gray-200 hover:border-gray-300">
-                            Hoàn thành
-                        </button>
-                        <button onclick="applyFilters()" data-status="canceled"
-                            class="status-btn flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm font-medium transition-all border border-gray-200 hover:border-red-300">
-                            Đã hủy
                         </button>
                     </div>
                 </div>
@@ -147,12 +147,15 @@
                                 </a>
 
                                 @if ($trip->status === 'active')
-                                    <button
-                                        onclick="if(confirm('Xác nhận bắt đầu chuyến này?')) 
-                                        window.location.href = '{{ route('driver.trips.start', $trip) }}'"
-                                        class="flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all active:scale-[0.97]">
-                                        Bắt đầu chuyến
-                                    </button>
+                                    <form action="{{ route('driver.trips.updateStatus', $trip) }}" method="POST" class="flex-1" style="display:flex">
+                                        @csrf
+                                        <input type="hidden" name="status" value="running">
+                                        <button type="submit"
+                                            onclick="return confirm('Xác nhận bắt đầu chuyến này?')"
+                                            class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all active:scale-[0.97]">
+                                            Bắt đầu chuyến
+                                        </button>
+                                    </form>
                                 @endif
                             </div>
                         </div>

@@ -43,27 +43,27 @@
                         {{-- Điểm khởi hành --}}
                         <div class="col-md-6">
                             <label class="form-label">Điểm khởi hành</label>
-                            <select name="departure_location_id" class="form-select rounded-3 @error('departure_location_id') is-invalid @enderror">
+                            <select name="start_location_id" class="form-select rounded-3 @error('start_location_id') is-invalid @enderror">
                                 @foreach($locations as $loc)
-                                    <option value="{{ $loc->id }}" {{ old('departure_location_id', $route->departure_location_id) == $loc->id ? 'selected' : '' }}>
+                                    <option value="{{ $loc->id }}" {{ old('start_location_id', $route->start_location_id) == $loc->id ? 'selected' : '' }}>
                                         {{ $loc->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('departure_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            @error('start_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Điểm kết thúc --}}
                         <div class="col-md-6">
                             <label class="form-label">Điểm kết thúc</label>
-                            <select name="destination_location_id" class="form-select rounded-3 @error('destination_location_id') is-invalid @enderror">
+                            <select name="end_location_id" class="form-select rounded-3 @error('end_location_id') is-invalid @enderror">
                                 @foreach($locations as $loc)
-                                    <option value="{{ $loc->id }}" {{ old('destination_location_id', $route->destination_location_id) == $loc->id ? 'selected' : '' }}>
+                                    <option value="{{ $loc->id }}" {{ old('end_location_id', $route->end_location_id) == $loc->id ? 'selected' : '' }}>
                                         {{ $loc->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('destination_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            @error('end_location_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Khoảng cách --}}
@@ -71,7 +71,7 @@
                             <label class="form-label">Khoảng cách (km)</label>
                             <div class="input-group">
                                 <input type="number" name="distance_km" value="{{ old('distance_km', $route->distance_km) }}" 
-                                       class="form-control rounded-3 @error('distance') is-invalid @enderror" placeholder="Ví dụ: 350">
+                                       class="form-control rounded-3 @error('distance_km') is-invalid @enderror" placeholder="Ví dụ: 350">
                                 <span class="input-group-text bg-light text-muted">km</span>
                             </div>
                             @error('distance_km') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -86,6 +86,13 @@
                                 <span class="input-group-text bg-light text-muted">giờ</span>
                             </div>
                             @error('estimated_time') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                        </div>
+                        
+                        <div class="col-md-12 mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="isActive" value="1" {{ old('is_active', $route->is_active) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold small" for="isActive">Kích hoạt tuyến đường</label>
+                            </div>
                         </div>
                     </div>
 

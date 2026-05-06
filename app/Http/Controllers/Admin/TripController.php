@@ -49,9 +49,11 @@ class TripController extends Controller
             'pickupPoints'
         ]);
 
-        $bookedSeatIds = $trip->seatLocks()->pluck('seat_id')->toArray();
+        $totalSeats = $trip->vehicle->seats()->count();
+        $bookedSeats = \App\Models\Ticket::where('trip_id', $trip->id)->whereIn('status', ['pending', 'confirmed'])->count();
+        $availableSeats = max(0, $totalSeats - $bookedSeats);
 
-        return view('admin.trips.show', compact('trip', 'bookedSeatIds'));
+        return view('admin.trips.show', compact('trip', 'availableSeats', 'totalSeats', 'bookedSeats'));
     }
 
     public function create()
@@ -68,13 +70,22 @@ class TripController extends Controller
     {
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'vehicle_id' => 'required|exists:vehicles,id',
+            'vehicle_id' => [
+                'required',
+                'exists:vehicles,id',
+                \Illuminate\Validation\Rule::unique('trips')->where(function ($query) use ($request) {
+                    return $query->where('trip_date', $request->trip_date)
+                                 ->where('departure_time', $request->departure_time);
+                })
+            ],
             'driver_id' => 'required|exists:drivers,id',
             'trip_date' => 'nullable|date',
             'departure_time' => 'nullable|date_format:H:i',
             'arrival_time' => 'nullable|date_format:H:i',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',
+        ], [
+            'vehicle_id.unique' => 'Xe này đã được xếp lịch chạy vào ngày và giờ này. Vui lòng chọn xe khác hoặc đổi thời gian khởi hành.',
         ]);
 
         Trip::create($validated);
@@ -94,13 +105,22 @@ class TripController extends Controller
     {
         $validated = $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'vehicle_id' => 'required|exists:vehicles,id',
+            'vehicle_id' => [
+                'required',
+                'exists:vehicles,id',
+                \Illuminate\Validation\Rule::unique('trips')->where(function ($query) use ($request) {
+                    return $query->where('trip_date', $request->trip_date)
+                                 ->where('departure_time', $request->departure_time);
+                })->ignore($trip->id)
+            ],
             'driver_id' => 'required|exists:drivers,id',
             'trip_date' => 'required|date|after_or_equal:today',
             'departure_time' => 'required|date_format:H:i',
             'arrival_time' => 'required|date_format:H:i',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:active,completed,cancelled',
+        ], [
+            'vehicle_id.unique' => 'Xe này đã được xếp lịch chạy vào ngày và giờ này. Vui lòng chọn xe khác hoặc đổi thời gian khởi hành.',
         ]);
 
         $trip->update($validated);

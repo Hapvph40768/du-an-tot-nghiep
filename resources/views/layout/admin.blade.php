@@ -13,7 +13,7 @@
         <nav class="flex items-center justify-between gap-4">
             <div class="font-medium">Quản lý Hệ Thống</div>
             <div class="flex gap-4">
-                <a href="{{ route('admin.dashboard') }}" class="underline underline-offset-4">Dashboard</a>
+                <a href="{{ route('admin.dashboard.index') }}" class="underline underline-offset-4">Dashboard</a>
                 <form method="POST" action="{{ route('logout') }}">@csrf
                     <button type="submit" class="opacity-70 hover:opacity-100">Đăng xuất</button>
                 </form>

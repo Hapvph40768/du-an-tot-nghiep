@@ -70,7 +70,7 @@ class SeatLockController extends Controller
             'locked_until' => $lockedUntil,
         ]);
 
-        return redirect()->route('admin.seat_locks.index', ['trip_id' => $validated['trip_id']])
+        return redirect()->route('admin.seat-locks.index', ['trip_id' => $validated['trip_id']])
                          ->with('success', "Đã khóa ghế thành công trong {$request->lock_minutes} phút!");
     }
 
@@ -79,7 +79,7 @@ class SeatLockController extends Controller
         $tripId = $seatLock->trip_id;
         $seatLock->delete();
 
-        return redirect()->route('admin.seat_locks.index', ['trip_id' => $tripId])
+        return redirect()->route('admin.seat-locks.index', ['trip_id' => $tripId])
                          ->with('success', 'Đã mở khóa ghế thủ công!');
     }
 }

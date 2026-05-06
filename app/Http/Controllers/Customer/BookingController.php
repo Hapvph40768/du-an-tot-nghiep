@@ -97,17 +97,34 @@ class BookingController extends Controller
     {
         $request->validate([
             'trip_id'          => 'required|exists:trips,id',
-            'pickup_point_id'  => 'required|exists:pickup_points,id',
-            'dropoff_point_id' => 'nullable|exists:pickup_points,id',
+            'pickup_point_id'  => ['required', \Illuminate\Validation\Rule::exists('trip_pickup_points', 'pickup_point_id')->where('trip_id', $request->trip_id)],
+            'dropoff_point_id' => ['nullable', \Illuminate\Validation\Rule::exists('trip_pickup_points', 'pickup_point_id')->where('trip_id', $request->trip_id)],
             'coupon_code'      => 'nullable|string|max:50',
-            'seat_ids'         => 'required|array|min:1',
-            'seat_ids.*'       => 'exists:seats,id',
+            'ticket_quantity'  => 'required|integer|min:1|max:4',
             'contact_name'     => 'required|string|max:255',
             'contact_phone'    => 'required|string|max:20',
         ]);
 
+        $userBookedTickets = Ticket::whereHas('booking', function ($q) {
+            $q->where('user_id', Auth::id());
+        })
+        ->where('trip_id', $request->trip_id)
+        ->whereIn('status', ['pending', 'confirmed'])
+        ->count();
+
+        if ($userBookedTickets + $request->ticket_quantity > 4) {
+            return back()->with('error', 'Mỗi tài khoản được mua tối đa 4 vé trên chuyến này. Bạn đã có ' . $userBookedTickets . ' vé hợp lệ hoặc đang chờ thanh toán.');
+        }
+
         $trip        = Trip::findOrFail($request->trip_id);
-        $baseAmount  = $trip->price * count($request->seat_ids);
+        
+        $totalSeats = $trip->vehicle->seats()->count();
+        $bookedSeats = Ticket::where('trip_id', $trip->id)->whereIn('status', ['pending', 'confirmed'])->count();
+        if ($bookedSeats + $request->ticket_quantity > $totalSeats) {
+            return back()->with('error', 'Chuyến xe không đủ số lượng vé trống yêu cầu.');
+        }
+
+        $baseAmount  = $trip->price * $request->ticket_quantity;
         $discount    = 0;
         $promotionId = null;
 
@@ -150,24 +167,11 @@ class BookingController extends Controller
                 Promotion::where('id', $promotionId)->increment('current_uses');
             }
 
-            foreach ($request->seat_ids as $seatId) {
-                $isLocked = SeatLock::where('trip_id', $trip->id)->where('seat_id', $seatId)->exists();
-                if ($isLocked) {
-                    throw new \Exception('Một số ghế bạn chọn đã có người khác đặt.');
-                }
-
-                SeatLock::create([
-                    'trip_id'      => $trip->id,
-                    'seat_id'      => $seatId,
-                    'user_id'      => Auth::id(),
-                    'booking_id'   => $booking->id,
-                    'locked_until' => now()->addMinutes(15),
-                ]);
-
+            for ($i = 0; $i < $request->ticket_quantity; $i++) {
                 Ticket::create([
                     'booking_id' => $booking->id,
                     'trip_id'    => $trip->id,
-                    'seat_id'    => $seatId,
+                    'seat_id'    => null,
                     'status'     => 'pending',
                 ]);
             }
@@ -175,7 +179,173 @@ class BookingController extends Controller
             DB::commit();
             return redirect()->route('customer.payment.checkout', $booking->id)
                              ->with('success', 'Giữ chỗ thành công. Vui lòng thanh toán trong 15 phút.');
+        } catch (\Exception $e) {
 
+    DB::rollBack();
+
+    return back()->with('error', $e->getMessage());
+}
+}
+    public function cancel(Request $request, Booking $booking)
+    {
+        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->status !== 'paid') {
+            return back()->with('error', 'Chỉ có thể hủy vé đã thanh toán.');
+        }
+
+        $departure = Carbon::parse($booking->trip->trip_date . ' ' . $booking->trip->departure_time);
+        if (now()->diffInHours($departure, false) < 4) {
+            return back()->with('error', 'Chỉ được phép hủy vé trước giờ khởi hành tối thiểu 4 tiếng.');
+        }
+
+        $minutesSinceBooking = $booking->created_at->diffInMinutes(now());
+        $penaltyFee = 0;
+        // Trừ 10% nếu hủy sau 30 phút
+        if ($minutesSinceBooking > 30) {
+            $penaltyFee = $booking->total_amount * 0.10;
+        }
+
+        $refundAmount = max(0, $booking->total_amount - $penaltyFee);
+
+        DB::beginTransaction();
+        try {
+            $booking->update([
+                'status' => 'cancelled',
+                'refund_amount' => $refundAmount,
+                'penalty_fee' => $penaltyFee,
+            ]);
+
+            // Release seats
+            Ticket::where('booking_id', $booking->id)->update(['status' => 'cancelled']);
+            SeatLock::where('booking_id', $booking->id)->delete();
+
+            DB::commit();
+            return back()->with('success', "Đã yêu cầu hủy vé thành công. Phí hủy: " . number_format($penaltyFee) . "đ. Số tiền chờ hoàn lại: " . number_format($refundAmount) . "đ.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Lỗi khi hủy vé.');
+        }
+    }
+
+    public function changeDate(Booking $booking)
+    {
+        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->status !== 'paid') {
+            return back()->with('error', 'Chỉ có thể đổi vé đã thanh toán.');
+        }
+
+        $departure = Carbon::parse($booking->trip->trip_date . ' ' . $booking->trip->departure_time);
+        if (now()->diffInHours($departure, false) < 2) {
+            return back()->with('error', 'Chỉ được phép đổi vé trước giờ khởi hành tối thiểu 2 tiếng.');
+        }
+
+        // Tiền vé cũ
+        $oldAmount = $booking->total_amount;
+        $penaltyFee = $oldAmount * 0.10; // Phụ phí đổi vé 10%
+        $creditAmount = max(0, $oldAmount - $penaltyFee);
+
+        $availableTrips = Trip::with('vehicle')
+            ->where('route_id', $booking->trip->route_id)
+            ->where(DB::raw("CONCAT(trip_date, ' ', departure_time)"), '>', now()->addHours(2))
+            ->where('id', '!=', $booking->trip_id)
+            ->where('status', 'active')
+            ->orderBy('trip_date')
+            ->orderBy('departure_time')
+            ->get();
+
+        return view('customer.bookings.change-date', compact('booking', 'penaltyFee', 'creditAmount', 'availableTrips'));
+    }
+
+    public function processChangeDate(Request $request, Booking $booking)
+    {
+        if ($booking->user_id !== Auth::id()) abort(403);
+        if ($booking->status !== 'paid') {
+            return back()->with('error', 'Chỉ có thể đổi vé đã thanh toán.');
+        }
+
+        $departure = Carbon::parse($booking->trip->trip_date . ' ' . $booking->trip->departure_time);
+        if (now()->diffInHours($departure, false) < 2) {
+            return back()->with('error', 'Chỉ được phép đổi vé trước giờ khởi hành tối thiểu 2 tiếng.');
+        }
+
+        $request->validate([
+            'new_trip_id' => 'required|exists:trips,id',
+            'ticket_quantity' => 'required|integer|min:1|max:4',
+        ]);
+
+        $userBookedTickets = Ticket::whereHas('booking', function ($q) {
+            $q->where('user_id', Auth::id());
+        })
+        ->where('trip_id', $request->new_trip_id)
+        ->whereIn('status', ['pending', 'confirmed'])
+        ->count();
+
+        if ($userBookedTickets + $request->ticket_quantity > 4) {
+            return back()->with('error', 'Mỗi tài khoản được mua tối đa 4 vé trên chuyến này. Lần đổi này làm tổng số vé vượt quá 4.');
+        }
+
+        $newTrip = Trip::findOrFail($request->new_trip_id);
+        
+        // Cùng tuyến?
+        if ($newTrip->route_id !== $booking->trip->route_id) {
+            return back()->with('error', 'Chuyến xe thay thế phải cùng tuyến đường.');
+        }
+        
+        $totalSeats = $newTrip->vehicle->seats()->count();
+        $bookedSeats = Ticket::where('trip_id', $newTrip->id)->whereIn('status', ['pending', 'confirmed'])->count();
+        if ($bookedSeats + $request->ticket_quantity > $totalSeats) {
+            return back()->with('error', 'Chuyến xe không đủ số lượng vé trống yêu cầu.');
+        }
+
+        $baseAmount = $newTrip->price * $request->ticket_quantity;
+        
+        // Phụ phí 10% của vé cũ
+        $penaltyFee = $booking->total_amount * 0.10;
+        $creditAmount = max(0, $booking->total_amount - $penaltyFee);
+        
+        // Số tiền bù = Giá vé mới - Tiền còn lại từ vé cũ
+        $extraPay = max(0, $baseAmount - $creditAmount);
+
+        DB::beginTransaction();
+        try {
+            // Hủy vé cũ
+            $booking->update([
+                'status' => 'cancelled',
+                'refund_amount' => 0, // Tiền này được dùng để cấn trừ vé mới
+                'penalty_fee' => $penaltyFee,
+            ]);
+            Ticket::where('booking_id', $booking->id)->update(['status' => 'cancelled']);
+            SeatLock::where('booking_id', $booking->id)->delete();
+
+            // Tạo đặt vé mới
+            $newBooking = Booking::create([
+                'user_id' => Auth::id(),
+                'trip_id' => $newTrip->id,
+                'pickup_point_id' => $booking->pickup_point_id,
+                'dropoff_point_id' => $booking->dropoff_point_id,
+                'contact_name' => $booking->contact_name,
+                'contact_phone' => $booking->contact_phone,
+                'total_amount' => $extraPay,
+                'status' => $extraPay > 0 ? 'pending' : 'paid', // Nếu ko phải bù tiền, coi như đã paid
+            ]);
+
+            for ($i = 0; $i < $request->ticket_quantity; $i++) {
+                Ticket::create([
+                    'booking_id' => $newBooking->id,
+                    'trip_id' => $newTrip->id,
+                    'seat_id' => null,
+                    'status' => $extraPay > 0 ? 'pending' : 'confirmed',
+                ]);
+            }
+
+            DB::commit();
+            if ($extraPay > 0) {
+                return redirect()->route('customer.payment.checkout', $newBooking->id)
+                             ->with('success', 'Tạo yêu cầu đổi vé thành công. Vui lòng thanh toán khoản tiền bù để hoàn tất.');
+            } else {
+                return redirect()->route('customer.bookings.show', $newBooking->id)
+                             ->with('success', 'Đổi vé thành công. Bạn không cần thanh toán thêm.');
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());

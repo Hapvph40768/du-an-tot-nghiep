@@ -26,8 +26,15 @@
             <h2 class="fw-bold text-dark m-0">Danh sách Đặt vé</h2>
             <p class="text-muted small mb-0">Theo dõi đơn hàng và trạng thái thanh toán từ khách hàng</p>
         </div>
+        <form method="GET" action="{{ route('admin.bookings.index') }}" class="d-flex gap-2 align-items-center">
+            <input type="text" name="search" class="form-control form-control-sm rounded-3" placeholder="Mã vé, SĐT, ID..." value="{{ request('search') }}">
+            <button class="btn btn-primary btn-sm rounded-3 px-3" type="submit">Tìm</button>
+            @if(request('search'))
+                <a href="{{ route('admin.bookings.index') }}" class="btn btn-light btn-sm rounded-3 border">Xóa lọc</a>
+            @endif
+        </form>
         {{-- Có thể thêm nút Xuất Excel báo cáo ở đây --}}
-        <button class="btn btn-outline-secondary btn-sm rounded-3">
+        <button class="btn btn-outline-secondary btn-sm rounded-3 d-none">
             <i class='bx bx-export'></i> Xuất báo cáo
         </button>
     </div>

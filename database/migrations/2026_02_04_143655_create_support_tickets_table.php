@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('assigned_admin_id')->nullable()->constrained('users');
             $table->enum('status', ['open', 'processing', 'closed'])->default('open');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

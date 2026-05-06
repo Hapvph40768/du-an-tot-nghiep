@@ -19,8 +19,7 @@
                         <div class="row g-3">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Điểm khởi hành</label>
-                                    
+                                    <label class="form-label fw-bold small">Điểm khởi hành <span class="text-danger">*</span></label>
                                     <select name="start_location_id"
                                         class="form-select rounded-3 <?php $__errorArgs = ['start_location_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -52,8 +51,7 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Điểm kết thúc</label>
-                                    
+                                    <label class="form-label fw-bold small">Điểm kết thúc <span class="text-danger">*</span></label>
                                     <select name="end_location_id"
                                         class="form-select rounded-3 <?php $__errorArgs = ['end_location_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -83,8 +81,13 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                 </div>
-
-                                
+                            </div>
+                            
+                            <div class="col-md-12 mt-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="isActive" value="1" <?php echo e(old('is_active', true) ? 'checked' : ''); ?>>
+                                    <label class="form-check-label fw-bold small" for="isActive">Kích hoạt tuyến đường</label>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">Khoảng cách (km)</label>

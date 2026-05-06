@@ -73,6 +73,14 @@
             </li>
 
             <li class="menu-item">
+                <a href="{{ route('admin.dropoff-points.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.dropoff-points.*') ? 'active' : '' }}">
+                    <i class='bx bx-map-pin'></i>
+                    <span>Danh mục Điểm trả</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
                 <a href="{{ route('admin.locations.index') }}"
                     class="menu-link {{ request()->routeIs('admin.locations.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-location-dot"></i>
@@ -154,6 +162,14 @@
                 <span class="menu-link" style="font-size:10px;text-transform:uppercase;color:#aaa;pointer-events:none;padding-bottom:2px;">
                     Giám sát & Thống kê
                 </span>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('admin.statistics.index') }}"
+                    class="menu-link {{ request()->routeIs('admin.statistics.*') ? 'active' : '' }}">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span>Thống kê chi tiết</span>
+                </a>
             </li>
 
             <li class="menu-item">

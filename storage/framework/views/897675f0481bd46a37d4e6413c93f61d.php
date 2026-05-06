@@ -24,8 +24,15 @@
             <h2 class="fw-bold text-dark m-0">Danh sách Đặt vé</h2>
             <p class="text-muted small mb-0">Theo dõi đơn hàng và trạng thái thanh toán từ khách hàng</p>
         </div>
+        <form method="GET" action="<?php echo e(route('admin.bookings.index')); ?>" class="d-flex gap-2 align-items-center">
+            <input type="text" name="search" class="form-control form-control-sm rounded-3" placeholder="Mã vé, SĐT, ID..." value="<?php echo e(request('search')); ?>">
+            <button class="btn btn-primary btn-sm rounded-3 px-3" type="submit">Tìm</button>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(request('search')): ?>
+                <a href="<?php echo e(route('admin.bookings.index')); ?>" class="btn btn-light btn-sm rounded-3 border">Xóa lọc</a>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        </form>
         
-        <button class="btn btn-outline-secondary btn-sm rounded-3">
+        <button class="btn btn-outline-secondary btn-sm rounded-3 d-none">
             <i class='bx bx-export'></i> Xuất báo cáo
         </button>
     </div>

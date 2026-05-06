@@ -17,10 +17,12 @@ return new class extends Migration
             $table->time('departure_time')->nullable();
             $table->time('arrival_time')->nullable();
             $table->decimal('price', 10, 2)->nullable();
-            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
+            $table->enum('status', ['active', 'running', 'broken', 'completed', 'cancelled'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['vehicle_id', 'trip_date', 'departure_time']);
+            $table->index(['trip_date', 'route_id', 'status'], 'idx_trips_search');
         });
     }
 

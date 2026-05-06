@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('price', 12, 0);
             $table->foreignId('route_id')->constrained('routes')->cascadeOnDelete();
             $table->string('status')->default('pending'); // pending, shipping, completed, cancelled
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

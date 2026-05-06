@@ -80,6 +80,18 @@
                                     <i class="fas fa-credit-card mr-2"></i> Thanh toán đơn hàng này
                                 </a>
                             </div>
+                        <?php elseif($booking->status == 'paid'): ?>
+                            <div class="mt-4 flex gap-2">
+                                <a href="<?php echo e(route('customer.bookings.changeDate', $booking->id)); ?>" class="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-all duration-200">
+                                    <i class="fas fa-exchange-alt mr-1"></i> Đổi chuyến
+                                </a>
+                                <form action="<?php echo e(route('customer.bookings.cancel', $booking->id)); ?>" method="POST" class="flex-1" onsubmit="return confirm('Bạn có chắc chắn muốn hủy vé?\nNếu hủy sau 30 phút từ khi đặt sẽ chịu phí 10%. Tiền sẽ được hoàn lại sau khi trừ phí.');">
+                                    <?php echo csrf_field(); ?>
+                                    <button type="submit" class="w-full text-center bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-all duration-200">
+                                        <i class="fas fa-times mr-1"></i> Hủy vé
+                                    </button>
+                                </form>
+                            </div>
                         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
                 </div>

@@ -12,6 +12,11 @@ class Location extends Model
     {
         return $this->hasMany(PickupPoint::class);
     }
+
+    public function dropoffPoints()
+    {
+        return $this->hasMany(DropoffPoint::class);
+    }
     public function routesAsStart()
     {
         return $this->hasMany(Route::class, 'start_location_id');

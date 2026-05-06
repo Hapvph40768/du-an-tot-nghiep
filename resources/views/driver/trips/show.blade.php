@@ -197,19 +197,43 @@
 
                     <div class="space-y-4">
                         @if ($trip->status === 'active')
-                            <button
-                                onclick="if(confirm('Xác nhận bắt đầu chuyến này?')) 
-                                window.location.href = '{{ route('driver.trips.start', $trip) }}'"
-                                class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
-                                <i class='bx bx-play-circle text-xl'></i> Bắt đầu chuyến
-                            </button>
+                            <form action="{{ route('driver.trips.updateStatus', $trip) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="status" value="running">
+                                <button type="submit" onclick="return confirm('Xác nhận bắt đầu chuyến này?')" 
+                                    class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                                    <i class='bx bx-play-circle text-xl'></i> Bắt đầu chuyến
+                                </button>
+                            </form>
+                        @elseif ($trip->status === 'running')
+                            <form action="{{ route('driver.trips.updateStatus', $trip) }}" method="POST" class="mb-3">
+                                @csrf
+                                <input type="hidden" name="status" value="completed">
+                                <button type="submit" onclick="return confirm('Xác nhận đã Hoàn Thành chuyến đi?')" 
+                                    class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                                    <i class='bx bx-check-circle text-xl'></i> Hoàn thành chuyến
+                                </button>
+                            </form>
+                            <form action="{{ route('driver.trips.updateStatus', $trip) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="status" value="broken">
+                                <button type="submit" onclick="return confirm('Xác nhận báo Sự Cố/Hỏng xe? Admin sẽ nhận được thông báo giải quyết.')" 
+                                    class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                                    <i class='bx bx-error-circle text-xl'></i> Báo sự cố/Xe hỏng
+                                </button>
+                            </form>
                         @endif
 
                         <button onclick="showRouteModal()"
-                            class="w-full py-4 border border-amber-500 text-amber-600 font-semibold rounded-2xl hover:bg-amber-50 transition flex items-center justify-center gap-2">
+                            class="w-full mt-4 py-4 border border-amber-500 text-amber-600 font-semibold rounded-2xl hover:bg-amber-50 transition flex items-center justify-center gap-2">
                             <i class='bx bx-map-alt text-xl'></i>
-                            Xem lộ trình & Điểm đón
+                            Thứ tự điểm đón
                         </button>
+                        
+                        <a href="#" onclick="openFullGoogleMapsRoute(); return false;"
+                            class="w-full mt-3 py-4 border border-blue-500 text-blue-600 font-semibold rounded-2xl hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                            <i class='bx bx-directions text-xl'></i> Xem Hướng dẫn đường đi (Google Maps)
+                        </a>
                     </div>
                 </div>
             </div>
@@ -342,6 +366,20 @@
             const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
 
             window.open(googleMapsUrl, '_blank');
+        }
+
+        function openFullGoogleMapsRoute() {
+            @php
+                $origin = $trip->route->departureLocation->name ?? '';
+                $destination = $trip->route->destinationLocation->name ?? '';
+                $waypoints = $trip->pickupPoints->sortBy('pivot.order')->pluck('name')->join('|');
+            @endphp
+            const origin = encodeURIComponent("{{ $origin }}");
+            const dest = encodeURIComponent("{{ $destination }}");
+            const waypoints = encodeURIComponent("{{ $waypoints }}");
+            
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}&waypoints=${waypoints}`;
+            window.open(url, '_blank');
         }
 
         document.addEventListener('keydown', function(e) {

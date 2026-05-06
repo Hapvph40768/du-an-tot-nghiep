@@ -61,12 +61,23 @@
                 <input type="checkbox" name="remember" <?php echo e(old('remember') ? 'checked' : ''); ?>>
                 <span style="color: var(--text-secondary);">Ghi nhớ đăng nhập</span>
             </label>
-            <a href="#">Quên mật khẩu?</a>
+            <a href="<?php echo e(route('password.request')); ?>">Quên mật khẩu?</a>
         </div>
 
         <button type="submit" class="btn-primary" style="width: 100%;">
             Đăng nhập hệ thống
         </button>
+
+        <div style="margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <hr style="flex: 1; border: none; border-top: 1px solid #dee2e6;">
+            <span style="color: var(--text-secondary); font-size: 14px;">Hoặc</span>
+            <hr style="flex: 1; border: none; border-top: 1px solid #dee2e6;">
+        </div>
+
+        <a href="<?php echo e(route('login.google')); ?>" class="btn" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px; border-radius: 8px; font-weight: 500; background: #fff; border: 1px solid #dee2e6; color: #333; text-decoration: none; transition: 0.2s;">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style="width: 20px;">
+            Đăng nhập bằng Google
+        </a>
 
         <div class="auth-links" style="justify-content: center; margin-top: 32px;">
             <span>Chưa có tài khoản? <a href="<?php echo e(route('register')); ?>" class="text-link">Đăng ký ngay</a></span>

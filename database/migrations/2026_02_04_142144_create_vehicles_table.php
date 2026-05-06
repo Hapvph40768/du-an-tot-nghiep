@@ -13,8 +13,12 @@ return new class extends Migration
             $table->string('license_plate', 50)->unique()->nullable();
             $table->string('type', 100)->nullable();
             $table->unsignedInteger('total_seats')->nullable();
-            $table->enum('status', ['active', 'maintenance'])->default('active');
+            $table->string('phone_vehicles', 15)->nullable();
+            $table->enum('status', ['active', 'maintenance', 'inactive'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
+            
+            $table->index('status', 'idx_veh_status');
         });
     }
 

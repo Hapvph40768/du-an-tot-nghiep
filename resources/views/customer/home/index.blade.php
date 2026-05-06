@@ -17,7 +17,7 @@
 
             <div class="bg-white rounded-2xl card-shadow p-8 max-w-4xl mx-auto">
                 <form id="search-form" action="{{ route('customer.trips.search') }}" method="GET">
-                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
                         <div class="space-y-2">
                             <label class="block text-gray-700 font-bold text-sm ml-1">Điểm đi</label>
                             <div class="relative group">
@@ -67,6 +67,20 @@
                                             d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-bold text-sm ml-1">Ngày đi</label>
+                            <div class="relative group">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-amber-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
+                                    </svg>
+                                </div>
+                                <input type="date" id="trip-date" name="trip_date" 
+                                    min="{{ date('Y-m-d') }}"
+                                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-amber-500 focus:bg-white focus:outline-none transition-all text-gray-700 font-medium">
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Trip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TripController extends Controller
 {
@@ -28,9 +29,11 @@ class TripController extends Controller
             })
             ->where('status', 'active');
 
-        // Bỏ việc fix cứng $tripDate = now() vì các chuyến xe chạy hàng ngày và người dùng không nhập ngày
         if ($request->filled('trip_date')) {
-            $query->where('trip_date', $request->trip_date);
+            $query->whereDate('trip_date', $request->trip_date)
+                  ->where(DB::raw("CONCAT(trip_date, ' ', departure_time)"), '>=', now());
+        } else {
+            $query->where(DB::raw("CONCAT(trip_date, ' ', departure_time)"), '>=', now());
         }
 
         $trips = $query->orderBy('trip_date', 'desc')->get();
@@ -38,15 +41,19 @@ class TripController extends Controller
         return view('customer.trips.search_result', compact('trips'));
     }
 
-    // Xem chi tiết 1 chuyến xe (hiển thị sơ đồ ghế và chọn điểm đón)
+    // Xem chi tiết 1 chuyến xe (hiển thị chọn số lượng vé và chọn điểm đón)
     public function show(Trip $trip)
     {
-        // Load kèm xe, danh sách ghế, và các điểm đón trả khách
-        $trip->load(['vehicle.seats', 'pickupPoints']);
+        // Load kèm xe và các điểm đón trả khách
+        $trip->load(['vehicle', 'pickupPoints']);
         
-        // Lấy danh sách ID các ghế đã được đặt hoặc đang bị khóa
-        $bookedSeatIds = $trip->seatLocks()->where('locked_until', '>', now())->pluck('seat_id')->toArray();
+        $totalSeats = $trip->vehicle->seats()->count();
+        $bookedSeats = \App\Models\Ticket::where('trip_id', $trip->id)
+                            ->whereIn('status', ['pending', 'confirmed'])
+                            ->count();
+        
+        $availableSeats = max(0, $totalSeats - $bookedSeats);
 
-        return view('customer.trips.show', compact('trip', 'bookedSeatIds'));
+        return view('customer.trips.show', compact('trip', 'availableSeats'));
     }
 }

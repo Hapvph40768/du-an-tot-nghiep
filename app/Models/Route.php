@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Route extends Model
 {
-    protected $fillable = ['start_location_id', 'end_location_id', 'distance_km', 'estimated_time'];
+    protected $fillable = ['start_location_id', 'end_location_id', 'distance_km', 'estimated_time', 'is_active'];
+
 
     public function departureLocation()
     {

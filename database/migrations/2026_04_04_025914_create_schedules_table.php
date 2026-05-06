@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('route_id')->constrained('routes')->cascadeOnDelete();
-            $table->string('departure_time');
+            $table->time('departure_time');
             $table->json('days_of_week'); // e.g. ["Monday", "Tuesday"]
             $table->boolean('is_active')->default(true);
             $table->timestamps();

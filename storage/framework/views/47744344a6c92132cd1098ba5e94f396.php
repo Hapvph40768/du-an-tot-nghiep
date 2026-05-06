@@ -123,40 +123,21 @@
                         </div>
                     </div>
 
-                    <!-- Right: Seat selection & Summary -->
+                    <!-- Right: Ticket Quantity & Summary -->
                     <div class="bg-white rounded-xl shadow-sm p-6 self-start sticky top-6">
-                        <h3 class="text-xl font-bold border-b pb-3 mb-4">Chọn ghế</h3>
+                        <h3 class="text-xl font-bold border-b pb-3 mb-4">Mua vé</h3>
                         
-                        <div class="flex justify-between mb-4 text-sm max-w-[200px] mx-auto">
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-gray-200 border rounded"></div> Trống</div>
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-amber-500 rounded"></div> Đang chọn</div>
-                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-red-800 rounded"></div> Đã đặt</div>
-                        </div>
-
-                        <!-- Sơ đồ ghế đơn giản -->
-                        <div class="grid grid-cols-4 gap-2 mb-6">
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $trip->vehicle->seats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
-                                <?php
-                                    $isBooked = in_array($seat->id, $bookedSeatIds);
-                                ?>
-                                <label class="relative cursor-pointer">
-                                    <input type="checkbox" name="seat_ids[]" value="<?php echo e($seat->id); ?>" class="peer sr-only seat-checkbox" 
-                                        <?php echo e($isBooked ? 'disabled' : ''); ?>>
-                                    
-                                    <div class="w-full aspect-square flex items-center justify-center rounded border font-medium text-sm
-                                        <?php echo e($isBooked ? 'bg-red-800 text-white border-red-900 cursor-not-allowed' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-600 transition-colors'); ?>">
-                                        <?php echo e($seat->seat_number); ?>
-
-                                    </div>
-                                </label>
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-bold mb-2">Số lượng vé muốn mua (Tối đa 4)</label>
+                            <div class="relative">
+                                <input type="number" name="ticket_quantity" id="ticket-qty-input" min="1" max="<?php echo e(min(4, $availableSeats)); ?>" value="1"
+                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-amber-500 focus:bg-white transition-colors text-center text-lg font-bold"
+                                    oninput="updateSummary()">
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 text-center">Còn lại <span class="font-bold text-amber-600"><?php echo e($availableSeats); ?></span> chỗ trống trên chuyến này.</p>
                         </div>
 
                         <div class="border-t pt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-600">Ghế đã chọn:</span>
-                                <span id="selected-seats-display" class="font-medium text-right text-sm">Chưa có</span>
-                            </div>
 
                             
                             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
@@ -210,11 +191,10 @@
         </div>
     </section>
 
-    <!-- JS Logic cho chọn ghế + mã giảm giá -->
+    <!-- JS Logic cho chọn số lượng + mã giảm giá -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes    = document.querySelectorAll('.seat-checkbox:not(:disabled)');
-            const selectedDisplay = document.getElementById('selected-seats-display');
+            const qtyInput      = document.getElementById('ticket-qty-input');
             const totalDisplay  = document.getElementById('total-price-display');
             const basePriceDisplay = document.getElementById('base-price-display');
             const discountDisplay  = document.getElementById('discount-display');
@@ -229,20 +209,16 @@
 
             const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + ' đ';
 
-            function updateSummary() {
-                let selectedNames = [];
-                let count = 0;
-                checkboxes.forEach(cb => {
-                    if (cb.checked) {
-                        count++;
-                        selectedNames.push(cb.nextElementSibling.innerText.trim());
-                    }
-                });
+            window.updateSummary = function() {
+                let count = parseInt(qtyInput ? qtyInput.value : 1) || 0;
+                let maxQty = qtyInput ? parseInt(qtyInput.getAttribute('max')) || 1 : 1;
+
+                if (count < 1) { count = 1; if(qtyInput) qtyInput.value = 1; }
+                if (count > maxQty) { count = maxQty; if(qtyInput) qtyInput.value = maxQty; }
 
                 currentBaseTotal = count * pricePerSeat;
 
                 if (count > 0) {
-                    selectedDisplay.innerText = selectedNames.join(', ');
                     const finalTotal = Math.max(0, currentBaseTotal - currentDiscount);
                     totalDisplay.innerText = fmt(finalTotal);
 
@@ -250,6 +226,8 @@
                         priceBreakdown && priceBreakdown.classList.remove('hidden');
                         basePriceDisplay && (basePriceDisplay.innerText = fmt(currentBaseTotal));
                         discountDisplay  && (discountDisplay.innerText  = '-' + fmt(currentDiscount));
+                    } else {
+                        priceBreakdown && priceBreakdown.classList.add('hidden');
                     }
 
                     if (submitBtn) {
@@ -258,12 +236,11 @@
                         submitBtn.classList.add('bg-amber-500', 'hover:bg-amber-600');
                     }
                 } else {
-                    selectedDisplay.innerText = 'Chưa có';
                     totalDisplay.innerText    = '0 đ';
                     priceBreakdown && priceBreakdown.classList.add('hidden');
                     currentDiscount = 0;
                     appliedPromoId  = '';
-                    resetCouponUI();
+                    resetCouponUI && resetCouponUI();
 
                     if (submitBtn) {
                         submitBtn.disabled = true;
@@ -273,7 +250,8 @@
                 }
             }
 
-            checkboxes.forEach(cb => cb.addEventListener('change', updateSummary));
+            // Gọi update 1 lần lúc vào trang
+            updateSummary();
 
             // ===== COUPON LOGIC =====
             const couponBtn   = document.getElementById('coupon-btn');

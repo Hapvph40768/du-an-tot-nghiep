@@ -14,11 +14,10 @@
     .timeline-item:last-child { border-left: none; padding-bottom: 0; }
     .timeline-item::before { content: ''; position: absolute; left: -7px; top: 0; width: 12px; height: 12px; background: var(--primary-color); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #ff6b0033; }
     
-    /* Sơ đồ ghế */
-    .seat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #f1f5f9; padding: 20px; border-radius: 12px; }
-    .seat-box { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 700; }
-    .seat-occupied { background: #fee2e2; color: #ef4444; border-color: #fecaca; }
-    .seat-available { background: #f0fdf4; color: #22c55e; border-color: #bbf7d0; }
+    .capacity-box { background: #f1f5f9; padding: 20px; border-radius: 12px; text-align: center; }
+    .capacity-number { font-size: 2.5rem; font-weight: 800; color: #ff6b00; }
+    .capacity-label { font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-top: 5px; }
+    .capacity-stats { display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px dashed #cbd5e1; padding-top: 15px; }
 </style>
 
 <div class="container-fluid py-4">
@@ -38,8 +37,7 @@
             </div>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.trips.edit', $trip->id) }}" class="btn btn-light border px-4 rounded-3"><i class='bx bx-edit'></i> Chỉnh sửa</a>
-            <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-dark px-4 rounded-3"><i class='bx bx-map-pin'></i> Lộ trình</a>
+            <a href="{{ route('admin.trips.edit', $trip->id) }}" class="btn btn-light border px-4 rounded-3"><i class='bx bx-edit'></i> Chỉnh sửa thông tin</a>
         </div>
     </div>
 
@@ -74,9 +72,12 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card-box">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Danh sách điểm đón khách</h5>
-                <div class="ps-2 mt-3">
+            <div class="card-box" style="overflow-y: auto; max-height: 600px;">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                    <h5 class="fw-bold m-0">Điểm đón khách</h5>
+                    <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
+                </div>
+                <div class="ps-2 mt-3 mb-5">
                     @forelse($trip->pickupPoints as $point)
                         <div class="timeline-item">
                             <div class="fw-bold text-dark">{{ $point->name }}</div>
@@ -85,8 +86,27 @@
                     @empty
                         <div class="text-center py-4">
                             <i class='bx bx-map-alt fs-2 text-muted opacity-25'></i>
-                            <p class="text-muted small mt-2">Chưa thiết lập điểm dừng cho chuyến này.</p>
+                            <p class="text-muted small mt-2">Chưa thiết lập điểm đón.</p>
                             <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-sm btn-outline-primary mt-2">Thiết lập ngay</a>
+                        </div>
+                    @endforelse
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 mt-4">
+                    <h5 class="fw-bold m-0">Điểm trả khách</h5>
+                    <a href="{{ route('admin.trips.dropoff_points.index', $trip->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
+                </div>
+                <div class="ps-2 mt-3">
+                    @forelse($trip->dropoffPoints as $point)
+                        <div class="timeline-item" style="--primary-color: #3b82f6;">
+                            <div class="fw-bold text-dark">{{ $point->name }}</div>
+                            <div class="text-muted small">{{ $point->address }}</div>
+                        </div>
+                    @empty
+                        <div class="text-center py-4">
+                            <i class='bx bx-map-alt fs-2 text-muted opacity-25'></i>
+                            <p class="text-muted small mt-2">Chưa thiết lập điểm trả.</p>
+                            <a href="{{ route('admin.trips.dropoff_points.index', $trip->id) }}" class="btn btn-sm btn-outline-primary mt-2">Thiết lập ngay</a>
                         </div>
                     @endforelse
                 </div>
@@ -96,25 +116,30 @@
         <div class="col-md-4">
             <div class="card-box">
                 <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                    <h5 class="fw-bold m-0">Tình trạng chỗ ngồi</h5>
+                    <h5 class="fw-bold m-0">Tình trạng đặt vé</h5>
                     <span class="badge bg-success small">Đang mở bán</span>
                 </div>
                 
-                <div class="seat-grid">
-                    @foreach($trip->vehicle->seats as $seat)
-                        @php
-                            $isBooked = in_array($seat->id, $bookedSeatIds ?? []);
-                        @endphp
-                        <div class="seat-box {{ $isBooked ? 'seat-occupied' : 'seat-available' }}" title="Ghế {{ $seat->seat_number }}">
-                            <i class='bx bx-chair fs-5'></i>
-                            {{ $seat->seat_number }}
+                <div class="capacity-box text-center">
+                    <div class="capacity-number">{{ $availableSeats }}</div>
+                    <div class="capacity-label">Chỗ còn trống</div>
+                    
+                    <div class="capacity-stats">
+                        <div>
+                            <span class="d-block fw-bold text-dark fs-5">{{ $totalSeats }}</span>
+                            <span class="text-muted small">Tổng ghế</span>
                         </div>
-                    @endforeach
+                        <div>
+                            <span class="d-block fw-bold text-danger fs-5">{{ $bookedSeats }}</span>
+                            <span class="text-muted small">Đã đặt</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-4 d-flex justify-content-center gap-3">
-                    <small class="text-muted"><i class='bx bxs-square text-success'></i> Trống</small>
-                    <small class="text-muted"><i class='bx bxs-square text-danger'></i> Đã đặt</small>
+                <div class="mt-4 text-center">
+                    <a href="{{ route('admin.tickets.index', ['trip_id' => $trip->id]) }}" class="btn btn-primary w-100 py-2 fw-bold" style="background: var(--primary-color); border-color: var(--primary-color);">
+                        <i class='bx bx-list-ol mr-1'></i> Xem danh sách vé
+                    </a>
                 </div>
             </div>
         </div>

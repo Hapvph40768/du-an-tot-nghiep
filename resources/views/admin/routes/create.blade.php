@@ -20,8 +20,7 @@
                         <div class="row g-3">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Điểm khởi hành</label>
-                                    {{-- Đổi name thành start_location_id --}}
+                                    <label class="form-label fw-bold small">Điểm khởi hành <span class="text-danger">*</span></label>
                                     <select name="start_location_id"
                                         class="form-select rounded-3 @error('start_location_id') is-invalid @enderror">
                                         <option value="">-- Chọn điểm đi --</option>
@@ -38,8 +37,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Điểm kết thúc</label>
-                                    {{-- Đổi name thành end_location_id --}}
+                                    <label class="form-label fw-bold small">Điểm kết thúc <span class="text-danger">*</span></label>
                                     <select name="end_location_id"
                                         class="form-select rounded-3 @error('end_location_id') is-invalid @enderror">
                                         <option value="">-- Chọn điểm đến --</option>
@@ -54,8 +52,13 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-
-                                {{-- Các trường distance và duration giữ nguyên nhưng nên thêm @error để hiện lỗi đỏ --}}
+                            </div>
+                            
+                            <div class="col-md-12 mt-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="isActive" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold small" for="isActive">Kích hoạt tuyến đường</label>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">Khoảng cách (km)</label>
