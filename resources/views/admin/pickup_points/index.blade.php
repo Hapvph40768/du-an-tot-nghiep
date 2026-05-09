@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('title', 'Danh mục Điểm đón')
 @section('content-main')
 <div class="container-fluid py-4">
@@ -18,8 +18,8 @@
                 <thead class="table-light">
                     <tr>
                         <th>Tỉnh/Thành phố</th>
-                        <th>Tên điểm đón</th>
-                        <th>Địa chỉ</th>
+                        <th>{{ __('name') }} điểm đón</th>
+                        <th>{{ __('address') }}</th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
@@ -41,7 +41,6 @@
                 </tbody>
             </table>
         </div>
-        {{ $pickupPoints->links() }}
-    </div>
+        {{ $pickupPoints->links() }}</div>
 </div>
 @endsection

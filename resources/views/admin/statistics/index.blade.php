@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Báo cáo Thống kê Chuyên sâu')
 @section('header-title', 'THỐNG KÊ CHI TIẾT')

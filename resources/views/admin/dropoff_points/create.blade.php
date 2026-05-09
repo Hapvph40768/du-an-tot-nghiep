@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Thêm điểm trả vào kho')
 

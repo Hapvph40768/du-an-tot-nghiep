@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('header-title', 'CHỈNH SỬA GIÁ KÝ GỬI')
 @section('header-subtitle', 'Cập nhật thông tin giá ký gửi')

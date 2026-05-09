@@ -13,7 +13,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" viewBox="0 0 16 16"><path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/></svg>
         </div>
         <div class="text-sm font-bold opacity-80 uppercase tracking-wider mb-2">Chuyến Hôm Nay</div>
-        <div class="text-4xl font-black mb-1">{{ $todayTripCount }} <span class="text-lg font-medium opacity-60">Chuyến</span></div>
+        <div class="text-4xl font-black mb-1">{{ $todayTripCount }}<span class="text-lg font-medium opacity-60">Chuyến</span></div>
         <div class="text-xs opacity-80">Đã bán: {{ $todayBookingsCount }} đơn mới.</div>
     </div>
 
@@ -73,8 +73,7 @@
                                 </div>
                                 <div class="grow">
                                     <div class="font-bold flex items-center gap-2 mb-1">
-                                        {{ $trip->route->startLocation->name }} <span class="opacity-40">&rarr;</span> {{ $trip->route->endLocation->name }}
-                                        <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs opacity-60">{{ $trip->vehicle->license_plate ?? 'BKS' }}</span>
+                                        {{ $trip->route->startLocation->name }}<span class="opacity-40">&rarr;</span> {{ $trip->route->endLocation->name }}<span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs opacity-60">{{ $trip->vehicle->license_plate ?? 'BKS' }}</span>
                                     </div>
                                     <div class="text-sm">
                                         <span class="opacity-60">Lấp đầy:</span> <span class="font-bold">{{ $trip->capacity_data['sold'] }}/{{ $trip->capacity_data['total'] }} ghế</span>
@@ -133,8 +132,7 @@
                         <div class="py-3 flex items-center justify-between px-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-xl transition-colors group">
                             <div class="w-1/2">
                                 <div class="font-bold flex items-center gap-2">
-                                    {{ $bk->contact_name }}
-                                </div>
+                                    {{ $bk->contact_name }}</div>
                                 <div class="text-sm opacity-60 text-blue-500">{{ $bk->contact_phone }}</div>
                             </div>
                             <div class="w-1/4">
@@ -142,10 +140,10 @@
                                 <div class="text-xs opacity-60 font-bold font-mono">{{ $bk->trip->departure_time }}</div>
                             </div>
                             <div class="w-1/4 flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                                <form action="{{ route('staff.bookings.cancel', $bk) }}" method="POST" id="cancelForm{{$bk->id}}">
+                                <form action="{{ route('staff.bookings.cancel', $bk) }}" method="POST" id="cancelForm{{ $bk->id }}">
                                     @csrf
-                                    <input type="hidden" name="cancellation_reason" id="cancellationReason{{$bk->id}}">
-                                    <button type="button" class="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 text-xs font-bold rounded-lg" onclick="let r = prompt('Vui lòng nhập lý do hủy đơn (bắt buộc):'); if(r){ document.getElementById('cancellationReason{{$bk->id}}').value = r; document.getElementById('cancelForm{{$bk->id}}').submit(); }">Hủy</button>
+                                    <input type="hidden" name="cancellation_reason" id="cancellationReason{{ $bk->id }}">
+                                    <button type="button" class="px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 text-xs font-bold rounded-lg" onclick="let r = prompt('Vui lòng nhập lý do hủy đơn (bắt buộc):'); if(r){ document.getElementById('cancellationReason{{ $bk->id }}').value = r; document.getElementById('cancelForm{{ $bk->id }}').submit(); }">{{ __('cancel') }}</button>
                                 </form>
                                 <a href="{{ route('staff.bookings.show', $bk) }}" class="px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs font-bold rounded-lg">Thu tiền</a>
                             </div>
@@ -181,8 +179,7 @@
                             <span>{{ $log->created_at->diffForHumans() }}</span>
                         </div>
                         <div class="text-sm font-medium leading-relaxed">
-                            {!! strip_tags($log->description, '<b><strong>') !!}
-                        </div>
+                            {!! strip_tags($log->description, '<b><strong>') !!}}</div>
                     </div>
                 @empty
                     <div class="pl-6 text-sm opacity-50 italic text-center mt-10">Chưa có theo vết hành động nào trong hệ thống.</div>

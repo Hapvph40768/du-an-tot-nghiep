@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Danh mục Điểm trả'); ?>
 <?php $__env->startSection('content-main'); ?>
 <div class="container-fluid py-4">
@@ -45,4 +46,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/dropoff_points/index.blade.php ENDPATH**/ ?>
+
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/dropoff_points/index.blade.php ENDPATH**/ ?>

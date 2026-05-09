@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Chi tiết chuyến xe #' . $trip->id)
 

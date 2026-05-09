@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     @if(session('success'))
@@ -16,7 +16,7 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>Tên quy tắc</th>
+                        <th>{{ __('name') }} quy tắc</th>
                         <th>Loại</th>
                         <th>Giá trị</th>
                         <th>Áp dụng từ</th>
@@ -32,8 +32,7 @@
                         <td>{{ $rule->type == 'percentage' ? 'Phần trăm (%)' : 'Cố định (VNĐ)' }}</td>
                         <td>
                             <span class="badge bg-info text-dark">
-                                +{{ $rule->type == 'percentage' ? $rule->value.'%' : number_format($rule->value).' ₫' }}
-                            </span>
+                                +{{ $rule->type == 'percentage' ? $rule->value.'%' : number_format($rule->value).' ₫' }}</span>
                         </td>
                         <td>{{ $rule->start_date ? \Carbon\Carbon::parse($rule->start_date)->format('d/m/Y') : '—' }}</td>
                         <td>{{ $rule->end_date ? \Carbon\Carbon::parse($rule->end_date)->format('d/m/Y') : '—' }}</td>

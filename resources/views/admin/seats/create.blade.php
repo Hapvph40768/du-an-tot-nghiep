@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
 <div class="container-fluid py-4">
@@ -14,8 +14,7 @@
                         <select name="vehicle_id" class="form-select rounded-3 @error('vehicle_id') is-invalid @enderror">
                             @foreach($vehicles as $vehicle)
                                 <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                                    {{ $vehicle->license_plate }} - {{ $vehicle->type }}
-                                </option>
+                                    {{ $vehicle->license_plate }} - {{ $vehicle->type }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -28,8 +27,8 @@
                     </div>
 
                     <div class="pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">Lưu thông tin</button>
-                        <a href="{{ route('admin.seats.index') }}" class="btn btn-light px-4 border ms-2">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">{{ __('save') }} thông tin</button>
+                        <a href="{{ route('admin.seats.index') }}" class="btn btn-light px-4 border ms-2">{{ __('cancel') }}</a>
                     </div>
                 </form>
             </div>

@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Thêm Địa điểm')
 
@@ -12,7 +12,7 @@
                     <form action="{{ route('admin.locations.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Tên địa điểm / Bến xe</label>
+                            <label class="form-label fw-bold">{{ __('name') }} địa điểm / Bến xe</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                 value="{{ old('name') }}" placeholder="Nhập tên bến xe hoặc thành phố..." required
                                 autofocus>
@@ -23,9 +23,9 @@
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary px-4 py-2"
-                                style="background-color: #ff6b00; border:none; border-radius: 10px;">Lưu lại</button>
+                                style="background-color: #ff6b00; border:none; border-radius: 10px;">{{ __('save') }} lại</button>
                             <a href="{{ route('admin.locations.index') }}" class="btn btn-light px-4 py-2"
-                                style="border-radius: 10px;">Hủy bỏ</a>
+                                style="border-radius: 10px;">{{ __('cancel') }} bỏ</a>
                         </div>
                     </form>
                 </div>

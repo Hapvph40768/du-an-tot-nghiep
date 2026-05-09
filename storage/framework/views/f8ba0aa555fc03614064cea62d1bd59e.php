@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content-main'); ?>
     <div class="container-fluid px-4 py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -13,9 +15,9 @@
                                 <th class="ps-4">Mã</th>
                                 <th>Khách hàng</th>
                                 <th>Loại</th>
-                                <th>Mô tả</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày gửi</th>
+                                <th><?php echo e(__('description')); ?></th>
+                                <th><?php echo e(__('status')); ?></th>
+                                <th><?php echo e(__('date')); ?> gửi</th>
                                 <th class="text-end pe-4">Hành động</th>
                             </tr>
                         </thead>
@@ -29,14 +31,10 @@
                                     </td>
                                     <td>
                                         <span class="badge bg-info-subtle text-info px-2">
-                                            <?php echo e(ucfirst($ticket->type)); ?>
-
-                                        </span>
+                                            <?php echo e(ucfirst($ticket->type)); ?></span>
                                     </td>
                                     <td>
-                                        <div class="text-truncate" style="max-width: 200px;"><?php echo e($ticket->description); ?>
-
-                                        </div>
+                                        <div class="text-truncate" style="max-width: 200px;"><?php echo e($ticket->description); ?></div>
                                     </td>
                                     <td>
                                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($ticket->status == 'open'): ?>
@@ -67,10 +65,8 @@
         </div>
 
         <div class="mt-3">
-            <?php echo e($tickets->links()); ?>
-
-        </div>
+            <?php echo e($tickets->links()); ?></div>
     </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/support_tickets/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/support_tickets/index.blade.php ENDPATH**/ ?>

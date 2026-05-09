@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     <div class="card shadow-sm border-0 rounded-4 p-4">
@@ -26,10 +26,8 @@
                         <td>#{{ $route->id }}</td>
                         <td>
                             <div class="fw-bold text-dark">
-                                {{ $route->departureLocation->name }} 
-                                <i class='bx bx-right-arrow-alt text-primary'></i> 
-                                {{ $route->destinationLocation->name }}
-                            </div>
+                                {{ $route->departureLocation->name }}<i class='bx bx-right-arrow-alt text-primary'></i> 
+                                {{ $route->destinationLocation->name }}</div>
                         </td>
                         <td>{{ $route->distance_km }} km</td>
                         <td>{{ $route->estimated_time }} giờ</td>
@@ -45,7 +43,6 @@
                 </tbody>
             </table>
         </div>
-        {{-- <div class="mt-3">{{ $routes->links() }}</div> --}}
-    </div>
+        {{-- <div class="mt-3">{{ $routes->links() }}</div> --}}</div>
 </div>
 @endsection

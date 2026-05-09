@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('title', 'Gán điểm trả cho chuyến xe')
 @section('content-main')
 <div class="container-fluid py-4">

@@ -10,7 +10,7 @@
                 <a href="{{ route('driver.home') }}" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-600 transition-colors">
                     <i class='bx bx-chevron-left text-2xl'></i>
                 </a>
-                <h2 class="text-2xl font-bold text-gray-800">Chuyến xe Sắp/Đang chạy</h2>
+                <h2 class="text-2xl font-bold text-gray-800">{{ __('trips') }} Sắp/Đang chạy</h2>
             </div>
             <a href="{{ route('driver.trips.history') }}" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition flex items-center gap-2">
                 <i class='bx bx-history'></i> Lịch sử chuyến đi
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="lg:col-span-5">
-                    <label class="block text-sm font-medium text-gray-600 mb-3">Trạng thái</label>
+                    <label class="block text-sm font-medium text-gray-600 mb-3">{{ __('status') }}</label>
                     <div class="flex flex-wrap gap-2" id="status-filter">
                         <button onclick="applyFilters()" data-status="active"
                             class="status-btn flex-1 sm:flex-none px-5 py-3 rounded-2xl text-sm font-medium transition-all bg-amber-500 text-white shadow">
@@ -76,43 +76,37 @@
                                     <span
                                         class="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-700 rounded-2xl text-sm font-semibold">
                                         <i class='bx bx-time-five'></i>
-                                        {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}
-                                    </span>
+                                        {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
                                     <p class="text-xs text-gray-500 mt-2">
-                                        {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}
-                                    </p>
+                                        {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</p>
                                 </div>
                                 <div class="text-right">
                                     <span class="text-xs text-gray-500">Biển số</span>
                                     <p class="font-semibold text-gray-800 mt-0.5">
-                                        {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}
-                                    </p>
+                                        {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}</p>
                                 </div>
                             </div>
 
                             <div class="flex items-center gap-4 mb-8">
                                 <div class="flex-1">
                                     <p class="font-bold text-xl text-gray-900 leading-tight">
-                                        {{ $trip->route->departureLocation->name ?? 'N/A' }}
-                                    </p>
-                                    <p class="text-xs text-gray-500 mt-1">Điểm khởi hành</p>
+                                        {{ $trip->route->departureLocation->name ?? 'N/A' }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">{{ __('departure') }}</p>
                                 </div>
                                 <div class="text-amber-500 text-5xl -mt-2">
                                     <i class='bx bx-right-arrow-alt'></i>
                                 </div>
                                 <div class="flex-1 text-right">
                                     <p class="font-bold text-xl text-gray-900 leading-tight">
-                                        {{ $trip->route->destinationLocation->name ?? 'N/A' }}
-                                    </p>
-                                    <p class="text-xs text-gray-500 mt-1">Điểm đến</p>
+                                        {{ $trip->route->destinationLocation->name ?? 'N/A' }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">{{ __('destination') }}</p>
                                 </div>
                             </div>
 
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-3xl font-semibold text-emerald-600">
-                                        {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}
-                                    </span>
+                                        {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}</span>
                                     <span class="text-gray-400 text-lg">/</span>
                                     <span class="text-gray-500">{{ $trip->vehicle->total_seats ?? '?' }}</span>
                                     <span class="text-xs text-gray-400 ml-1">ghế</span>
@@ -136,8 +130,7 @@
                                         'completed' => 'Hoàn thành',
                                         'canceled' => 'Đã hủy',
                                         default => ucfirst($trip->status),
-                                    } }}
-                                </span>
+                                    }}}</span>
                             </div>
 
                             <div class="flex gap-3">
@@ -164,8 +157,7 @@
             </div>
 
             <div class="mt-12 flex justify-center">
-                {{ $trips->links() }}
-            </div>
+                {{ $trips->links() }}</div>
         @endif
     </div>
 
@@ -193,9 +185,7 @@
                 let matchTime = true;
                 if (selectedStatus === 'active') {
                     matchTime = departureTime >= now && departureTime <= tenHoursLater;
-                }
-
-                const shouldShow = matchDate && matchStatus && matchTime;
+                }} const shouldShow = matchDate && matchStatus && matchTime;
                 card.style.display = shouldShow ? 'block' : 'none';
 
                 if (shouldShow) visibleCount++;
@@ -204,10 +194,7 @@
             const emptyDiv = document.querySelector('.bg-white.rounded-3xl.p-16');
             if (emptyDiv) {
                 emptyDiv.style.display = (visibleCount === 0) ? 'block' : 'none';
-            }
-        }
-
-        document.querySelectorAll('.date-btn').forEach(btn => {
+            }}} document.querySelectorAll('.date-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.date-btn').forEach(b => {
                     b.classList.remove('bg-amber-500', 'text-white', 'shadow-md', 'ring-2',
@@ -236,14 +223,10 @@
             const todayBtn = document.querySelector(`.date-btn[data-date="{{ now()->format('Y-m-d') }}"]`);
             if (todayBtn) {
                 todayBtn.classList.add('bg-amber-500', 'text-white', 'shadow-md', 'ring-2', 'ring-amber-200');
-            }
-
-            const activeBtn = document.querySelector('.status-btn[data-status="active"]');
+            }} const activeBtn = document.querySelector('.status-btn[data-status="active"]');
             if (activeBtn) {
                 activeBtn.classList.add('bg-amber-500', 'text-white', 'shadow-md');
-            }
-
-            applyFilters();
+            }} applyFilters();
         });
     </script>
 @endsection

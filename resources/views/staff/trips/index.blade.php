@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="flex items-center justify-between mb-8">
-    <h1 class="text-2xl font-bold">Lịch trình Chuyến xe</h1>
+    <h1 class="text-2xl font-bold">{{ __('schedules') }} Chuyến xe</h1>
     <form action="{{ route('staff.trips.index') }}" method="GET" class="flex gap-2">
         <input type="date" name="date" value="{{ request('date', now()->format('Y-m-d')) }}" class="px-4 py-2 border rounded-xl dark:bg-[#111111] dark:border-[#262626]">
-        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">Lọc ngày</button>
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">{{ __('filter') }} ngày</button>
     </form>
 </div>
 
@@ -39,7 +39,7 @@
                     <div class="text-xs opacity-40 font-bold">TÀI XẾ</div>
                     <div class="text-sm font-bold">{{ $trip->driver->name ?? 'Chưa gán' }}</div>
                 </div>
-                <a href="{{ route('staff.trips.show', $trip) }}" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-sm font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all">Chi tiết</a>
+                <a href="{{ route('staff.trips.show', $trip) }}" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-sm font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all">{{ __('details') }}</a>
             </div>
         </div>
     @empty
@@ -48,6 +48,5 @@
 </div>
 
 <div class="mt-8">
-    {{ $trips->links() }}
-</div>
+    {{ $trips->links() }}</div>
 @endsection

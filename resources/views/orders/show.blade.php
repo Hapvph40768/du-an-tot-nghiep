@@ -9,19 +9,13 @@
     .order-card {
         border-radius: 1.25rem; border: none;
         box-shadow: 0 10px 30px rgba(255, 122, 24, 0.1); transition: all 0.3s ease;
-    }
-    .order-card:hover { transform: scale(1.02); box-shadow: 0 15px 40px rgba(255, 122, 24, 0.2); }
-    .bg-gradient-orange { background: linear-gradient(135deg, #ffb347 0%, #ff7a18 100%); }
-    .btn-orange {
+    }} .order-card:hover { transform: scale(1.02); box-shadow: 0 15px 40px rgba(255, 122, 24, 0.2); }} .bg-gradient-orange { background: linear-gradient(135deg, #ffb347 0%, #ff7a18 100%); }} .btn-orange {
         background: linear-gradient(135deg, #ffb347 0%, #ff7a18 100%); color: white;
         border: none; border-radius: 0.75rem; font-weight: bold; transition: all 0.3s ease;
-    }
-    .btn-orange:hover {
+    }} .btn-orange:hover {
         background: linear-gradient(135deg, #ff7a18 0%, #e65c00 100%); color: white;
         transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255, 122, 24, 0.4);
-    }
-    .badge-status { font-size: 0.9rem; padding: 0.5em 1em; border-radius: 2rem; }
-</style>
+    }} .badge-status { font-size: 0.9rem; padding: 0.5em 1em; border-radius: 2rem; }}</style>
 @endpush
 
 @section('content-main')
@@ -31,8 +25,7 @@
             
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
@@ -49,7 +42,7 @@
                             <span class="fw-bold">{{ $order->user->name ?? 'Khách vãng lai' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                            <span class="text-muted fw-semibold">Số tiền</span>
+                            <span class="text-muted fw-semibold">{{ __('amount') }}</span>
                             <span class="fw-bold fs-5" style="color: #ff7a18;">{{ number_format($order->amount) }} VNĐ</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
@@ -57,7 +50,7 @@
                             <span class="badge bg-secondary badge-status text-uppercase">{{ $order->payment_method }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom-0">
-                            <span class="text-muted fw-semibold">Trạng thái</span>
+                            <span class="text-muted fw-semibold">{{ __('status') }}</span>
                             @if($order->status == 'pending')
                                 <span class="badge bg-warning text-dark badge-status">⏳ Chờ xử lý</span>
                             @elseif($order->status == 'paid' || $order->status == 'completed')

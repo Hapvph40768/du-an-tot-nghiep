@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
     <div class="container-fluid px-4 py-4">
@@ -15,9 +15,9 @@
                                 <th class="ps-4">Mã</th>
                                 <th>Khách hàng</th>
                                 <th>Loại</th>
-                                <th>Mô tả</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày gửi</th>
+                                <th>{{ __('description') }}</th>
+                                <th>{{ __('status') }}</th>
+                                <th>{{ __('date') }} gửi</th>
                                 <th class="text-end pe-4">Hành động</th>
                             </tr>
                         </thead>
@@ -31,12 +31,10 @@
                                     </td>
                                     <td>
                                         <span class="badge bg-info-subtle text-info px-2">
-                                            {{ ucfirst($ticket->type) }}
-                                        </span>
+                                            {{ ucfirst($ticket->type) }}</span>
                                     </td>
                                     <td>
-                                        <div class="text-truncate" style="max-width: 200px;">{{ $ticket->description }}
-                                        </div>
+                                        <div class="text-truncate" style="max-width: 200px;">{{ $ticket->description }}</div>
                                     </td>
                                     <td>
                                         @if ($ticket->status == 'open')
@@ -67,7 +65,6 @@
         </div>
 
         <div class="mt-3">
-            {{ $tickets->links() }}
-        </div>
+            {{ $tickets->links() }}</div>
     </div>
 @endsection

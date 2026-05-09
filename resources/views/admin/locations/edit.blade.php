@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Cập nhật Địa điểm')
 
@@ -13,7 +13,7 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Tên địa điểm / Bến xe</label>
+                            <label class="form-label fw-bold">{{ __('name') }} địa điểm / Bến xe</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
                                 value="{{ old('name', $location->name) }}" required>
                             @error('name')
@@ -23,9 +23,9 @@
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary px-4 py-2"
-                                style="background-color: #ff6b00; border:none; border-radius: 10px;">Cập nhật</button>
+                                style="background-color: #ff6b00; border:none; border-radius: 10px;">{{ __('update') }}</button>
                             <a href="{{ route('admin.locations.index') }}" class="btn btn-light px-4 py-2"
-                                style="border-radius: 10px;">Hủy</a>
+                                style="border-radius: 10px;">{{ __('cancel') }}</a>
                         </div>
                     </form>
                 </div>

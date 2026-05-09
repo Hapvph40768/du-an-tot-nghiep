@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
     <div class="chat-box">
@@ -6,16 +6,13 @@
         @foreach ($ticket->messages as $msg)
             @if ($msg->sender_type == 'user')
                 <div class="user">
-                    {{ $msg->message }}
-                </div>
+                    {{ $msg->message }}</div>
             @elseif($msg->sender_type == 'ai')
                 <div class="ai">
-                    🤖 {{ $msg->message }}
-                </div>
+                    🤖 {{ $msg->message }}</div>
             @else
                 <div class="admin">
-                    Admin: {{ $msg->message }}
-                </div>
+                    Admin: {{ $msg->message }}</div>
             @endif
         @endforeach
 

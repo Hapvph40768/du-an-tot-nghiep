@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 
 <div class="top-header">
@@ -24,7 +24,7 @@
         @csrf
 
         <div style="margin-bottom:12px;">
-            <label>Người dùng</label>
+            <label>{{ __('users') }}</label>
             <select name="user_id" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;">
                 <option value="">-- Chọn người dùng --</option>
                 @foreach($users as $user)
@@ -69,8 +69,8 @@
         </div>
 
         <div style="display:flex;gap:8px;">
-            <button type="submit" style="background:#ff5b24;color:#fff;padding:10px 16px;border-radius:8px;border:none;">Lưu</button>
-            <a href="{{ route('admin.reviews.index') }}" style="background:#f0f0f0;padding:10px 16px;border-radius:8px;text-decoration:none;color:#333;">Hủy</a>
+            <button type="submit" style="background:#ff5b24;color:#fff;padding:10px 16px;border-radius:8px;border:none;">{{ __('save') }}</button>
+            <a href="{{ route('admin.reviews.index') }}" style="background:#f0f0f0;padding:10px 16px;border-radius:8px;text-decoration:none;color:#333;">{{ __('cancel') }}</a>
         </div>
     </form>
 </div>

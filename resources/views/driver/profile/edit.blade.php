@@ -5,12 +5,11 @@
 @section('content-main')
     <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-3xl shadow-sm p-8">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">Cập nhật hồ sơ tài xế</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">{{ __('update') }} hồ sơ tài xế</h2>
             
             @if(session('warning'))
                 <div class="bg-amber-100 text-amber-800 p-4 rounded-xl mb-6">
-                    {{ session('warning') }}
-                </div>
+                    {{ session('warning') }}</div>
             @endif
 
             <form action="{{ route('driver.profile.update') }}" method="POST">
@@ -50,8 +49,8 @@
                 </div>
 
                 <div class="flex justify-end gap-4">
-                    <a href="{{ route('driver.profile') }}" class="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition">Hủy / Bỏ qua</a>
-                    <button type="submit" class="px-6 py-3 rounded-xl bg-amber-600 text-white font-medium hover:bg-amber-700 transition">Cập nhật thông tin</button>
+                    <a href="{{ route('driver.profile') }}" class="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition">{{ __('cancel') }} / Bỏ qua</a>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-amber-600 text-white font-medium hover:bg-amber-700 transition">{{ __('update') }} thông tin</button>
                 </div>
             </form>
         </div>

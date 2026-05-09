@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('title', 'Quản lý Địa điểm'); ?>
 
 <?php $__env->startSection('content-main'); ?>
@@ -7,25 +9,19 @@
             --primary-color: #ff6b00;
             --primary-hover: #e65100;
             --bg-light: #f9fafb;
-        }
-
-        .card-box {
+        }} .card-box {
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
             border: 1px solid #f0f0f0;
             padding: 24px;
-        }
-
-        .toolbar-area {
+        }} .toolbar-area {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
             gap: 15px;
-        }
-
-        .btn-primary-custom {
+        }} .btn-primary-custom {
             background-color: var(--primary-color);
             border: none;
             color: white;
@@ -37,24 +33,18 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
-        }
-
-        .btn-primary-custom:hover {
+        }} .btn-primary-custom:hover {
             background-color: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
             color: white;
-        }
-
-        .custom-table {
+        }} .custom-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             table-layout: fixed;
             text-align: left;
-        }
-
-        .custom-table thead th {
+        }} .custom-table thead th {
             background-color: #f9fafb;
             color: #6b7280;
             font-weight: 600;
@@ -62,23 +52,17 @@
             text-transform: uppercase;
             padding: 16px;
             border-bottom: 2px solid #edf2f7;
-        }
-
-        .custom-table td {
+        }} .custom-table td {
             padding: 16px;
             vertical-align: middle;
             border-bottom: 1px solid #f3f4f6;
             color: #374151;
             font-size: 14px;
-        }
-
-        .action-group {
+        }} .action-group {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-        }
-
-        .action-btn {
+        }} .action-btn {
             width: 32px;
             height: 32px;
             border-radius: 8px;
@@ -91,31 +75,22 @@
             border: none;
             cursor: pointer;
             text-decoration: none;
-        }
-
-        .action-btn:hover {
+        }} .action-btn:hover {
             background-color: #edf2f7;
             color: var(--primary-color);
-        }
-
-        .action-btn.delete-btn:hover {
+        }} .action-btn.delete-btn:hover {
             background-color: #fee2e2;
             color: #dc2626;
-        }
-
-        .custom-table td {
+        }} .custom-table td {
             padding: 16px;
             vertical-align: middle;
             border-bottom: 1px solid #f3f4f6;
             text-align: left;
             /* Đảm bảo nội dung căn trái */
-        }
-
-        /* Căn phải riêng cho cột hành động */
+        }} /* Căn phải riêng cho cột hành động */
         .text-end {
             text-align: right !important;
-        }
-    </style>
+        }}</style>
 
     <div class="container-fluid py-4">
 
@@ -126,8 +101,8 @@
             </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-primary">Địa điểm</li>
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted"><?php echo e(__('home')); ?></a></li>
+                    <li class="breadcrumb-item active text-primary"><?php echo e(__('locations')); ?></li>
                 </ol>
             </nav>
         </div>
@@ -136,9 +111,7 @@
 
             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class='bx bx-check-circle me-1'></i> <?php echo e(session('success')); ?>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class='bx bx-check-circle me-1'></i> <?php echo e(session('success')); ?><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
@@ -156,8 +129,8 @@
                     <thead>
                         <tr>
                             <th class="ps-4" style="width: 10%;">ID</th>
-                            <th style="width: 45%;">Tên địa điểm / Bến xe</th>
-                            <th style="width: 25%;">Ngày tạo</th>
+                            <th style="width: 45%;"><?php echo e(__('name')); ?> địa điểm / Bến xe</th>
+                            <th style="width: 25%;"><?php echo e(__('created_at')); ?></th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
                     </thead>
@@ -170,9 +143,7 @@
                                 </td>
                                 <td>
                                     <span class="text-muted small">
-                                        <?php echo e($location->created_at->format('d/m/Y H:i')); ?>
-
-                                    </span>
+                                        <?php echo e($location->created_at->format('d/m/Y H:i')); ?></span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="action-group">
@@ -185,7 +156,7 @@
                                             class="d-inline" onsubmit="return confirm('Xóa địa điểm này?');">
                                             <?php echo csrf_field(); ?>
                                             <?php echo method_field('DELETE'); ?>
-                                            <button type="submit" class="action-btn delete-btn" title="Xóa">
+                                            <button type="submit" class="action-btn delete-btn" title="="<?php echo e(__('delete')); ?>">
                                                 <i class='bx bx-trash fs-5'></i>
                                             </button>
                                         </form>
@@ -204,13 +175,11 @@
             </div>
 
             <div class="mt-4">
-                <?php echo e($locations->links('pagination::bootstrap-5')); ?>
-
-            </div>
+                <?php echo e($locations->links('pagination::bootstrap-5')); ?></div>
 
         </div>
     </div>
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/locations/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/locations/index.blade.php ENDPATH**/ ?>

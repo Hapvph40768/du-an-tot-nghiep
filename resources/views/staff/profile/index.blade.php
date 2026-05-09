@@ -19,8 +19,7 @@
             </div>
             <h2 class="text-2xl font-black mb-1">{{ $user->name }}</h2>
             <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-black uppercase tracking-widest mb-4">
-                {{ strtoupper($user->role) }} - {{ $user->department ?? 'Văn phòng' }}
-            </div>
+                {{ strtoupper($user->role) }} - {{ $user->department ?? 'Văn phòng' }}</div>
             <div class="text-sm opacity-60 italic mb-6">ID: {{ $user->employee_id ?? 'NV-'.str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</div>
             
             <div class="grid grid-cols-2 gap-4 pt-6 border-t border-[#e3e3e0] dark:border-[#262626] border-dashed">
@@ -37,7 +36,7 @@
 
         <div class="bg-blue-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
             <div class="relative z-10">
-                <div class="text-xs font-bold uppercase opacity-60 mb-1">Ngày gia nhập</div>
+                <div class="text-xs font-bold uppercase opacity-60 mb-1">{{ __('date') }} gia nhập</div>
                 <div class="text-lg font-black mb-4">{{ \Carbon\Carbon::parse($user->joined_date ?? $user->created_at)->format('d/m/Y') }}</div>
                 
                 <div class="text-xs font-bold uppercase opacity-60 mb-1">Loại hợp đồng</div>
@@ -71,7 +70,7 @@
                         <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase opacity-40 mb-2 italic">Ngày sinh</label>
+                        <label class="block text-xs font-bold uppercase opacity-40 mb-2 italic">{{ __('date') }} sinh</label>
                         <input type="date" name="birthday" value="{{ old('birthday', $user->birthday) }}" class="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div>
@@ -85,12 +84,12 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold uppercase opacity-40 mb-2 italic">Địa chỉ thường trú</label>
+                    <label class="block text-xs font-bold uppercase opacity-40 mb-2 italic">{{ __('address') }} thường trú</label>
                     <textarea name="address" rows="3" class="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">{{ old('address', $user->address) }}</textarea>
                 </div>
 
                 <div class="pt-4 border-t border-gray-50 flex justify-end">
-                    <button type="submit" class="px-8 py-4 bg-black text-white rounded-2xl font-black shadow-lg shadow-black/20 hover:scale-105 transition-all">Lưu thay đổi hồ sơ</button>
+                    <button type="submit" class="px-8 py-4 bg-black text-white rounded-2xl font-black shadow-lg shadow-black/20 hover:scale-105 transition-all">{{ __('save') }} thay đổi hồ sơ</button>
                 </div>
             </form>
         </div>
@@ -114,7 +113,7 @@
                         <input type="password" name="password" class="w-full px-5 py-3 bg-white border border-gray-100 rounded-2xl font-bold focus:ring-2 focus:ring-red-500 outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase opacity-40 mb-2 italic">Xác nhận mật khẩu mới</label>
+                        <label class="block text-[10px] font-bold uppercase opacity-40 mb-2 italic">{{ __('confirm') }} mật khẩu mới</label>
                         <input type="password" name="password_confirmation" class="w-full px-5 py-3 bg-white border border-gray-100 rounded-2xl font-bold focus:ring-2 focus:ring-red-500 outline-none transition-all">
                     </div>
                 </div>

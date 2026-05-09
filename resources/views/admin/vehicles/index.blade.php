@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Quản lý Xe')
 
@@ -7,24 +7,18 @@
         :root {
             --primary-color: #ff6b00;
             --primary-hover: #e65100;
-        }
-
-        .card-box {
+        }} .card-box {
             background: #ffffff;
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
             border: 1px solid #f0f0f0;
-        }
-
-        .custom-table {
+        }} .custom-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             table-layout: fixed;
-        }
-
-        .custom-table thead th {
+        }} .custom-table thead th {
             background-color: #f9fafb;
             color: #6b7280;
             font-weight: 600;
@@ -33,17 +27,13 @@
             padding: 16px;
             border-bottom: 2px solid #edf2f7;
             text-align: left;
-        }
-
-        .custom-table td {
+        }} .custom-table td {
             padding: 16px;
             vertical-align: middle;
             border-bottom: 1px solid #f3f4f6;
             text-align: left;
             font-size: 14px;
-        }
-
-        .btn-primary-custom {
+        }} .btn-primary-custom {
             background-color: var(--primary-color);
             border: none;
             color: white;
@@ -55,32 +45,25 @@
             align-items: center;
             gap: 5px;
             transition: 0.3s;
-        }
-
-        .btn-primary-custom:hover {
+        }} .btn-primary-custom:hover {
             background-color: var(--primary-hover);
             color: white;
             transform: translateY(-2px);
-        }
-
-        .status-active {
+        }} .status-active {
             color: #059669;
             background: #ecfdf5;
             padding: 4px 10px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 12px;
-        }
-
-        .status-maintenance {
+        }} .status-maintenance {
             color: #dc2626;
             background: #fef2f2;
             padding: 4px 10px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 12px;
-        }
-    </style>
+        }}</style>
 
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -95,8 +78,7 @@
 
         @if (session('success'))
             <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-                <i class='bx bx-check-circle'></i> {{ session('success') }}
-            </div>
+                <i class='bx bx-check-circle'></i> {{ session('success') }}</div>
         @endif
 
         <div class="card-box">
@@ -108,7 +90,7 @@
                             <th style="width: 25%;">Loại xe</th>
                             <th style="width: 15%;">Số ghế</th>
                             <th style="width: 20%;">Số điện thoại</th>
-                            <th style="width: 20%;">Trạng thái</th>
+                            <th style="width: 20%;">{{ __('status') }}</th>
                             <th class="text-end pe-4" style="width: 20%;">Hành động</th>
                         </tr>
                     </thead>
@@ -133,8 +115,7 @@
                                 <td>
                                     @if ($vehicle->phone_vehicles)
                                         <i class='bx bxs-phone-call text-success me-1'></i>
-                                        {{ $vehicle->phone_vehicles }}
-                                    @else
+                                        {{ $vehicle->phone_vehicles }} @else
                                         <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
@@ -159,7 +140,7 @@
                                         </a>
 
                                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                            class="btn btn-sm btn-light border" title="Sửa">
+                                            class="btn btn-sm btn-light border" title="="{{ __('edit') }}">
                                             <i class='bx bx-edit text-primary'></i>
                                         </a>
 
@@ -167,7 +148,7 @@
                                             onsubmit="return confirm('Xóa xe này sẽ xóa toàn bộ sơ đồ ghế liên quan. Tiếp tục?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-sm btn-light border text-danger" title="Xóa">
+                                            <button class="btn btn-sm btn-light border text-danger" title="="{{ __('delete') }}">
                                                 <i class='bx bx-trash'></i>
                                             </button>
                                         </form>
@@ -186,8 +167,7 @@
                 </table>
             </div>
             <div class="mt-4">
-                {{ $vehicles->links('pagination::bootstrap-5') }}
-            </div>
+                {{ $vehicles->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 @endsection

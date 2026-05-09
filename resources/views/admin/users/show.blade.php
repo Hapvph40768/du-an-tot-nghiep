@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
     <div style="padding: 24px;">
@@ -50,8 +50,7 @@
                         background:
                         {{ $user->role === 'admin' ? '#ff4d4f' : ($user->role === 'staff' ? '#faad14' : '#1890ff') }};
                     ">
-                            {{ ucfirst($user->role) }}
-                        </span>
+                            {{ ucfirst($user->role) }}</span>
                     </div>
 
                     <div style="margin-top:10px;">
@@ -66,8 +65,7 @@
                         color:
                             {{ $user->status === 'active' ? '#389e0d' : '#cf1322' }};
                     ">
-                            {{ $user->status === 'active' ? 'Hoạt động' : 'Bị chặn' }}
-                        </span>
+                            {{ $user->status === 'active' ? 'Hoạt động' : 'Bị chặn' }}</span>
                     </div>
 
                     <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" style="margin-top:20px;">
@@ -87,8 +85,7 @@
                             color:
                                 {{ $user->status === 'active' ? '#cf1322' : '#389e0d' }};
                         ">
-                            {{ $user->status === 'active' ? '🚫 Chặn tài khoản' : '✅ Mở khóa' }}
-                        </button>
+                            {{ $user->status === 'active' ? '🚫 Chặn tài khoản' : '✅ Mở khóa' }}</button>
                     </form>
 
                 </div>
@@ -97,34 +94,29 @@
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                         <div style="padding:16px; border-radius:12px; background:#fafafa;">
-                            <small style="color:#888;">Email</small>
+                            <small style="color:#888;">{{ __('email') }}</small>
                             <div style="font-weight:600; margin-top:4px;">
-                                {{ $user->email ?? 'Chưa cập nhật' }}
-                            </div>
+                                {{ $user->email ?? 'Chưa cập nhật' }}</div>
                         </div>
 
                         <div style="padding:16px; border-radius:12px; background:#fafafa;">
                             <small style="color:#888;">Số điện thoại</small>
                             <div style="font-weight:600; margin-top:4px;">
-                                {{ $user->phone ?? 'Chưa cập nhật' }}
-                            </div>
+                                {{ $user->phone ?? 'Chưa cập nhật' }}</div>
                         </div>
 
                         <div style="padding:16px; border-radius:12px; background:#fafafa;">
-                            <small style="color:#888;">Ngày tạo</small>
+                            <small style="color:#888;">{{ __('created_at') }}</small>
                             <div style="font-weight:600; margin-top:4px;">
-                                {{ $user->created_at->format('d/m/Y H:i') }}
-                            </div>
+                                {{ $user->created_at->format('d/m/Y H:i') }}</div>
                             <small style="color:#aaa;">
-                                {{ $user->created_at->diffForHumans() }}
-                            </small>
+                                {{ $user->created_at->diffForHumans() }}</small>
                         </div>
 
                         <div style="padding:16px; border-radius:12px; background:#fafafa;">
-                            <small style="color:#888;">Cập nhật lần cuối</small>
+                            <small style="color:#888;">{{ __('update') }} lần cuối</small>
                             <div style="font-weight:600; margin-top:4px;">
-                                {{ $user->updated_at->format('d/m/Y H:i') }}
-                            </div>
+                                {{ $user->updated_at->format('d/m/Y H:i') }}</div>
                         </div>
 
                     </div>

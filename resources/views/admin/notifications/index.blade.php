@@ -1,9 +1,9 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     <div class="card shadow-sm border-0 rounded-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold m-0">Thông báo hệ thống</h3>
+            <h3 class="fw-bold m-0">{{ __('notifications') }} hệ thống</h3>
         </div>
         <div class="table-responsive">
             <table class="table align-middle">

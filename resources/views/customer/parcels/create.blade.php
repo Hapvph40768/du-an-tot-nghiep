@@ -1,22 +1,29 @@
 @extends('layout.customer.CustomerLayout')
 
 @section('content-main')
-<section class="py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-3xl mx-auto px-4">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-800">Tạo Đơn Ký gửi hàng hóa</h2>
-            <a href="{{ route('customer.parcels.index') }}" class="text-amber-600 hover:text-amber-800 font-medium">
-                &larr; Quay lại
+<section class="py-12 lg:py-20 relative min-h-[80vh]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-black text-white tracking-tight uppercase flex items-center gap-3">
+                <i data-lucide="package-plus" class="w-8 h-8 text-brand-primary"></i> Tạo Đơn Ký Gửi
+            </h2>
+            <a href="{{ route('customer.parcels.index') }}" class="px-4 py-2 bg-white/10 text-white border border-white/20 rounded-xl font-medium text-sm hover:bg-white/20 transition-colors flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Quay lại
             </a>
         </div>
         
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">{{ session('success') }}</div>
+            <div class="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl mb-6 flex items-center gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+                <p class="text-sm font-medium">{{ session('success') }}</p>
+            </div>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-sm">
-                <ul class="list-disc pl-5">
+            <div class="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl mb-6">
+                <ul class="list-disc pl-5 text-sm space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -24,73 +31,140 @@
             </div>
         @endif
 
-        <div class="bg-white rounded-xl shadow-sm p-8">
-            <form action="{{ route('customer.parcels.store') }}" method="POST">
-                @csrf
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Sender Info -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người gửi</h3>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người gửi <span class="text-red-500">*</span></label>
-                            <input type="text" name="sender_name" value="{{ old('sender_name', Auth::user()->name ?? '') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+        <form action="{{ route('customer.parcels.store') }}" method="POST">
+            @csrf
+            
+            <!-- Thông tin Người gửi & Người nhận -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                
+                <!-- Người gửi -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 relative overflow-hidden group hover:border-brand-primary/30 transition-colors">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-primary/20 transition-colors"></div>
+                    
+                    <h3 class="font-bold text-lg text-white mb-6 border-b border-white/10 pb-3 flex items-center gap-2">
+                        <i data-lucide="user" class="w-5 h-5 text-brand-primary"></i> Người gửi
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Họ tên người gửi <span class="text-red-400">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                    <i data-lucide="user" class="w-4 h-4"></i>
+                                </div>
+                                <input type="text" name="sender_name" value="{{ old('sender_name', Auth::user()->name ?? '') }}" required 
+                                    class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors">
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
-                            <input type="text" name="sender_phone" value="{{ old('sender_phone', Auth::user()->phone ?? '') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
-                        </div>
-                    </div>
-
-                    <!-- Receiver Info -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Người nhận</h3>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Họ tên người nhận <span class="text-red-500">*</span></label>
-                            <input type="text" name="receiver_name" value="{{ old('receiver_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
-                            <input type="text" name="receiver_phone" value="{{ old('receiver_phone') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Số điện thoại <span class="text-red-400">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                    <i data-lucide="phone" class="w-4 h-4"></i>
+                                </div>
+                                <input type="tel" name="sender_phone" value="{{ old('sender_phone', Auth::user()->phone ?? '') }}" required 
+                                    class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Thông tin hàng hóa</h3>
+                <!-- Người nhận -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 relative overflow-hidden group hover:border-brand-accent/30 transition-colors">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/10 rounded-full blur-[40px] pointer-events-none group-hover:bg-brand-accent/20 transition-colors"></div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <h3 class="font-bold text-lg text-white mb-6 border-b border-white/10 pb-3 flex items-center gap-2">
+                        <i data-lucide="user-check" class="w-5 h-5 text-brand-accent"></i> Người nhận
+                    </h3>
+                    
+                    <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tuyến đường gửi <span class="text-red-500">*</span></label>
-                            <select name="route_id" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
-                                <option value="">-- Chọn tuyến đường --</option>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Họ tên người nhận <span class="text-red-400">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                    <i data-lucide="user" class="w-4 h-4"></i>
+                                </div>
+                                <input type="text" name="receiver_name" value="{{ old('receiver_name') }}" required 
+                                    class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-white/70 mb-2">Số điện thoại <span class="text-red-400">*</span></label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                    <i data-lucide="phone" class="w-4 h-4"></i>
+                                </div>
+                                <input type="tel" name="receiver_phone" value="{{ old('receiver_phone') }}" required 
+                                    class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-colors">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Thông tin Hàng hóa -->
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 mb-8 relative overflow-hidden">
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-brand-primary/5 blur-[50px] pointer-events-none"></div>
+
+                <h3 class="font-bold text-lg text-white mb-6 border-b border-white/10 pb-3 flex items-center gap-2">
+                    <i data-lucide="box" class="w-5 h-5 text-white/70"></i> Thông tin hàng hóa
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-white/70 mb-2">Tuyến đường gửi <span class="text-red-400">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                <i data-lucide="map" class="w-4 h-4"></i>
+                            </div>
+                            <select name="route_id" required class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors">
+                                <option value="" class="bg-gray-900 text-white/50">-- Chọn tuyến đường --</option>
                                 @foreach($routes as $route)
-                                    <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
+                                    <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }} class="bg-gray-900 text-white">
                                         {{ $route->departureLocation->name ?? '...' }} &rarr; {{ $route->destinationLocation->name ?? '...' }}
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Cân nặng (kg) <span class="text-red-500">*</span></label>
-                            <input type="number" step="0.1" name="weight" value="{{ old('weight') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500">
-                            <p class="text-xs text-gray-500 mt-1">Cước phí ước tính: ~10.000đ/kg (Tối thiểu 20.000đ)</p>
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-white/40">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả hàng hóa</label>
-                        <textarea name="description" rows="3" class="w-full px-4 py-2 border rounded-lg focus:ring-amber-500 focus:border-amber-500" placeholder="Loại hàng hóa: quần áo, tài liệu, thực phẩm...">{{ old('description') }}</textarea>
+                    <div>
+                        <label class="block text-sm font-medium text-white/70 mb-2">Cân nặng (kg) <span class="text-red-400">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                <i data-lucide="scale" class="w-4 h-4"></i>
+                            </div>
+                            <input type="number" step="0.1" name="weight" value="{{ old('weight') }}" required min="0.1"
+                                class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors">
+                        </div>
+                        <p class="text-xs text-brand-accent mt-2 flex items-center gap-1">
+                            <i data-lucide="info" class="w-3 h-3"></i> Cước phí ước tính: ~10.000đ/kg (Tối thiểu 20.000đ)
+                        </p>
                     </div>
                 </div>
 
-                <div class="text-center pt-4 border-t">
-                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-colors text-lg inline-flex items-center">
-                        <i class="fas fa-paper-plane mr-2"></i> Tạo đơn ký gửi
-                    </button>
-                    <p class="text-sm text-gray-500 mt-3">Sau khi tạo, vui lòng mang hàng hóa ra văn phòng để nhân viên kiểm tra và thanh toán báo giá chính thức.</p>
+                <div>
+                    <label class="block text-sm font-medium text-white/70 mb-2">Mô tả hàng hóa <span class="text-white/40 font-normal">(Loại hàng, số lượng, lưu ý...)</span></label>
+                    <textarea name="description" rows="3" placeholder="Ví dụ: 1 thùng quần áo, 2 tài liệu quan trọng cần nhẹ tay..." 
+                        class="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors resize-y placeholder-white/20">{{ old('description') }}</textarea>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="text-center pt-4">
+                <button type="submit" class="w-full sm:w-auto liquid-gradient hover:scale-[1.02] active:scale-[0.98] transition-transform text-white font-bold py-4 px-10 rounded-xl shadow-[0_10px_40px_-10px_rgba(255,91,36,0.6)] text-lg inline-flex items-center justify-center gap-3">
+                    <i data-lucide="send" class="w-5 h-5"></i> Tạo đơn ký gửi ngay
+                </button>
+                <div class="mt-6 flex items-center justify-center gap-2 text-sm text-white/40 bg-black/20 py-3 px-4 rounded-xl border border-white/5 max-w-lg mx-auto">
+                    <i data-lucide="alert-circle" class="w-4 h-4 text-brand-primary flex-shrink-0"></i>
+                    <p>Sau khi tạo, vui lòng mang hàng hóa ra văn phòng để nhân viên kiểm tra và thanh toán báo giá chính thức.</p>
+                </div>
+            </div>
+            
+        </form>
     </div>
 </section>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     @if($errors->any())
@@ -12,19 +12,18 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="form-label fw-bold small">Tuyến đường</label>
+                            <label class="form-label fw-bold small">{{ __('routes') }}</label>
                             <select name="route_id" class="form-select rounded-3 @error('route_id') is-invalid @enderror">
                                 <option value="">-- Chọn tuyến --</option>
                                 @foreach($routes as $route)
                                     <option value="{{ $route->id }}" {{ old('route_id')==$route->id?'selected':'' }}>
-                                        {{ $route->departureLocation->name ?? '' }} → {{ $route->destinationLocation->name ?? '' }}
-                                    </option>
+                                        {{ $route->departureLocation->name ?? '' }} → {{ $route->destinationLocation->name ?? '' }}</option>
                                 @endforeach
                             </select>
                             @error('route_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small">Giờ khởi hành</label>
+                            <label class="form-label fw-bold small">{{ __('time') }} khởi hành</label>
                             <input type="time" name="departure_time" value="{{ old('departure_time') }}" class="form-control rounded-3 @error('departure_time') is-invalid @enderror">
                             @error('departure_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
@@ -35,7 +34,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label fw-bold small">Ngày chạy trong tuần</label>
+                            <label class="form-label fw-bold small">{{ __('date') }} chạy trong tuần</label>
                             <div class="d-flex flex-wrap gap-2 mt-1">
                                 @foreach(['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'] as $day)
                                     @php $val = ['Thứ 2'=>'Monday','Thứ 3'=>'Tuesday','Thứ 4'=>'Wednesday','Thứ 5'=>'Thursday','Thứ 6'=>'Friday','Thứ 7'=>'Saturday','Chủ nhật'=>'Sunday'][$day]; @endphp
@@ -50,8 +49,8 @@
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">Lưu lịch trình</button>
-                        <a href="{{ route('admin.schedules.index') }}" class="btn btn-light px-4 border">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">{{ __('save') }} lịch trình</button>
+                        <a href="{{ route('admin.schedules.index') }}" class="btn btn-light px-4 border">{{ __('cancel') }}</a>
                     </div>
                 </form>
             </div>

@@ -5,7 +5,6 @@
 
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($isOpen): ?>
         <div class="chat-container shadow-lg border">
-            
             <div class="chat-header bg-primary text-white p-2 d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <div class="dropdown">
@@ -35,7 +34,7 @@
                             </li>
                         </ul>
                     </div>
-                    <span class="fw-bold ms-1" style="font-size: 14px;">Hỗ trợ trực tuyến</span>
+                    <span class="fw-bold ms-1" style="font-size: 14px;"><?php echo e(__('support')); ?> trực tuyến</span>
                 </div>
                 
                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedTicketId): ?>
@@ -43,7 +42,6 @@
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-            
             <div class="chat-body p-2" id="chat-window" wire:poll.3s>
                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedTicketId): ?>
                     <?php
@@ -51,7 +49,6 @@
                     ?>
 
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($currentTicket): ?>
-                        
                         <div class="d-flex mb-3 justify-content-start">
                             <div class="p-2 rounded-3 shadow-sm bg-white border-start border-4 border-warning"
                                 style="max-width: 85%;">
@@ -60,9 +57,7 @@
                                 </div>
                                 <div style="font-size: 13px; color: #333; line-height: 1.4;"><?php echo e($currentTicket->description); ?></div>
                                 <div class="text-muted mt-1" style="font-size: 9px; text-align: right;">
-                                    <?php echo e($currentTicket->created_at->format('H:i')); ?>
-
-                                </div>
+                                    <?php echo e($currentTicket->created_at->format('H:i')); ?></div>
                             </div>
                         </div>
 
@@ -74,8 +69,7 @@
                         </div>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-                    
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $chatHistory; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $chatHistory; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                         <div class="d-flex mb-3 <?php echo e($msg->sender_type === 'user' ? 'justify-content-end' : 'justify-content-start'); ?>">
                             <div class="p-2 rounded-3 shadow-sm <?php echo e($msg->sender_type === 'user' ? 'bg-primary text-white' : 'bg-white border'); ?>"
                                 style="max-width: 85%; font-size: 13px;">
@@ -84,17 +78,12 @@
                                         Nhân viên hỗ trợ
                                     </div>
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                <?php echo e($msg->message); ?>
-
-                                <div style="font-size: 9px; opacity: 0.7; text-align: right; margin-top: 3px;">
-                                    <?php echo e($msg->created_at->format('H:i')); ?>
-
-                                </div>
+                                <?php echo e($msg->message); ?><div style="font-size: 9px; opacity: 0.7; text-align: right; margin-top: 3px;">
+                                    <?php echo e($msg->created_at->format('H:i')); ?></div>
                             </div>
                         </div>
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                 <?php else: ?>
-                    
                     <div class="text-center py-5">
                         <i class='bx bx-message-alt-detail fs-1 text-muted opacity-25'></i>
                         <p class="small text-muted mt-2 px-4">Vui lòng chọn hoặc tạo vấn đề mới để bắt đầu chat.</p>
@@ -103,8 +92,7 @@
                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
-            
-            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedTicketId): ?>
+             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($selectedTicketId): ?>
                 <div class="chat-footer p-2 border-top bg-white">
                     <div class="input-group">
                         <input type="text" wire:model="newMessage" wire:keydown.enter="sendMessage"
@@ -120,18 +108,8 @@
 
     <style>
         /* CSS giữ nguyên như bản cũ của bạn, thêm chỉnh sửa cho dropdown */
-        .dropdown-item:active { background-color: #ff5b24; }
-        .chat-footer .input-group { background: #f8f9fa; border-radius: 20px; overflow: hidden; padding: 2px 5px; border: 1px solid #eee; }
-        .chatbox-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Inter', sans-serif; }
-        .chat-toggle-btn { width: 55px; height: 55px; border-radius: 50%; background: #ff5b24; color: white; border: none; font-size: 26px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 91, 36, 0.4); }
-        .chat-container { width: 330px; height: 480px; background: white; border-radius: 15px; position: absolute; bottom: 70px; right: 0; display: flex; flex-direction: column; overflow: hidden; }
-        .chat-body { flex: 1; overflow-y: auto; background: #fdfdfd; }
-        /* Bo góc Messenger style */
-        .justify-content-end .p-2 { border-bottom-right-radius: 2px !important; }
-        .justify-content-start .p-2 { border-bottom-left-radius: 2px !important; }
-        .chat-body::-webkit-scrollbar { width: 4px; }
-        .chat-body::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
-    </style>
+        .dropdown-item:active { background-color: #ff5b24; }} .chat-footer .input-group { background: #f8f9fa; border-radius: 20px; overflow: hidden; padding: 2px 5px; border: 1px solid #eee; }} .chatbox-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Inter', sans-serif; }} .chat-toggle-btn { width: 55px; height: 55px; border-radius: 50%; background: #ff5b24; color: white; border: none; font-size: 26px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 91, 36, 0.4); }} .chat-container { width: 330px; height: 480px; background: white; border-radius: 15px; position: absolute; bottom: 70px; right: 0; display: flex; flex-direction: column; overflow: hidden; }} .chat-body { flex: 1; overflow-y: auto; background: #fdfdfd; }} /* Bo góc Messenger style */
+        .justify-content-end .p-2 { border-bottom-right-radius: 2px !important; }} .justify-content-start .p-2 { border-bottom-left-radius: 2px !important; }} .chat-body::-webkit-scrollbar { width: 4px; }} .chat-body::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }}</style>
 
     <script>
         document.addEventListener('livewire:init', () => {

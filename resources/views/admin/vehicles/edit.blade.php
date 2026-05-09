@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Chỉnh sửa xe')
 
@@ -14,8 +14,7 @@
 
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show mb-4">
-                        <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <i class='bx bx-check-circle me-1'></i> {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
@@ -64,7 +63,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                            <label class="form-label">{{ __('status') }}<span class="text-danger">*</span></label>
                             <select name="status" class="form-select" required>
                                 <option value="active" {{ old('status', $vehicle->status) == 'active' ? 'selected' : '' }}>
                                     Hoạt động
@@ -86,8 +85,7 @@
                                             @foreach ($parking->slots as $slot)
                                                 <option value="{{ $slot->id }}"
                                                     {{ old('parking_slot_id') == $slot->id || ($vehicle->parkingSlot && $vehicle->parkingSlot->id == $slot->id) ? 'selected' : '' }}>
-                                                    {{ $slot->slot_code }} - {{ $slot->zone }}
-                                                </option>
+                                                    {{ $slot->slot_code }} - {{ $slot->zone }}</option>
                                             @endforeach
                                         </optgroup>
                                     @endif

@@ -47,7 +47,7 @@ class DashboardController extends Controller
         ];
 
         // --- TRUYỀN TẤT CẢ BIẾN SANG VIEW ---
-        return view('admin.dashboard.index', compact(
+        return view('admin.dashboard', compact(
             'totalDrivers',
             'totalTrips',
             'totalTickets',

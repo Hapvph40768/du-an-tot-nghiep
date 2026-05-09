@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     <div class="card shadow-sm border-0 rounded-4 p-4">
@@ -9,10 +9,10 @@
             <table class="table align-middle">
                 <thead>
                     <tr class="text-muted small text-uppercase">
-                        <th>Ngày</th>
+                        <th>{{ __('date') }}</th>
                         <th>Số đặt vé</th>
                         <th>Số vé xuất</th>
-                        <th>Tổng doanh thu</th>
+                        <th>{{ __('total') }} doanh thu</th>
                     </tr>
                 </thead>
                 <tbody>

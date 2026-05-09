@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('title', 'Chi tiết Đặt vé')
 
@@ -27,19 +27,17 @@
                         <div class="col-md-6">
                             <h5>Khách hàng</h5>
                             <p><strong>Họ tên:</strong> {{ $booking->user->name ?? 'Khách vãng lai' }}</p>
-                            <p><strong>Email:</strong> {{ $booking->user->email ?? 'N/A' }}</p>
+                            <p><strong>{{ __('email') }}:</strong> {{ $booking->user->email ?? 'N/A' }}</p>
                             <p><strong>Số điện thoại:</strong> {{ $booking->user->phone ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-6">
                             <h5>Thông tin chuyến đi</h5>
                             <p><strong>Tuyến:</strong> 
-                                {{ $booking->trip->route->startLocation->name }} 
-                                <i class="fas fa-long-arrow-alt-right"></i> 
-                                {{ $booking->trip->route->endLocation->name }}
-                            </p>
+                                {{ $booking->trip->route->startLocation->name }}<i class="fas fa-long-arrow-alt-right"></i> 
+                                {{ $booking->trip->route->endLocation->name }}</p>
                             <p><strong>Khởi hành:</strong> {{ \Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i d/m/Y') }}</p>
                             <p><strong>Số điện thoại xe:</strong> <a href="tel:{{ $booking->trip->vehicle->phone_vehicles ?? '' }}" class="text-primary">{{ $booking->trip->vehicle->phone_vehicles ?? 'Chưa có' }}</a></p>
-                            <p><strong>Điểm đón:</strong> {{ $booking->pickupPoint->name ?? 'Tại văn phòng' }}</p>
+                            <p><strong>{{ __('pickup_points') }}:</strong> {{ $booking->pickupPoint->name ?? 'Tại văn phòng' }}</p>
                         </div>
                     </div>
 
@@ -52,7 +50,7 @@
                                 <tr>
                                     <th>Mã vé</th>
                                     <th>Số ghế</th>
-                                    <th>Giá vé</th>
+                                    <th>{{ __('cost') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,7 +63,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="2" class="text-end">Tổng cộng:</th>
+                                    <th colspan="2" class="text-end">{{ __('total') }} cộng:</th>
                                     <th class="text-danger">{{ number_format($booking->total_amount) }}đ</th>
                                 </tr>
                             </tfoot>
@@ -78,11 +76,11 @@
         <div class="col-lg-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Trạng thái & Thanh toán</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('status') }} & Thanh toán</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Trạng thái hiện tại:</label>
+                        <label class="form-label font-weight-bold">{{ __('status') }} hiện tại:</label>
                         <br>
                         @if($booking->status == 'pending')
                             <span class="badge bg-warning text-dark">Chờ thanh toán</span>
@@ -104,21 +102,21 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group mb-3">
-                            <label for="status" class="form-label font-weight-bold">Cập nhật trạng thái:</label>
+                            <label for="status" class="form-label font-weight-bold">{{ __('update') }} trạng thái:</label>
                             <select name="status" id="status" class="form-select form-control">
                                 <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Chờ thanh toán</option>
                                 <option value="paid" {{ $booking->status == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
-                                <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Hủy đơn hàng</option>
+                                <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>{{ __('cancel') }} đơn hàng</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Cập nhật đơn hàng</button>
+                        <button type="submit" class="btn btn-primary w-100">{{ __('update') }} đơn hàng</button>
                     </form>
                 </div>
             </div>
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Phương tiện & Lái xe</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('vehicles') }} & Lái xe</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">

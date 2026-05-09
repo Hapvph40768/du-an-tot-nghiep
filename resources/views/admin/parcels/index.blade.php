@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     @if(session('success'))
@@ -16,12 +16,12 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>Người gửi</th>
-                        <th>Người nhận</th>
-                        <th>Tuyến đường</th>
-                        <th>Khối lượng</th>
+                        <th>{{ __('sender') }}</th>
+                        <th>{{ __('receiver') }}</th>
+                        <th>{{ __('routes') }}</th>
+                        <th>{{ __('weight') }}</th>
                         <th>Phí vận chuyển</th>
-                        <th>Trạng thái</th>
+                        <th>{{ __('status') }}</th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>

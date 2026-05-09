@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     @if($errors->any())
@@ -34,17 +34,17 @@
                             <input type="number" name="max_uses" value="{{ old('max_uses') }}" class="form-control rounded-3" placeholder="Để trống = không giới hạn">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small">Ngày bắt đầu</label>
+                            <label class="form-label fw-bold small">{{ __('date') }} bắt đầu</label>
                             <input type="datetime-local" name="start_date" value="{{ old('start_date') }}" class="form-control rounded-3">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small">Ngày kết thúc</label>
+                            <label class="form-label fw-bold small">{{ __('date') }} kết thúc</label>
                             <input type="datetime-local" name="end_date" value="{{ old('end_date') }}" class="form-control rounded-3">
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">Lưu khuyến mãi</button>
-                        <a href="{{ route('admin.promotions.index') }}" class="btn btn-light px-4 border">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">{{ __('save') }} khuyến mãi</button>
+                        <a href="{{ route('admin.promotions.index') }}" class="btn btn-light px-4 border">{{ __('cancel') }}</a>
                     </div>
                 </form>
             </div>

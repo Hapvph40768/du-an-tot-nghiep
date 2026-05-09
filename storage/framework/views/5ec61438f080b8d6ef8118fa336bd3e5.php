@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('content-main'); ?>
 <div class="container-fluid py-4">
     <div class="card shadow-sm border-0 rounded-4 p-4">
@@ -8,10 +9,10 @@
             <table class="table align-middle">
                 <thead>
                     <tr class="text-muted small text-uppercase">
-                        <th>Ngày</th>
+                        <th><?php echo e(__('date')); ?></th>
                         <th>Số đặt vé</th>
                         <th>Số vé xuất</th>
-                        <th>Tổng doanh thu</th>
+                        <th><?php echo e(__('total')); ?> doanh thu</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,4 +34,4 @@
 </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/daily_reports/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/daily_reports/index.blade.php ENDPATH**/ ?>

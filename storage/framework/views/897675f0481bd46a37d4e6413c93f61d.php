@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('title', 'Quản lý Đặt vé'); ?>
 
 <?php $__env->startSection('content-main'); ?>
@@ -118,4 +120,5 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/bookings/index.blade.php ENDPATH**/ ?>
+
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/bookings/index.blade.php ENDPATH**/ ?>

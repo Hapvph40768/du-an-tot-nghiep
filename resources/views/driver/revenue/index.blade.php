@@ -11,13 +11,13 @@
                     <i class='bx bx-chevron-left text-2xl'></i>
                 </a>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Tổng quan Doanh Thu</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">{{ __('overview') }} Doanh Thu</h2>
                     <p class="text-gray-500 mt-1">Dựa trên các chuyến xe đã được quản lý bởi bạn.</p>
                 </div>
             </div>
             
             <div class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-6 text-white shadow-lg sm:min-w-[300px]">
-                <p class="text-white/80 font-medium text-sm mb-1 uppercase tracking-wider">Tổng doanh thu các chuyến</p>
+                <p class="text-white/80 font-medium text-sm mb-1 uppercase tracking-wider">{{ __('total') }} doanh thu các chuyến</p>
                 <div class="text-4xl font-bold tracking-tight">
                     {{ number_format($totalRevenue) }}<span class="text-2xl opacity-80 ml-1">đ</span>
                 </div>
@@ -32,7 +32,7 @@
         @else
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                    <h3 class="font-bold text-lg text-gray-800">Chi tiết doanh thu theo chuyến</h3>
+                    <h3 class="font-bold text-lg text-gray-800">{{ __('details') }} doanh thu theo chuyến</h3>
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -40,9 +40,9 @@
                         <thead>
                             <tr class="bg-white border-b border-gray-100">
                                 <th class="text-left py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">Mã chuyến & Lộ trình</th>
-                                <th class="text-left py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">Ngày khởi hành</th>
+                                <th class="text-left py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">{{ __('date') }} khởi hành</th>
                                 <th class="text-center py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">Số vé đã thanh toán</th>
-                                <th class="text-right py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">Tổng thu (VNĐ)</th>
+                                <th class="text-right py-5 px-8 font-medium text-gray-500 uppercase tracking-wider text-xs">{{ __('total') }} thu (VNĐ)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-50">
@@ -54,14 +54,11 @@
                                     <td class="py-5 px-8">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 font-bold">
-                                                {{ $trip->id }}
-                                            </div>
+                                                {{ $trip->id }}</div>
                                             <div>
                                                 <p class="font-semibold text-gray-900">
-                                                    {{ $trip->route->departureLocation->name ?? 'N/A' }} 
-                                                    <i class='bx bx-right-arrow-alt text-gray-400 mx-1'></i> 
-                                                    {{ $trip->route->destinationLocation->name ?? 'N/A' }}
-                                                </p>
+                                                    {{ $trip->route->departureLocation->name ?? 'N/A' }}<i class='bx bx-right-arrow-alt text-gray-400 mx-1'></i> 
+                                                    {{ $trip->route->destinationLocation->name ?? 'N/A' }}</p>
                                                 <p class="text-xs text-gray-500 mt-1">Biển số: {{ $trip->vehicle->license_plate ?? 'N/A' }}</p>
                                             </div>
                                         </div>
@@ -72,8 +69,7 @@
                                     </td>
                                     <td class="py-5 px-8 text-center text-gray-600">
                                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 font-semibold text-gray-700">
-                                            {{ $stat['bookings_count'] }}
-                                        </span>
+                                            {{ $stat['bookings_count'] }}</span>
                                     </td>
                                     <td class="py-5 px-8 text-right">
                                         <span class="font-bold text-gray-900 text-lg">

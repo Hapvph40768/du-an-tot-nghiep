@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
     <div class="container-fluid py-4">
@@ -36,7 +36,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Tổng số ghế</label>
+                                <label class="form-label fw-bold small">{{ __('total') }} số ghế</label>
                                 <input type="number" name="total_seats"
                                     class="form-control rounded-3 @error('total_seats') is-invalid @enderror"
                                     value="{{ old('total_seats') }}" min="1" required>
@@ -51,7 +51,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Trạng thái</label>
+                                <label class="form-label fw-bold small">{{ __('status') }}</label>
                                 <select name="status" class="form-select rounded-3">
                                     <option value="active">Đang hoạt động</option>
                                     <option value="maintenance">Đang bảo trì</option>
@@ -67,8 +67,7 @@
                                                 @foreach ($parking->slots as $slot)
                                                     <option value="{{ $slot->id }}"
                                                         {{ old('parking_slot_id') == $slot->id ? 'selected' : '' }}>
-                                                        {{ $slot->slot_code }} - {{ $slot->zone }}
-                                                    </option>
+                                                        {{ $slot->slot_code }} - {{ $slot->zone }}</option>
                                                 @endforeach
                                             </optgroup>
                                         @endif
@@ -83,7 +82,7 @@
                                 Lưu & Tạo sơ đồ ghế
                             </button>
                             <a href="{{ route('admin.vehicles.index') }}" class="btn btn-light px-4 border ms-2"
-                                style="border-radius: 10px; height: 45px;">Hủy</a>
+                                style="border-radius: 10px; height: 45px;">{{ __('cancel') }}</a>
                         </div>
                     </form>
                 </div>

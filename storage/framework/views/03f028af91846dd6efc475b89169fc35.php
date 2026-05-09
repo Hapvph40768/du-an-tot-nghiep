@@ -1,101 +1,133 @@
-<?php $__env->startSection('title', 'Quản lý Người dùng'); ?>
+
+
+<?php $__env->startSection('header-title', 'Quản lý Tài khoản'); ?>
+<?php $__env->startSection('header-subtitle', 'Phân quyền và quản lý người dùng hệ thống'); ?>
 
 <?php $__env->startSection('content-main'); ?>
-<style>
-    :root { --primary-color: #ff6b00; --primary-hover: #e65100; }
-    .card-box { background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-    .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
-    .custom-table thead th { background-color: #f9fafb; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase; padding: 16px; border-bottom: 2px solid #edf2f7; text-align: left; }
-    .custom-table td { padding: 16px; vertical-align: middle; border-bottom: 1px solid #f3f4f6; text-align: left; font-size: 14px; }
-    .btn-primary-custom { background-color: var(--primary-color); border: none; color: white; padding: 8px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; }
-    .btn-primary-custom:hover { background-color: var(--primary-hover); color: white; transform: translateY(-2px); }
-    .badge-role { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; }
-    .role-admin { background: #fee2e2; color: #dc2626; }
-    .role-staff { background: #e0e7ff; color: #4338ca; }
-    .role-customer { background: #f3f4f6; color: #374151; }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-</style>
-
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark m-0">Quản lý tài khoản</h2>
-            <p class="text-muted small mb-0">Hệ thống có tổng cộng <?php echo e($users->total()); ?> thành viên</p>
+<div class="container-fluid px-0">
+    <!-- Header Summary -->
+    <div class="card border-0 mb-4 p-4 dash-card">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+            <div class="d-flex align-items-center gap-4">
+                <div class="dash-icon-bg" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; width: 60px; height: 60px;">
+                    <i class='bx bx-group fs-1'></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold text-dark mb-1">NGƯỜI DÙNG</h3>
+                    <p class="text-muted small fw-bold text-uppercase mb-0" style="letter-spacing: 1px;">Hệ thống có <?php echo e($users->total()); ?> thành viên</p>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-light px-4 py-2 rounded-3 border text-center">
+                    <p class="text-success small fw-bold text-uppercase mb-0" style="letter-spacing: 1px;">Active</p>
+                    <p class="fw-bold text-dark fs-5 mb-0"><?php echo e($users->where('status', 'active')->count()); ?></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
-        <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
-            <i class='bx bx-check-circle'></i> <?php echo e(session('success')); ?>
-
-        </div>
+    <div class="alert alert-success d-flex align-items-center mb-4 border-0 shadow-sm" style="border-radius: 12px;">
+        <i class='bx bx-check-circle fs-4 me-2'></i>
+        <div class="fw-bold"><?php echo e(session('success')); ?></div>
+    </div>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-    <div class="card-box">
+    <!-- Table Container -->
+    <div class="card border-0 p-0">
         <div class="table-responsive">
-            <table class="custom-table w-100">
+            <table class="table mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4" style="width: 25%;">Họ tên / Email</th>
-                        <th style="width: 15%;">Số điện thoại</th>
-                        <th style="width: 15%;">Vai trò</th>
-                        <th style="width: 15%;">Trạng thái</th>
-                        <th style="width: 15%;">Ngày tạo</th>
-                        <th class="text-end pe-4" style="width: 15%;">Hành động</th>
+                        <th class="ps-4">Họ tên / Email</th>
+                        <th>Vai Trò</th>
+                        <th>Liên Hệ</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-end pe-4">Thao Tác</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-bold text-dark"><?php echo e($user->name); ?></div>
-                                <div class="text-muted small"><?php echo e($user->email); ?></div>
-                            </td>
-                            <td><?php echo e($user->phone ?? '—'); ?></td>
-                            <td>
-                                <span class="badge-role role-<?php echo e($user->role); ?>">
-                                    <?php echo e(ucfirst($user->role)); ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold text-dark"><?php echo e($user->name); ?></span>
+                                <span class="text-muted small"><?php echo e($user->email); ?></span>
+                            </div>
+                        </td>
+                        <td>
+                            <?php
+                                $roleConfig = [
+                                    'admin' => ['bg' => 'danger', 'label' => 'Quản trị'],
+                                    'staff' => ['bg' => 'warning', 'label' => 'Nhân viên'],
+                                    'customer' => ['bg' => 'secondary', 'label' => 'Khách hàng'],
+                                ][$user->role] ?? ['bg' => 'secondary', 'label' => $user->role];
+                            ?>
+                            <span class="badge bg-<?php echo e($roleConfig['bg']); ?> bg-opacity-10 text-<?php echo e($roleConfig['bg']); ?> border border-<?php echo e($roleConfig['bg']); ?> border-opacity-25">
+                                <?php echo e($roleConfig['label']); ?>
 
-                                </span>
-                            </td>
-                            <td>
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($user->status == 'active'): ?>
-                                    <span class="text-success small fw-bold"><span class="status-dot bg-success"></span>Hoạt động</span>
-                                <?php else: ?>
-                                    <span class="text-danger small fw-bold"><span class="status-dot bg-danger"></span>Đã khóa</span>
-                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                            </td>
-                            <td class="text-muted small"><?php echo e($user->created_at->format('d/m/Y')); ?></td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>" class="btn btn-sm btn-light border" title="Sửa">
-                                        <i class='bx bx-edit'></i>
-                                    </a>
-                                    <form action="<?php echo e(route('admin.users.toggle-status', $user->id)); ?>" method="POST" class="d-inline">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit" class="btn btn-sm btn-light border <?php echo e($user->status === 'active' ? 'text-danger' : 'text-success'); ?>" title="<?php echo e($user->status === 'active' ? 'Khóa' : 'Mở khóa'); ?>">
-                                            <i class='bx <?php echo e($user->status === "active" ? "bx-block" : "bx-check-circle"); ?>'></i>
-                                        </button>
-                                    </form>
-                                    <form action="<?php echo e(route('admin.users.destroy', $user->id)); ?>" method="POST" onsubmit="return confirm('Xóa người dùng này?')">
-                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                                        <button class="btn btn-sm btn-light border text-danger" title="Xóa">
-                                            <i class='bx bx-trash'></i>
-                                        </button>
-                                    </form>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-dark fw-bold"><?php echo e($user->phone ?? '—'); ?></span>
+                        </td>
+                        <td>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($user->status == 'active'): ?>
+                                <div class="d-flex align-items-center gap-2 text-success fw-bold small">
+                                    <i class='bx bxs-circle' style="font-size: 8px;"></i>
+                                    <span>Đang chạy</span>
                                 </div>
-                            </td>
-                        </tr>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            <?php else: ?>
+                                <div class="d-flex align-items-center gap-2 text-danger fw-bold small">
+                                    <i class='bx bxs-circle' style="font-size: 8px;"></i>
+                                    <span>Đã khóa</span>
+                                </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>" class="btn btn-sm btn-light border text-primary" title="Cài đặt">
+                                    <i class='bx bx-cog'></i>
+                                </a>
+                                <form action="<?php echo e(route('admin.users.toggle-status', $user->id)); ?>" method="POST" class="d-inline">
+                                    <?php echo csrf_field(); ?>
+                                    <button type="submit" class="btn btn-sm btn-light border <?php echo e($user->status === 'active' ? 'text-danger' : 'text-success'); ?>" title="Khóa/Mở khóa">
+                                        <i class='bx bx-<?php echo e($user->status === 'active' ? 'lock-alt' : 'lock-open-alt'); ?>'></i>
+                                    </button>
+                                </form>
+                                <form action="<?php echo e(route('admin.users.destroy', $user->id)); ?>" method="POST" onsubmit="return confirm('Xác nhận xóa tài khoản?')" class="d-inline">
+                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
+                                    <button type="submit" class="btn btn-sm btn-light border text-danger" title="Xóa">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="text-muted mb-2"><i class='bx bx-search fs-1'></i></div>
+                            <p class="fw-bold text-muted mb-0">Không tìm thấy dữ liệu phù hợp</p>
+                        </td>
+                    </tr>
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
-            <?php echo e($users->links('pagination::bootstrap-5')); ?>
 
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($users->hasPages()): ?>
+        <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center p-4">
+            <small class="text-muted fw-bold">Hiển thị <?php echo e($users->count()); ?> / <?php echo e($users->total()); ?> người dùng</small>
+            <div>
+                <?php echo e($users->links('pagination::bootstrap-5')); ?>
+
+            </div>
         </div>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/users/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/users/index.blade.php ENDPATH**/ ?>

@@ -8,6 +8,7 @@ use App\Http\Middleware\CheckAdminRole;
 
 // AUTH CONTROLLER
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocaleController;
 
 // CUSTOMER & PUBLIC CONTROLLERS
 use App\Http\Controllers\Customer\HomeController as CustomerHomeController;
@@ -58,6 +59,7 @@ use App\Http\Middleware\CheckDriverRole;
 */
 
 Route::get('/', [CustomerHomeController::class, 'index'])->name('customer.home');
+Route::get('/set-locale/{locale}', [LocaleController::class, 'setLocale'])->name('set.locale');
 Route::get('/trips/search', [CustomerTripController::class, 'search'])->name('customer.trips.search');
 Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('customer.trips.show');
 
@@ -228,7 +230,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::resource('parcel_prices', ParcelPriceController::class);
     Route::resource('schedules', ScheduleController::class);
     Route::resource('price_rules', PriceRuleController::class);
-    
+
     // Read-only modules
     Route::get('daily-reports', [DailyReportController::class, 'index'])->name('daily_reports.index');
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
@@ -280,16 +282,6 @@ Route::prefix('staff')->name('staff.')->middleware(['auth', CheckStaffRole::clas
     Route::get('/parking', [StaffParking::class, 'index'])->name('parking.index');
     Route::post('/parking/slots/{slot}/check-in', [StaffParking::class, 'checkIn'])->name('parking.checkin');
     Route::post('/parking/slots/{slot}/check-out', [StaffParking::class, 'checkOut'])->name('parking.checkout');
-});
-
-Route::get('/fix-staff', function() {
-    $user = \App\Models\User::where('name', 'nhanvienA')->first() ?? \App\Models\User::first();
-    if ($user) {
-        $user->role = 'staff';
-        $user->save();
-        return "User '{$user->name}' updated to staff! Please refresh and look for 'Trang nhân viên' button.";
-    }
-    return "No users found.";
 });
 
 // 5. DRIVERS ROUTES

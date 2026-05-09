@@ -12,9 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-          'role' => \App\Http\Middleware\RoleMiddleware::class,
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
         ]);
+        // Alias RoleMiddleware removed: file does not exist and is not used in routes
+        // Use CheckAdminRole, CheckCustomerRole, CheckStaffRole, CheckDriverRole instead
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

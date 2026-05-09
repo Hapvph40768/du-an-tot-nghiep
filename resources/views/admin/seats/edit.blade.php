@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('content-main')
 <div class="container-fluid py-4">
@@ -27,8 +27,8 @@
                     </div>
 
                     <div class="pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">Cập nhật</button>
-                        <a href="{{ route('admin.seats.index', ['vehicle_id' => $seat->vehicle_id]) }}" class="btn btn-light px-4 border ms-2">Quay lại</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background: #ff6b00; border:none; border-radius: 10px;">{{ __('update') }}</button>
+                        <a href="{{ route('admin.seats.index', ['vehicle_id' => $seat->vehicle_id]) }}" class="btn btn-light px-4 border ms-2">{{ __('back') }}</a>
                     </div>
                 </form>
             </div>

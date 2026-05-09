@@ -60,41 +60,35 @@
                                     <span
                                         class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-2xl text-sm font-semibold">
                                         <i class='bx bx-time-five'></i>
-                                        {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}
-                                    </span>
+                                        {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
                                     <p class="text-xs text-gray-500 mt-2">
-                                        {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}
-                                    </p>
+                                        {{ \Carbon\Carbon::parse($trip->trip_date)->format('d/m/Y') }}</p>
                                 </div>
                                 <div class="text-right">
                                     <span class="text-xs text-gray-500">Biển số</span>
                                     <p class="font-semibold text-gray-800 mt-0.5">
-                                        {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}
-                                    </p>
+                                        {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}</p>
                                 </div>
                             </div>
 
                             <div class="flex items-center gap-4 mb-8">
                                 <div class="flex-1">
                                     <p class="font-bold text-xl text-gray-900 leading-tight">
-                                        {{ $trip->route->departureLocation->name ?? 'N/A' }}
-                                    </p>
+                                        {{ $trip->route->departureLocation->name ?? 'N/A' }}</p>
                                 </div>
                                 <div class="text-gray-400 text-4xl -mt-2">
                                     <i class='bx bx-right-arrow-alt'></i>
                                 </div>
                                 <div class="flex-1 text-right">
                                     <p class="font-bold text-xl text-gray-900 leading-tight">
-                                        {{ $trip->route->destinationLocation->name ?? 'N/A' }}
-                                    </p>
+                                        {{ $trip->route->destinationLocation->name ?? 'N/A' }}</p>
                                 </div>
                             </div>
 
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-xl font-semibold text-gray-600">
-                                        {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}
-                                    </span>
+                                        {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}</span>
                                     <span class="text-gray-400 text-sm">/</span>
                                     <span class="text-gray-500 text-sm">{{ $trip->vehicle->total_seats ?? '?' }}</span>
                                     <span class="text-xs text-gray-400 ml-1">ghế</span>
@@ -108,8 +102,7 @@
                                         'completed' => 'Hoàn thành',
                                         'cancelled' => 'Đã hủy',
                                         default => ucfirst($trip->status),
-                                    } }}
-                                </span>
+                                    }}}</span>
                             </div>
 
                             <div class="pt-2 border-t">
@@ -124,8 +117,7 @@
             </div>
 
             <div class="mt-12 flex justify-center">
-                {{ $trips->links() }}
-            </div>
+                {{ $trips->links() }}</div>
         @endif
     </div>
 
@@ -135,20 +127,17 @@
                 if (btn.getAttribute('data-status') === status) {
                     btn.classList.add('bg-amber-500', 'text-white', 'shadow');
                     btn.classList.remove('border', 'border-gray-200');
-                } else {
+                }} else {
                     btn.classList.remove('bg-amber-500', 'text-white', 'shadow');
                     btn.classList.add('border', 'border-gray-200');
-                }
-            });
+                }});
 
             document.querySelectorAll('.history-card').forEach(card => {
                 const cardStatus = card.getAttribute('data-status');
                 if (status === '' || cardStatus === status) {
                     card.style.display = 'block';
-                } else {
+                }} else {
                     card.style.display = 'none';
-                }
-            });
-        }
-    </script>
+                }});
+        }}</script>
 @endsection

@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('header-title', 'QUẢN LÝ GIÁ KÝ GỬI')
 @section('header-subtitle', 'Cấu hình giá ký gửi theo tuyến và trọng lượng')

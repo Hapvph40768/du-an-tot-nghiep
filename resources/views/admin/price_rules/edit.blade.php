@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     @if($errors->any())
@@ -12,7 +12,7 @@
                     @csrf @method('PUT')
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="form-label fw-bold small">Tên quy tắc</label>
+                            <label class="form-label fw-bold small">{{ __('name') }} quy tắc</label>
                             <input type="text" name="name" value="{{ old('name', $priceRule->name) }}" class="form-control rounded-3 @error('name') is-invalid @enderror">
                             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
@@ -28,17 +28,17 @@
                             <input type="number" name="value" value="{{ old('value', $priceRule->value) }}" step="0.01" class="form-control rounded-3">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small">Ngày bắt đầu</label>
+                            <label class="form-label fw-bold small">{{ __('date') }} bắt đầu</label>
                             <input type="date" name="start_date" value="{{ old('start_date', $priceRule->start_date) }}" class="form-control rounded-3">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small">Ngày kết thúc</label>
+                            <label class="form-label fw-bold small">{{ __('date') }} kết thúc</label>
                             <input type="date" name="end_date" value="{{ old('end_date', $priceRule->end_date) }}" class="form-control rounded-3">
                         </div>
                     </div>
                     <div class="mt-4 pt-3 border-top">
-                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">Cập nhật</button>
-                        <a href="{{ route('admin.price_rules.index') }}" class="btn btn-light px-4 border">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4" style="background:#ff6b00;border:none;border-radius:10px;">{{ __('update') }}</button>
+                        <a href="{{ route('admin.price_rules.index') }}" class="btn btn-light px-4 border">{{ __('cancel') }}</a>
                     </div>
                 </form>
             </div>

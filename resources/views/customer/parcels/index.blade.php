@@ -1,66 +1,109 @@
 @extends('layout.customer.CustomerLayout')
 
 @section('content-main')
-<section class="py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-5xl mx-auto px-4">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-800">Lịch sử Ký gửi hàng hóa</h2>
-            <a href="{{ route('customer.parcels.create') }}" class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
-                + Gửi hàng mới
+<section class="py-12 lg:py-20 relative min-h-[80vh]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mb-10">
+            <div>
+                <h2 class="text-3xl font-black text-white tracking-tight uppercase flex items-center gap-3">
+                    <i data-lucide="package" class="w-8 h-8 text-brand-primary"></i> Lịch sử Ký gửi
+                </h2>
+                <p class="text-white/50 mt-1">Quản lý và theo dõi trạng thái các đơn hàng ký gửi của bạn.</p>
+            </div>
+            
+            <a href="{{ route('customer.parcels.create') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 liquid-gradient text-white font-bold py-3 px-6 rounded-xl shadow-[0_10px_40px_-10px_rgba(255,91,36,0.6)] hover:scale-105 transition-transform text-sm">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tạo đơn ký gửi mới
             </a>
         </div>
         
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm">{{ session('success') }}</div>
+            <div class="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl mb-8 flex items-center gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+                <p class="text-sm font-medium">{{ session('success') }}</p>
+            </div>
         @endif
         @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-sm">{{ session('error') }}</div>
+            <div class="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl mb-8 flex items-center gap-3">
+                <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
+                <p class="text-sm font-medium">{{ session('error') }}</p>
+            </div>
         @endif
 
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none"></div>
+
             @if($parcels->isEmpty())
-                <div class="p-12 text-center text-gray-500">
-                    <p class="mb-4 text-lg">Bạn chưa có đơn ký gửi nào.</p>
+                <div class="p-16 text-center text-white/50 flex flex-col items-center">
+                    <i data-lucide="package-open" class="w-16 h-16 mb-4 opacity-50"></i>
+                    <p class="text-lg">Bạn chưa có đơn ký gửi nào.</p>
                 </div>
             @else
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse whitespace-nowrap">
                         <thead>
-                            <tr class="bg-gray-100 uppercase text-xs font-semibold text-gray-600 border-b">
-                                <th class="p-4">Mã Đơn</th>
-                                <th class="p-4">Tuyến đường</th>
-                                <th class="p-4">Thông tin gửi/nhận</th>
-                                <th class="p-4">Cân nặng</th>
-                                <th class="p-4 text-right">Tổng tiền</th>
-                                <th class="p-4 text-center">Trạng thái</th>
+                            <tr class="bg-black/20 text-xs uppercase font-bold text-white/40 tracking-wider">
+                                <th class="p-5 pl-6 border-b border-white/5">Mã Đơn</th>
+                                <th class="p-5 border-b border-white/5">Tuyến đường</th>
+                                <th class="p-5 border-b border-white/5">Thông tin gửi/nhận</th>
+                                <th class="p-5 border-b border-white/5 text-center">Cân nặng</th>
+                                <th class="p-5 border-b border-white/5 text-right">Tổng tiền</th>
+                                <th class="p-5 pr-6 border-b border-white/5 text-center">Trạng thái</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
+                        <tbody class="divide-y divide-white/5 text-sm">
                             @foreach($parcels as $parcel)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="p-4 font-bold text-gray-800">#{{ $parcel->id }}</td>
-                                    <td class="p-4 text-gray-700">
-                                        {{ $parcel->route->startLocation->name ?? 'N/A' }} 
-                                        <span class="text-gray-400 mx-1">→</span> 
-                                        {{ $parcel->route->endLocation->name ?? 'N/A' }}
+                                <tr class="hover:bg-white/5 transition-colors group">
+                                    <td class="p-5 pl-6 font-mono font-bold text-white/80 group-hover:text-white transition-colors">#{{ $parcel->id }}</td>
+                                    <td class="p-5 text-white/70 group-hover:text-white transition-colors">
+                                        <div class="flex items-center gap-2">
+                                            <span>{{ $parcel->route->startLocation->name ?? 'N/A' }}</span>
+                                            <i data-lucide="arrow-right" class="w-3 h-3 text-brand-primary"></i>
+                                            <span>{{ $parcel->route->endLocation->name ?? 'N/A' }}</span>
+                                        </div>
                                     </td>
-                                    <td class="p-4 text-gray-700">
-                                        <div><strong>Gửi:</strong> {{ $parcel->sender_name }} ({{ $parcel->sender_phone }})</div>
-                                        <div><strong>Nhận:</strong> {{ $parcel->receiver_name }} ({{ $parcel->receiver_phone }})</div>
+                                    <td class="p-5 text-white/70">
+                                        <div class="flex flex-col gap-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-white/40 uppercase tracking-wider w-10">Gửi:</span> 
+                                                <span class="font-medium text-white/80">{{ $parcel->sender_name }}</span> 
+                                                <span class="text-xs">({{ $parcel->sender_phone }})</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-brand-accent uppercase tracking-wider w-10">Nhận:</span> 
+                                                <span class="font-medium text-white/80">{{ $parcel->receiver_name }}</span> 
+                                                <span class="text-xs">({{ $parcel->receiver_phone }})</span>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td class="p-4 text-gray-700">{{ $parcel->weight }} kg</td>
-                                    <td class="p-4 text-amber-600 font-bold text-right">{{ number_format($parcel->price, 0, ',', '.') }}đ</td>
-                                    <td class="p-4 text-center">
+                                    <td class="p-5 text-center text-white/70 font-medium">
+                                        {{ $parcel->weight }} kg
+                                    </td>
+                                    <td class="p-5 font-black text-brand-primary text-right text-base">
+                                        {{ number_format($parcel->price, 0, ',', '.') }}đ
+                                    </td>
+                                    <td class="p-5 pr-6 text-center">
                                         @if($parcel->status == 'pending')
-                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold inline-block">Chờ xử lý</span>
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full text-xs font-bold">
+                                                <i data-lucide="clock" class="w-3 h-3"></i> Chờ xử lý
+                                            </span>
                                         @elseif($parcel->status == 'shipping')
-                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-bold inline-block">Đang giao</span>
+                                            <span class="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full text-xs font-bold">
+                                                <i data-lucide="truck" class="w-3 h-3"></i> Đang giao
+                                            </span>
                                         @elseif($parcel->status == 'completed')
-                                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold inline-block">Đã nhận</span>
+                                            <span class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold">
+                                                <i data-lucide="check-circle" class="w-3 h-3"></i> Đã nhận
+                                            </span>
                                         @elseif($parcel->status == 'cancelled')
-                                            <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold inline-block">Đã hủy</span>
+                                            <span class="inline-flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1 rounded-full text-xs font-bold">
+                                                <i data-lucide="x-circle" class="w-3 h-3"></i> Đã hủy
+                                            </span>
                                         @else
-                                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-bold inline-block">{{ $parcel->status }}</span>
+                                            <span class="inline-flex items-center gap-1.5 bg-white/10 text-white/70 border border-white/20 px-3 py-1 rounded-full text-xs font-bold">
+                                                {{ $parcel->status }}
+                                            </span>
                                         @endif
                                     </td>
                                 </tr>

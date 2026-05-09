@@ -6,7 +6,7 @@
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="mb-12">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Chuyến xe hôm nay</h2>
+                <h2 class="text-2xl font-bold text-gray-800">{{ __('trips') }} hôm nay</h2>
                 <a href="#" class="text-amber-600 hover:text-amber-700 font-medium flex items-center gap-2">
                     Xem tất cả chuyến <i class='bx bx-right-arrow-alt'></i>
                 </a>
@@ -21,8 +21,7 @@
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full">
-                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}
-                                </span>
+                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
                             </div>
                             <div class="text-right">
                                 <span class="text-sm text-gray-500">Xe: </span>
@@ -40,7 +39,7 @@
                             </div>
                             <div class="flex-1 text-right">
                                 <p class="font-bold text-lg">{{ $trip->route->destinationLocation->name ?? 'N/A' }}</p>
-                                <p class="text-xs text-gray-500">Điểm đến</p>
+                                <p class="text-xs text-gray-500">{{ __('destination') }}</p>
                             </div>
                         </div>
 
@@ -50,8 +49,7 @@
                                 <span class="text-gray-400">ghế</span>
                             </div>
                             <a href="{{ route('driver.trips.show', $trip) }}" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl transition-all active:scale-95 inline-block">
-                                {{ $trip->status === 'running' ? 'Đang chạy' : 'Bắt đầu chuyến' }}
-                            </a>
+                                {{ $trip->status === 'running' ? 'Đang chạy' : 'Bắt đầu chuyến' }}</a>
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@
                 <a href="{{ route('driver.trips.index') }}"
                     class="flex items-center gap-2 text-gray-500 hover:text-amber-600 transition-colors">
                     <i class='bx bx-chevron-left text-3xl'></i>
-                    <span class="font-medium text-lg">Quay lại</span>
+                    <span class="font-medium text-lg">{{ __('back') }}</span>
                 </a>
             </div>
 
@@ -23,8 +23,7 @@
                         : ($trip->status === 'completed'
                             ? 'bg-gray-100 text-gray-700'
                             : 'bg-red-100 text-red-700')) }}">
-                {{ $trip->status === 'active' ? 'Sắp chạy' : ucfirst($trip->status) }}
-            </span>
+                {{ $trip->status === 'active' ? 'Sắp chạy' : ucfirst($trip->status) }}</span>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-8">
@@ -39,26 +38,22 @@
                                 <span
                                     class="inline-flex items-center gap-3 px-6 py-3 bg-amber-50 text-amber-700 rounded-3xl text-xl font-semibold">
                                     <i class='bx bx-time-five'></i>
-                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}
-                                </span>
+                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('H:i') }}</span>
                                 <p class="mt-3 text-gray-500 ml-6">
-                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('d/m/Y') }}
-                                </p>
+                                    {{ \Carbon\Carbon::parse($trip->departure_time)->format('d/m/Y') }}</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-xs uppercase tracking-widest text-gray-400">Biển số</p>
                                 <p class="text-3xl font-bold text-gray-900 mt-1">
-                                    {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}
-                                </p>
+                                    {{ $trip->vehicle->license_plate ?? 'Chưa gán' }}</p>
                             </div>
                         </div>
 
                         <div class="mt-12 flex items-center gap-8">
                             <div class="flex-1 text-center">
                                 <p class="text-3xl font-bold text-gray-900 leading-tight">
-                                    {{ $trip->route->departureLocation->name ?? 'N/A' }}
-                                </p>
-                                <p class="text-sm text-gray-500 mt-2">Điểm khởi hành</p>
+                                    {{ $trip->route->departureLocation->name ?? 'N/A' }}</p>
+                                <p class="text-sm text-gray-500 mt-2">{{ __('departure') }}</p>
                             </div>
 
                             <div class="flex flex-col items-center text-amber-500">
@@ -69,9 +64,8 @@
 
                             <div class="flex-1 text-center">
                                 <p class="text-3xl font-bold text-gray-900 leading-tight">
-                                    {{ $trip->route->destinationLocation->name ?? 'N/A' }}
-                                </p>
-                                <p class="text-sm text-gray-500 mt-2">Điểm đến</p>
+                                    {{ $trip->route->destinationLocation->name ?? 'N/A' }}</p>
+                                <p class="text-sm text-gray-500 mt-2">{{ __('destination') }}</p>
                             </div>
                         </div>
 
@@ -79,15 +73,13 @@
                             <div class="bg-gray-50 rounded-2xl p-6">
                                 <p class="text-gray-500 text-sm">Khởi hành</p>
                                 <p class="text-xl font-semibold mt-2">
-                                    {{ \Carbon\Carbon::parse($trip->trip_date . ' ' . $trip->departure_time)->format('H:i • d/m/Y') }}
-                                </p>
+                                    {{ \Carbon\Carbon::parse($trip->trip_date . ' ' . $trip->departure_time)->format('H:i • d/m/Y') }}</p>
                             </div>
                             <div class="bg-gray-50 rounded-2xl p-6">
                                 <p class="text-gray-500 text-sm">Dự kiến đến nơi</p>
                                 <p class="text-xl font-semibold mt-2">
                                     @php $duration = $trip->route->duration_minutes ?? 300; @endphp
-                                    {{ \Carbon\Carbon::parse($trip->trip_date . ' ' . $trip->departure_time)->addMinutes($duration)->format('H:i • d/m/Y') }}
-                                </p>
+                                    {{ \Carbon\Carbon::parse($trip->trip_date . ' ' . $trip->departure_time)->addMinutes($duration)->format('H:i • d/m/Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -104,7 +96,7 @@
                             <p class="font-semibold text-lg mt-1">{{ $trip->vehicle->type ?? 'Không xác định' }}</p>
                         </div>
                         <div>
-                            <p class="text-gray-500">Tổng số ghế</p>
+                            <p class="text-gray-500">{{ __('total') }} số ghế</p>
                             <p class="font-semibold text-lg mt-1">{{ $trip->vehicle->total_seats ?? '?' }} ghế</p>
                         </div>
                         <div>
@@ -112,7 +104,7 @@
                             <p class="font-semibold text-lg mt-1">{{ $trip->vehicle->license_plate ?? 'Chưa gán xe' }}</p>
                         </div>
                         <div>
-                            <p class="text-gray-500">Trạng thái xe</p>
+                            <p class="text-gray-500">{{ __('status') }} xe</p>
                             <p class="font-semibold text-emerald-600 text-lg mt-1">Sẵn sàng hoạt động</p>
                         </div>
                     </div>
@@ -123,8 +115,7 @@
                         <h2 class="text-xl font-semibold">Danh sách hành khách</h2>
                         <div class="text-sm">
                             <span class="font-semibold text-emerald-600">
-                                {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}
-                            </span>
+                                {{ $trip->tickets->where('status', '!=', 'cancelled')->count() }}</span>
                             <span class="text-gray-400"> / {{ $trip->vehicle->total_seats ?? '?' }} ghế</span>
                         </div>
                     </div>
@@ -143,7 +134,7 @@
                                         <th class="text-left py-5 font-medium text-gray-500">Số ghế</th>
                                         <th class="text-left py-5 font-medium text-gray-500">Số điện thoại</th>
                                         <th class="text-center py-5 font-medium text-gray-500">Mã vé</th>
-                                        <th class="text-center py-5 font-medium text-gray-500">Trạng thái</th>
+                                        <th class="text-center py-5 font-medium text-gray-500">{{ __('status') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
@@ -153,23 +144,18 @@
                                         @endphp
                                         <tr class="hover:bg-gray-50 transition">
                                             <td class="py-5 font-medium">
-                                                {{ $ticket->passenger_name ?? ($user?->name ?? 'Khách vãng lai') }}
-                                            </td>
+                                                {{ $ticket->passenger_name ?? ($user?->name ?? 'Khách vãng lai') }}</td>
                                             <td class="py-5 font-semibold text-amber-600">
-                                                {{ $ticket->seat?->seat_number ?? ($ticket->seat_number ?? '—') }}
-                                            </td>
+                                                {{ $ticket->seat?->seat_number ?? ($ticket->seat_number ?? '—') }}</td>
                                             <td class="py-5 text-gray-600">
-                                                {{ $user?->phone ?? '—' }}
-                                            </td>
+                                                {{ $user?->phone ?? '—' }}</td>
                                             <td class="py-5 text-center font-mono text-sm">
-                                                {{ $ticket->ticket_code }}
-                                            </td>
+                                                {{ $ticket->ticket_code }}</td>
                                             <td class="py-5 text-center">
                                                 <span
                                                     class="px-5 py-1.5 text-xs font-medium rounded-3xl
                                                     {{ $ticket->status === 'confirmed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
-                                                    {{ ucfirst($ticket->status) }}
-                                                </span>
+                                                    {{ ucfirst($ticket->status) }}</span>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -184,7 +170,7 @@
 
                 <!-- Trạng thái + Hành động -->
                 <div class="bg-white rounded-3xl shadow border border-gray-100 p-8 sticky top-8">
-                    <h3 class="font-semibold text-lg mb-6">Trạng thái chuyến đi</h3>
+                    <h3 class="font-semibold text-lg mb-6">{{ __('status') }} chuyến đi</h3>
 
                     @if ($trip->status === 'active')
                         <div
@@ -249,7 +235,7 @@
                         <i class='bx bx-map-alt text-2xl'></i>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-semibold text-gray-900">Lộ trình chuyến đi</h3>
+                        <h3 class="text-2xl font-semibold text-gray-900">{{ __('trajectory_mobile') }} chuyến đi</h3>
                         <p class="text-sm text-gray-500">Các điểm dừng đón khách theo thứ tự</p>
                     </div>
                 </div>
@@ -267,8 +253,7 @@
                             <div class="absolute -left-12 top-3 flex flex-col items-center">
                                 <div
                                     class="w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center text-white text-sm font-bold shadow-md">
-                                    {{ $index + 1 }}
-                                </div>
+                                    {{ $index + 1 }}</div>
                                 @if (!$loop->last)
                                     <div
                                         class="w-px h-[calc(100%+48px)] bg-gradient-to-b from-amber-300 to-transparent mt-3">
@@ -288,8 +273,7 @@
 
                                         @if ($point->location)
                                             <p class="text-xs text-gray-400 mt-3 flex items-center gap-1">
-                                                <i class='bx bx-map-pin'></i> {{ $point->location->name }}
-                                            </p>
+                                                <i class='bx bx-map-pin'></i> {{ $point->location->name }}</p>
                                         @endif
                                     </div>
 
@@ -336,13 +320,11 @@
                         el.textContent = "Đã đến giờ";
                         clearInterval(interval);
                         return;
-                    }
-                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    }} const hours = Math.floor(diff / (1000 * 60 * 60));
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     el.textContent = `${hours}h ${minutes}m`;
                 }, 1000);
-            }
-            document.addEventListener('DOMContentLoaded', startCountdown);
+            }} document.addEventListener('DOMContentLoaded', startCountdown);
         </script>
     @endif
 
@@ -351,24 +333,18 @@
             const modal = document.getElementById('routeModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
-
-        function closeRouteModal() {
+        }} function closeRouteModal() {
             const modal = document.getElementById('routeModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-        }
-
-        function openGoogleMaps(name, address) {
+        }} function openGoogleMaps(name, address) {
             let query = address ? address : name;
             const encodedQuery = encodeURIComponent(query.trim());
 
             const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
 
             window.open(googleMapsUrl, '_blank');
-        }
-
-        function openFullGoogleMapsRoute() {
+        }} function openFullGoogleMapsRoute() {
             @php
                 $origin = $trip->route->departureLocation->name ?? '';
                 $destination = $trip->route->destinationLocation->name ?? '';
@@ -380,9 +356,7 @@
             
             const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}&waypoints=${waypoints}`;
             window.open(url, '_blank');
-        }
-
-        document.addEventListener('keydown', function(e) {
+        }} document.addEventListener('keydown', function(e) {
             if (e.key === "Escape") closeRouteModal();
         });
 

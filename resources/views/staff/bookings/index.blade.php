@@ -16,7 +16,7 @@
                 <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
             </select>
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">Lọc</button>
+            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700">{{ __('filter') }}</button>
         </form>
     </div>
 </div>
@@ -27,9 +27,9 @@
             <tr>
                 <th class="px-6 py-4 text-center">ID</th>
                 <th class="px-6 py-4">Khách hàng</th>
-                <th class="px-6 py-4">Chuyến xe</th>
-                <th class="px-6 py-4 text-right">Tổng tiền</th>
-                <th class="px-6 py-4 text-center">Trạng thái</th>
+                <th class="px-6 py-4">{{ __('trips') }}</th>
+                <th class="px-6 py-4 text-right">{{ __('total') }} tiền</th>
+                <th class="px-6 py-4 text-center">{{ __('status') }}</th>
                 <th class="px-6 py-4 text-center">Hành động</th>
             </tr>
         </thead>
@@ -88,7 +88,6 @@
         </tbody>
     </table>
     <div class="p-6 border-t border-[#e3e3e0] dark:border-[#262626]">
-        {{ $bookings->links() }}
-    </div>
+        {{ $bookings->links() }}</div>
 </div>
 @endsection

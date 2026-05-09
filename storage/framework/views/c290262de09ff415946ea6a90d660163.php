@@ -1,79 +1,98 @@
-    <header class="gradient-hero bus-pattern text-white sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <a href="<?php echo e(route('customer.home')); ?>"
-                        class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center hover:bg-amber-600 transition-colors">
-                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z" />
-                        </svg>
-                    </a>
-                    <div>
-                        <a href="<?php echo e(route('customer.home')); ?>" id="brand-name"
-                            class="text-xl font-bold hover:text-amber-300 transition-colors block">Mạnh Hùng</a>
-                        <p id="slogan" class="text-xs text-amber-300">An toàn - Chất lượng - Đúng giờ</p>
+<header class="fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b border-white/5" :class="{ 'bg-[#0a0a0a]/80 backdrop-blur-xl shadow-2xl shadow-black/50': scrolled, 'bg-transparent': !scrolled }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-4">
+        <div class="flex items-center justify-between">
+            
+            <!-- Logo & Brand -->
+            <div class="flex items-center gap-3">
+                <a href="<?php echo e(route('customer.home')); ?>" class="relative group">
+                    <div class="w-12 h-12 rounded-xl liquid-gradient flex items-center justify-center shadow-lg shadow-brand-primary/20 group-hover:scale-105 transition-transform">
+                        <i data-lucide="bus" class="text-white w-6 h-6"></i>
                     </div>
-                </div>
-
-                <nav class="hidden md:flex items-center gap-6 text-sm">
-                    <a href="<?php echo e(url('/#search')); ?>" class="hover:text-amber-300 transition-colors">Đặt vé</a>
-                    <a href="<?php echo e(url('/#routes')); ?>" class="hover:text-amber-300 transition-colors">Tuyến đường</a>
-                    <a href="<?php echo e(url('/#features')); ?>" class="hover:text-amber-300 transition-colors">Dịch vụ</a>
-                    <a href="<?php echo e(route('customer.parcels.create')); ?>" class="hover:text-amber-300 transition-colors">Ký gửi hàng</a>
-                    
-                </nav>
-
-                <div class="flex items-center gap-3">
-                    <div class="hidden sm:flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                        <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                        </svg>
-                        <span id="hotline" class="font-semibold text-amber-300">1900 6868</span>
-                    </div>
-
-                    <!-- Logout -->
-                    <div class="flex items-center gap-3">
-                        
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
-                            <div class="flex items-center gap-2">
-                                <a href="<?php echo e(route('login')); ?>"
-                                    class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
-                                    Đăng nhập
-                                </a>
-                                <a href="<?php echo e(route('register')); ?>"
-                                    class="text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5">
-                                    Đăng ký
-                                </a>
-                            </div>
-                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-
-                        
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
-                            <div class="flex items-center gap-4">
-                                <a href="<?php echo e(route('customer.bookings.index')); ?>"
-                                    class="text-sm font-medium hover:text-amber-300 transition-colors px-3 py-2">
-                                    Vé của tôi
-                                </a>
-                                <a href="<?php echo e(route('customer.profile.edit')); ?>" class="hidden lg:block text-sm font-medium text-amber-100 hover:text-white transition-colors">
-                                    Chào, <?php echo e(Auth::user()->name); ?>
-
-                                </a>
-
-                                <form action="<?php echo e(route('logout')); ?>" method="POST">
-                                    <?php echo csrf_field(); ?>
-                                    <button type="submit"
-                                        class="flex items-center gap-2 text-sm font-bold bg-white/10 hover:bg-red-500/20 text-white px-4 py-2 rounded-lg border border-white/20 transition-all">
-                                        <i class='bx bx-log-out text-lg'></i>
-                                        <span>Đăng xuất</span>
-                                    </button>
-                                </form>
-                            </div>
-                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    </div>
+                </a>
+                <div class="hidden sm:block">
+                    <a href="<?php echo e(route('customer.home')); ?>" class="text-xl font-black tracking-tight uppercase hover:text-brand-primary transition-colors block">Mạnh <span class="text-brand-accent">Hùng</span></a>
+                    <p class="text-[10px] uppercase tracking-widest text-white/50">Trải nghiệm 5 sao</p>
                 </div>
             </div>
+
+            <!-- Main Navigation -->
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium">
+                <a href="<?php echo e(url('/#search')); ?>" class="text-white/70 hover:text-white transition-colors relative group">
+                    Đặt vé
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all group-hover:w-full"></span>
+                </a>
+                <a href="<?php echo e(url('/#routes')); ?>" class="text-white/70 hover:text-white transition-colors relative group">
+                    Tuyến đường
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all group-hover:w-full"></span>
+                </a>
+                <a href="<?php echo e(url('/#features')); ?>" class="text-white/70 hover:text-white transition-colors relative group">
+                    Dịch vụ
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all group-hover:w-full"></span>
+                </a>
+                <a href="<?php echo e(route('customer.parcels.create')); ?>" class="text-white/70 hover:text-white transition-colors relative group">
+                    Ký gửi hàng
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all group-hover:w-full"></span>
+                </a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4">
+                <!-- Hotline -->
+                <div class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm font-bold">
+                    <i data-lucide="phone-call" class="w-4 h-4 text-brand-primary"></i>
+                    <span>1900 6868</span>
+                </div>
+
+                <div class="h-6 w-px bg-white/10 hidden md:block"></div>
+
+                <!-- Auth / Profile -->
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->guest()): ?>
+                    <div class="flex items-center gap-2">
+                        <a href="<?php echo e(route('login')); ?>" class="text-sm font-medium hover:text-white text-white/70 transition-colors px-4 py-2 hidden sm:block">Đăng nhập</a>
+                        <a href="<?php echo e(route('register')); ?>" class="text-sm font-bold liquid-gradient text-white px-5 py-2.5 rounded-full shadow-lg shadow-brand-primary/20 hover:scale-105 transition-transform">Đăng ký</a>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->guard()->check()): ?>
+                    <div class="flex items-center gap-4">
+                        <a href="<?php echo e(route('customer.bookings.index')); ?>" class="text-sm font-medium hover:text-white text-white/70 transition-colors hidden sm:block">Vé của tôi</a>
+                        
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 focus:outline-none">
+                                <div class="w-10 h-10 rounded-full border border-brand-primary/30 p-0.5">
+                                    <div class="w-full h-full bg-brand-primary/20 rounded-full flex items-center justify-center text-brand-primary font-bold">
+                                        <?php echo e(substr(Auth::user()->name, 0, 1)); ?>
+
+                                    </div>
+                                </div>
+                            </button>
+
+                            <!-- Dropdown -->
+                            <div x-show="open" x-transition.opacity class="absolute right-0 mt-3 w-56 rounded-2xl border border-white/10 bg-[#141414] shadow-2xl overflow-hidden glass-auth" x-cloak>
+                                <div class="px-4 py-3 border-b border-white/5">
+                                    <p class="text-sm text-white font-semibold"><?php echo e(Auth::user()->name); ?></p>
+                                    <p class="text-xs text-white/50 truncate"><?php echo e(Auth::user()->email); ?></p>
+                                </div>
+                                <div class="p-2 space-y-1">
+                                    <a href="<?php echo e(route('customer.profile.edit')); ?>" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4"></i> Thông tin cá nhân
+                                    </a>
+                                    <a href="<?php echo e(route('customer.bookings.index')); ?>" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors sm:hidden">
+                                        <i data-lucide="ticket" class="w-4 h-4"></i> Vé của tôi
+                                    </a>
+                                    <form action="<?php echo e(route('logout')); ?>" method="POST" class="block">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-red-400 hover:bg-red-500/10 transition-colors">
+                                            <i data-lucide="log-out" class="w-4 h-4"></i> Đăng xuất
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            </div>
         </div>
-    </header>
+    </div>
+</header>
 <?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/layout/customer/blocks/header.blade.php ENDPATH**/ ?>

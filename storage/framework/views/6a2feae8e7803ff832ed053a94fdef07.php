@@ -1,14 +1,25 @@
 <?php $__env->startSection('content-main'); ?>
-<section class="py-12 bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4">
+<section class="py-12 lg:py-20 relative min-h-[80vh]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         
+        <!-- Header -->
+        <div class="mb-10 text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight uppercase flex items-center justify-center md:justify-start gap-3">
+                <i data-lucide="user" class="w-8 h-8 text-brand-primary"></i> Hồ sơ cá nhân
+            </h2>
+            <p class="text-white/50 mt-2">Quản lý thông tin bảo mật và lịch sử đặt vé của bạn.</p>
+        </div>
+
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 shadow-sm"><?php echo e(session('success')); ?></div>
+            <div class="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl mb-6 flex items-center gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+                <p class="text-sm font-medium"><?php echo e(session('success')); ?></p>
+            </div>
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($errors->any()): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 shadow-sm">
-                <ul class="list-disc pl-5">
+            <div class="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl mb-6">
+                <ul class="list-disc pl-5 text-sm space-y-1">
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                         <li><?php echo e($error); ?></li>
                     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
@@ -16,47 +27,74 @@
             </div>
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid lg:grid-cols-3 gap-8">
             
             <!-- CỘT TRÁI: Form Thông Tin Cá Nhân -->
-            <div class="md:col-span-1">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">Hồ sơ cá nhân</h2>
-                
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="lg:col-span-1">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] pointer-events-none"></div>
+                    
                     <form action="<?php echo e(route('customer.profile.update')); ?>" method="POST" enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
                         <?php echo method_field('PUT'); ?>
                         
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2" for="name">Họ và Tên <span class="text-red-500">*</span></label>
-                                <input type="text" id="name" name="name" value="<?php echo e(old('name', $user->name)); ?>" required
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors">
+                        <div class="space-y-6">
+                            
+                            <!-- Avatar Preview (Optional) -->
+                            <div class="flex justify-center mb-8">
+                                <div class="relative group">
+                                    <div class="w-24 h-24 rounded-full bg-black/30 border-2 border-white/10 flex items-center justify-center overflow-hidden group-hover:border-brand-primary transition-colors">
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($user->avatar) && $user->avatar): ?>
+                                            <img src="<?php echo e(asset('storage/' . $user->avatar)); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            <span class="text-3xl font-bold text-white/30"><?php echo e(substr($user->name, 0, 1)); ?></span>
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    </div>
+                                    <div class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                        <i data-lucide="camera" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <!-- Transparent file input layered over the avatar -->
+                                    <input type="file" name="avatar" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Thay đổi ảnh đại diện">
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-white/70 ml-1" for="name">Họ và Tên <span class="text-red-400">*</span></label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40 group-focus-within:text-brand-primary transition-colors">
+                                        <i data-lucide="user" class="w-5 h-5"></i>
+                                    </div>
+                                    <input type="text" id="name" name="name" value="<?php echo e(old('name', $user->name)); ?>" required
+                                        class="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors placeholder-white/20">
+                                </div>
                             </div>
                             
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
-                                <input type="email" id="email" value="<?php echo e($user->email); ?>" disabled
-                                    class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed">
-                                <p class="text-xs text-gray-400 mt-1">Email dùng để đăng nhập, không thể đổi.</p>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-white/70 ml-1" for="email">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40">
+                                        <i data-lucide="mail" class="w-5 h-5"></i>
+                                    </div>
+                                    <input type="email" id="email" value="<?php echo e($user->email); ?>" disabled
+                                        class="w-full px-4 py-3 pl-11 bg-black/30 border border-white/5 rounded-xl text-white/40 cursor-not-allowed">
+                                </div>
+                                <p class="text-xs text-white/40 mt-1 ml-1"><i data-lucide="info" class="w-3 h-3 inline-block mb-0.5"></i> Dùng để đăng nhập, không thể đổi.</p>
                             </div>
 
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2" for="phone">Số điện thoại</label>
-                                <input type="text" id="phone" name="phone" value="<?php echo e(old('phone', $user->phone)); ?>"
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-white/70 ml-1" for="phone">Số điện thoại</label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/40 group-focus-within:text-brand-primary transition-colors">
+                                        <i data-lucide="phone" class="w-5 h-5"></i>
+                                    </div>
+                                    <input type="text" id="phone" name="phone" value="<?php echo e(old('phone', $user->phone)); ?>"
+                                        class="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-colors placeholder-white/20">
+                                </div>
                             </div>
 
-                            <!-- Avatar -->
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2" for="avatar">Ảnh đại diện</label>
-                                <input type="file" id="avatar" name="avatar" accept="image/*"
-                                    class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors text-sm">
-                            </div>
-
-                            <div class="pt-4 mt-4 border-t border-gray-100 flex justify-end">
-                                <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition-colors w-full">
-                                    Cập nhật thông tin
+                            <div class="pt-6 mt-6 border-t border-white/10">
+                                <button type="submit" class="w-full liquid-gradient hover:scale-[1.02] transition-transform text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2">
+                                    Cập nhật thông tin <i data-lucide="save" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </div>
@@ -65,66 +103,70 @@
             </div>
 
             <!-- CỘT PHẢI: Lịch sử đặt vé -->
-            <div class="md:col-span-2">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Lịch sử đặt vé gần đây</h2>
-                    <a href="<?php echo e(route('customer.bookings.index')); ?>" class="text-amber-600 font-medium hover:text-amber-700 hover:underline text-sm">
-                        Xem tất cả &rarr;
-                    </a>
-                </div>
+            <div class="lg:col-span-2">
+                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative">
+                    <div class="p-6 md:p-8 flex items-center justify-between border-b border-white/10 bg-black/20">
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i data-lucide="clock" class="w-5 h-5 text-brand-primary"></i> Giao dịch gần đây
+                        </h2>
+                        <a href="<?php echo e(route('customer.bookings.index')); ?>" class="text-brand-primary font-medium hover:text-white transition-colors text-sm flex items-center gap-1">
+                            Xem tất cả <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($bookings) && $bookings->isEmpty()): ?>
-                        <div class="p-10 text-center text-gray-500">
-                            <i class="fas fa-ticket-alt text-4xl text-gray-300 mb-3 block"></i>
-                            <p class="mb-4 text-base">Bạn chưa có đơn đặt vé nào.</p>
-                            <a href="<?php echo e(route('customer.home')); ?>" class="inline-block bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 font-medium py-2 px-6 rounded-lg transition-colors">Đặt vé ngay</a>
-                        </div>
-                    <?php elseif(isset($bookings)): ?>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse whitespace-nowrap">
-                                <thead>
-                                    <tr class="bg-gray-50 uppercase text-xs font-semibold text-gray-500 border-b border-gray-100">
-                                        <th class="p-4">Mã ĐH</th>
-                                        <th class="p-4">Tuyến đường</th>
-                                        <th class="p-4">Khởi hành</th>
-                                        <th class="p-4 text-right">Tổng tiền</th>
-                                        <th class="p-4 text-center">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 text-sm">
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $bookings->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?> 
-                                        <tr class="hover:bg-amber-50 transition-colors cursor-pointer" onclick="window.location='<?php echo e(route('customer.bookings.show', $booking->id)); ?>'">
-                                            <td class="p-4 font-bold text-gray-800">#<?php echo e($booking->id); ?></td>
-                                            <td class="p-4 text-gray-700">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="font-medium truncate max-w-[120px]"><?php echo e($booking->trip->route->departureLocation->name ?? '...'); ?></span>
-                                                    <i class="fas fa-arrow-right text-gray-400 text-xs"></i>
-                                                    <span class="font-medium truncate max-w-[120px]"><?php echo e($booking->trip->route->destinationLocation->name ?? '...'); ?></span>
-                                                </div>
-                                            </td>
-                                            <td class="p-4 text-gray-700">
-                                                <div class="font-bold text-gray-800"><?php echo e(\Carbon\Carbon::parse($booking->trip->departure_time)->format('H:i')); ?></div>
-                                                <div class="text-xs text-gray-500"><?php echo e(\Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y')); ?></div>
-                                            </td>
-                                            <td class="p-4 text-amber-600 font-bold text-right"><?php echo e(number_format($booking->total_amount, 0, ',', '.')); ?>đ</td>
-                                            <td class="p-4 text-center">
+                    <div class="p-0">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(isset($bookings) && $bookings->isEmpty()): ?>
+                            <div class="p-12 text-center text-white/50 flex flex-col items-center">
+                                <i data-lucide="ticket" class="w-12 h-12 mb-4 opacity-50"></i>
+                                <p class="mb-6">Bạn chưa có đơn đặt vé nào.</p>
+                                <a href="<?php echo e(url('/#search')); ?>" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-6 rounded-xl transition-colors border border-white/10">
+                                    Đặt vé ngay
+                                </a>
+                            </div>
+                        <?php elseif(isset($bookings)): ?>
+                            <div class="divide-y divide-white/5">
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $bookings->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
+                                    <a href="<?php echo e(route('customer.bookings.show', $booking->id)); ?>" class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 hover:bg-white/5 transition-colors group">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:border-brand-primary/50 group-hover:bg-brand-primary/10 transition-colors">
+                                                <i data-lucide="bus" class="w-5 h-5 text-white/50 group-hover:text-brand-primary transition-colors"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-white text-lg mb-1 flex items-center gap-2">
+                                                    <?php echo e($booking->trip->route->departureLocation->name ?? '...'); ?>
+
+                                                    <i data-lucide="arrow-right" class="w-3 h-3 text-brand-primary"></i>
+                                                    <?php echo e($booking->trip->route->destinationLocation->name ?? '...'); ?>
+
+                                                </p>
+                                                <p class="text-sm text-white/50 flex items-center gap-3">
+                                                    <span><i data-lucide="hash" class="w-3 h-3 inline"></i> <?php echo e($booking->id); ?></span>
+                                                    <span><i data-lucide="calendar" class="w-3 h-3 inline"></i> <?php echo e(\Carbon\Carbon::parse($booking->trip->trip_date)->format('d/m/Y')); ?></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto mt-2 sm:mt-0">
+                                            <div class="text-left sm:text-right">
+                                                <p class="font-black text-white text-lg"><?php echo e(number_format($booking->total_amount, 0, ',', '.')); ?>đ</p>
+                                                
                                                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($booking->status == 'pending'): ?>
-                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded bg-opacity-70 text-xs font-bold inline-block border border-yellow-200">Đang chờ</span>
+                                                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Đang chờ</span>
                                                 <?php elseif($booking->status == 'paid'): ?>
-                                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded bg-opacity-70 text-xs font-bold inline-block border border-green-200">Đã thanh toán</span>
+                                                    <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Đã thanh toán</span>
                                                 <?php elseif($booking->status == 'cancelled'): ?>
-                                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded bg-opacity-70 text-xs font-bold inline-block border border-red-200">Đã hủy</span>
+                                                    <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Đã hủy</span>
                                                 <?php else: ?>
-                                                    <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded bg-opacity-70 text-xs font-bold inline-block border border-gray-200"><?php echo e(strtoupper($booking->status)); ?></span>
+                                                    <span class="text-xs font-bold text-white/50 uppercase tracking-wider"><?php echo e($booking->status); ?></span>
                                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                            </div>
+                                            <i data-lucide="chevron-right" class="w-5 h-5 text-white/30 group-hover:text-brand-primary transition-colors group-hover:translate-x-1"></i>
+                                        </div>
+                                    </a>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
+                            </div>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
                 </div>
             </div>
 

@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('content-main'); ?>
 <div class="container-fluid py-4">
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('success')): ?>
@@ -15,12 +16,12 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>ID</th>
-                        <th>Người gửi</th>
-                        <th>Người nhận</th>
-                        <th>Tuyến đường</th>
-                        <th>Khối lượng</th>
+                        <th><?php echo e(__('sender')); ?></th>
+                        <th><?php echo e(__('receiver')); ?></th>
+                        <th><?php echo e(__('routes')); ?></th>
+                        <th><?php echo e(__('weight')); ?></th>
                         <th>Phí vận chuyển</th>
-                        <th>Trạng thái</th>
+                        <th><?php echo e(__('status')); ?></th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
@@ -65,4 +66,4 @@
 </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/parcels/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/parcels/index.blade.php ENDPATH**/ ?>

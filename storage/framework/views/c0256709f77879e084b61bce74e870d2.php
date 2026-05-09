@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Danh mục Điểm đón'); ?>
 <?php $__env->startSection('content-main'); ?>
 <div class="container-fluid py-4">
@@ -17,8 +18,8 @@
                 <thead class="table-light">
                     <tr>
                         <th>Tỉnh/Thành phố</th>
-                        <th>Tên điểm đón</th>
-                        <th>Địa chỉ</th>
+                        <th><?php echo e(__('name')); ?> điểm đón</th>
+                        <th><?php echo e(__('address')); ?></th>
                         <th class="text-end">Hành động</th>
                     </tr>
                 </thead>
@@ -40,9 +41,8 @@
                 </tbody>
             </table>
         </div>
-        <?php echo e($pickupPoints->links()); ?>
-
-    </div>
+        <?php echo e($pickupPoints->links()); ?></div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layout.admin.AdminLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/pickup_points/index.blade.php ENDPATH**/ ?>
+
+<?php echo $__env->make('layout.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\admin\du-an-tot-nghiep\resources\views/admin/pickup_points/index.blade.php ENDPATH**/ ?>

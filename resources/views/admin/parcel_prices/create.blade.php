@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 
 @section('header-title', 'THÊM GIÁ KÝ GỬI')
 @section('header-subtitle', 'Cấu hình giá mới cho một tuyến và khoảng trọng lượng')

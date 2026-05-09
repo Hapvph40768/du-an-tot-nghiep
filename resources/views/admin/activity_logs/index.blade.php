@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('content-main')
 <div class="container-fluid py-4">
     <div class="card shadow-sm border-0 rounded-4 p-4">
@@ -10,10 +10,10 @@
                 <thead>
                     <tr class="text-muted small text-uppercase">
                         <th>Thời gian</th>
-                        <th>Người dùng</th>
+                        <th>{{ __('users') }}</th>
                         <th>Hành động</th>
-                        <th>Mô tả</th>
-                        <th>Địa chỉ IP</th>
+                        <th>{{ __('description') }}</th>
+                        <th>{{ __('address') }} IP</th>
                     </tr>
                 </thead>
                 <tbody>

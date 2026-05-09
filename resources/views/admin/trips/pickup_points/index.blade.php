@@ -1,4 +1,4 @@
-@extends('layout.admin.AdminLayout')
+@extends('layout.admin')
 @section('title', 'Gán điểm đón cho chuyến xe')
 @section('content-main')
 <div class="container-fluid py-4">
@@ -11,8 +11,7 @@
     <form action="{{ route('admin.trips.pickup_points.store', $trip->id) }}" method="POST">
         @csrf
         <div class="row">
-            {{-- Cột bên trái: Danh sách để chọn --}}
-            <div class="col-md-7">
+            {{-- Cột bên trái: Danh sách để chọn --}}<div class="col-md-7">
                 <div class="card shadow-sm border-0 rounded-4 p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold m-0">Chọn từ danh mục hệ thống</h5>
@@ -24,7 +23,7 @@
                             <thead class="sticky-top bg-white">
                                 <tr class="small text-muted">
                                     <th width="50">Chọn</th>
-                                    <th>Tên điểm / Địa chỉ</th>
+                                    <th>{{ __('name') }} điểm / Địa chỉ</th>
                                     <th>Tỉnh</th>
                                 </tr>
                             </thead>
@@ -48,10 +47,9 @@
                 </div>
             </div>
 
-            {{-- Cột bên phải: Tóm tắt & Lưu --}}
-            <div class="col-md-5">
+            {{-- Cột bên phải: Tóm tắt & Lưu --}}<div class="col-md-5">
                 <div class="card shadow-sm border-0 rounded-4 p-4 sticky-top" style="top: 20px;">
-                    <h5 class="fw-bold mb-3">Lộ trình hiện tại</h5>
+                    <h5 class="fw-bold mb-3">{{ __('trajectory_mobile') }} hiện tại</h5>
                     <div class="bg-light p-3 rounded-3 mb-4">
                         @forelse($trip->pickupPoints as $index => $p)
                             <div class="d-flex align-items-center mb-2">
