@@ -34,3 +34,6 @@ Thumbs.db
 
 # Python scripts
 fix_*.py
+
+storage/framework/views/*
+bootstrap/cache/*
