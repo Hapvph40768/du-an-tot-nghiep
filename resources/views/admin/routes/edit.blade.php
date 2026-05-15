@@ -65,13 +65,28 @@
                         </div>
 
                         {{-- Thời gian dự kiến --}}<div class="col-md-6">
-                            <label class="form-label">Thời gian dự kiến (giờ)</label>
-                            <div class="input-group">
-                                <input type="number" step="0.1" name="estimated_time" value="{{ old('estimated_time', $route->estimated_time) }}" 
-                                       class="form-control rounded-3 @error('estimated_time') is-invalid @enderror" placeholder="Ví dụ: 6.5">
-                                <span class="input-group-text bg-light text-muted">giờ</span>
+                            <label class="form-label">Thời gian dự kiến</label>
+                            @php
+                                $totalMin = old('estimated_hours') !== null
+                                    ? null
+                                    : (int) $route->estimated_time;
+                                $dispHours   = old('estimated_hours', floor($totalMin / 60));
+                                $dispMinutes = old('estimated_minutes', $totalMin % 60);
+                            @endphp
+                            <div class="d-flex gap-2 align-items-center">
+                                <div class="input-group" style="max-width: 130px;">
+                                    <input type="number" name="estimated_hours" min="0" max="99"
+                                           class="form-control rounded-3 @error('estimated_hours') is-invalid @enderror"
+                                           placeholder="0" value="{{ $dispHours }}">
+                                    <span class="input-group-text bg-light text-muted">giờ</span>
+                                </div>
+                                <div class="input-group" style="max-width: 130px;">
+                                    <input type="number" name="estimated_minutes" min="0" max="59"
+                                           class="form-control rounded-3 @error('estimated_minutes') is-invalid @enderror"
+                                           placeholder="0" value="{{ $dispMinutes }}">
+                                    <span class="input-group-text bg-light text-muted">phút</span>
+                                </div>
                             </div>
-                            @error('estimated_time') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                         </div>
                         
                         <div class="col-md-12 mt-3">

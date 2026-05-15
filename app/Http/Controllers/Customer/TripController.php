@@ -44,15 +44,31 @@ class TripController extends Controller
     // Xem chi tiết 1 chuyến xe (hiển thị chọn số lượng vé và chọn điểm đón)
     public function show(Trip $trip)
     {
-        // Load kèm xe và các điểm đón trả khách
-        $trip->load(['vehicle', 'pickupPoints']);
-        
+        // Load kèm xe, tuyến đường và các điểm đón, trả khách từ pivot
+        $trip->load(['vehicle', 'route', 'pickupPoints', 'dropoffPoints', 'driver']);
+
         $totalSeats = $trip->vehicle->seats()->count();
         $bookedSeats = \App\Models\Ticket::where('trip_id', $trip->id)
                             ->whereIn('status', ['pending', 'confirmed'])
                             ->count();
-        
+
         $availableSeats = max(0, $totalSeats - $bookedSeats);
+
+        // Nếu trip chưa được gán điểm đón qua pivot → fallback lấy theo route
+        if ($trip->pickupPoints->isEmpty() && $trip->route) {
+            $trip->setRelation(
+                'pickupPoints',
+                \App\Models\PickupPoint::where('location_id', $trip->route->start_location_id)->get()
+            );
+        }
+
+        // Nếu trip chưa được gán điểm trả qua pivot → fallback lấy theo route
+        if ($trip->dropoffPoints->isEmpty() && $trip->route) {
+            $trip->setRelation(
+                'dropoffPoints',
+                \App\Models\DropoffPoint::where('location_id', $trip->route->end_location_id)->get()
+            );
+        }
 
         return view('customer.trips.show', compact('trip', 'availableSeats'));
     }

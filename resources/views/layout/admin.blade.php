@@ -262,11 +262,71 @@
                         <input type="text" placeholder="Tìm kiếm...">
                     </div>
 
-                    <a href="{{ route('admin.notifications.index') }}" class="notif-btn">
-                        <i class='bx bx-bell'></i>
-                        <div class="notif-badge"></div>
-                    </a>
-                </div>
+                    @php
+                        $unreadCount = Auth::user()->unreadNotifications->count();
+                        $latestNotifs = Auth::user()->notifications()->latest()->take(5)->get();
+                    @endphp
+                    <div class="dropdown notif-dropdown">
+                        <button class="notif-btn position-relative" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background:none;border:none;cursor:pointer;">
+                            <i class='bx bx-bell'></i>
+                            @if($unreadCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;margin-top:5px;margin-left:-5px;">
+                                    {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                                </span>
+                            @endif
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-0" style="min-width:340px;max-width:380px;" aria-labelledby="notifDropdown">
+                            <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+                                <span class="fw-bold" style="font-size:14px;"><i class='bx bx-bell me-1' style="color:#6366f1;"></i>Thông báo</span>
+                                @if($unreadCount > 0)
+                                <form method="POST" action="{{ route('admin.notifications.readAll') }}" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link p-0 text-primary" style="font-size:12px;">Đọc hết</button>
+                                </form>
+                                @endif
+                            </div>
+                            <div style="max-height:360px;overflow-y:auto;">
+                                @forelse($latestNotifs as $notif)
+                                    @php
+                                        $ndata = $notif->data;
+                                        $nIcon = $ndata['icon'] ?? 'bx bx-bell';
+                                        $nTitle = $ndata['title'] ?? 'Thông báo';
+                                        $nMsg = $ndata['message'] ?? '';
+                                        $nUrl = $ndata['url'] ?? route('admin.notifications.index');
+                                        $nUnread = is_null($notif->read_at);
+                                        if (str_contains($notif->type, 'SupportTicket')) $nColor = '#10b981';
+                                        elseif (str_contains($notif->type, 'Parcel')) $nColor = '#3b82f6';
+                                        else $nColor = '#6366f1';
+                                    @endphp
+                                    <a href="{{ $nUrl }}" class="d-flex align-items-start gap-3 px-3 py-3 text-decoration-none text-dark {{ $nUnread ? 'notif-dd-unread' : '' }}"
+                                       onclick="markRead('{{ $notif->id }}')">
+                                        <div style="width:36px;height:36px;background:{{ $nColor }};border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            <i class="{{ $nIcon }} text-white" style="font-size:16px;"></i>
+                                        </div>
+                                        <div class="flex-grow-1" style="min-width:0;">
+                                            <div class="fw-semibold" style="font-size:13px;">
+                                                {{ $nTitle }}
+                                                @if($nUnread)<span class="badge bg-danger rounded-pill ms-1" style="font-size:8px;vertical-align:middle;">Mới</span>@endif
+                                            </div>
+                                            <div class="text-muted text-truncate" style="font-size:12px;">{{ $nMsg }}</div>
+                                            <div class="text-muted" style="font-size:11px;">{{ $notif->created_at->diffForHumans() }}</div>
+                                        </div>
+                                    </a>
+                                    <hr class="m-0" style="opacity:0.07;">
+                                @empty
+                                    <div class="text-center py-4 text-muted" style="font-size:13px;">
+                                        <i class='bx bx-bell-off d-block mb-1' style="font-size:28px;"></i>Không có thông báo nào
+                                    </div>
+                                @endforelse
+                            </div>
+                            <div class="px-3 py-2 border-top text-center">
+                                <a href="{{ route('admin.notifications.index') }}" class="text-primary" style="font-size:12px;text-decoration:none;">
+                                    Xem tất cả thông báo <i class='bx bx-chevron-right'></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>{{-- end header-actions --}}
             </header>
 
             <!-- Page Content -->
@@ -280,7 +340,25 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+    <style>
+    .notif-dd-unread { background: rgba(99,102,241,.06); }
+    .notif-dd-unread:hover { background: rgba(99,102,241,.12) !important; }
+    </style>
+
+    <script>
+    function markRead(id) {
+        if (!id) return;
+        fetch('/admin/notifications/' + id + '/read', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        });
+    }
+    </script>
+
     @livewireScripts
     @stack('scripts')
 </body>

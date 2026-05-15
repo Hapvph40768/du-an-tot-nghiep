@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Notifications\NewSupportTicketNotification;
+use Illuminate\Support\Facades\Notification;
 
 class SupportTicketController extends Controller
 {
@@ -23,8 +26,6 @@ class SupportTicketController extends Controller
             ->latest()
             ->get();
 
-
-            
         $tickets = SupportTicket::where('user_id', Auth::id())
             ->latest()
             ->get(); // 👈 THÊM DÒNG NÀY
@@ -40,13 +41,17 @@ class SupportTicketController extends Controller
             'booking_id' => 'nullable|exists:bookings,id'
         ]);
 
-        SupportTicket::create([
+        $ticket = SupportTicket::create([
             'user_id' => Auth::id(),
             'booking_id' => $request->booking_id,
             'type' => $request->type,
             'description' => $request->description,
             'status' => 'open',
         ]);
+
+        // Send notification to admin/staff
+        $admins = User::whereIn('role', ['admin', 'staff'])->get();
+        Notification::send($admins, new NewSupportTicketNotification($ticket));
 
         return redirect()->route('customer.support.index')->with('success', 'Đã gửi yêu cầu hỗ trợ thành công. Chúng tôi sẽ phản hồi sớm nhất.');
     }

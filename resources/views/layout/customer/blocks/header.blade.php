@@ -73,6 +73,12 @@
                                     <p class="text-xs text-white/50 truncate">{{ Auth::user()->email }}</p>
                                 </div>
                                 <div class="p-2 space-y-1">
+                                    @if(in_array(Auth::user()->role, ['admin', 'staff']))
+                                        <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard.index') : route('staff.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-brand-primary font-bold hover:bg-brand-primary/10 transition-colors">
+                                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Trang quản trị
+                                        </a>
+                                        <hr class="border-white/5 my-1">
+                                    @endif
                                     <a href="{{ route('customer.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">
                                         <i data-lucide="user" class="w-4 h-4"></i> Thông tin cá nhân
                                     </a>

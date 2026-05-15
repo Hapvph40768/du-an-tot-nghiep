@@ -30,7 +30,15 @@
                                 <?php echo e($route->destinationLocation->name); ?></div>
                         </td>
                         <td><?php echo e($route->distance_km); ?> km</td>
-                        <td><?php echo e($route->estimated_time); ?> giờ</td>
+                        <td>
+                            <?php
+                                $m = (int) $route->estimated_time;
+                                $h = floor($m / 60);
+                                $min = $m % 60;
+                            ?>
+                            <?php echo e($h); ?> giờ<?php echo e($min > 0 ? ' ' . $min . ' phút' : ''); ?>
+
+                        </td>
                         <td class="text-end">
                             <a href="<?php echo e(route('admin.routes.edit', $route->id)); ?>" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
                             <form action="<?php echo e(route('admin.routes.destroy', $route->id)); ?>" method="POST" class="d-inline">

@@ -96,9 +96,63 @@
                             <span class="bg-white/10 border border-white/20 text-white px-3 py-1 rounded-full text-xs font-bold">{{ $booking->status }}</span>
                         @endif
                     </div>
-                    <div class="flex justify-between items-center pt-4 mt-4 border-t border-white/5">
-                        <span class="text-white/50">Tổng tiền:</span>
-                        <span class="font-black text-brand-primary text-2xl">{{ number_format($booking->total_amount, 0, ',', '.') }} đ</span>
+                    
+                    <div class="pt-4 mt-4 border-t border-white/5 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-white/50">Giá vé:</span> 
+                            <span class="text-white font-medium">{{ number_format($booking->trip->price, 0, ',', '.') }} đ x {{ max(1, $booking->tickets->count()) }}</span>
+                        </div>
+                        
+                        @if($booking->discount_amount > 0)
+                        <div class="flex justify-between">
+                            <span class="text-white/50">Giảm giá:</span> 
+                            <span class="text-green-400 font-medium">-{{ number_format($booking->discount_amount, 0, ',', '.') }} đ</span>
+                        </div>
+                        @endif
+
+                        @php
+                            $baseTotal = ($booking->trip->price * max(1, $booking->tickets->count())) - $booking->discount_amount;
+                            $diff = $booking->total_amount - $baseTotal;
+                            
+                            $penaltyFee = 0;
+                            $isChangedBooking = false;
+
+                            if ($diff != 0) {
+                                $oldBooking = \App\Models\Booking::where('user_id', $booking->user_id)
+                                    ->where('status', 'cancelled')
+                                    ->where('penalty_fee', '>', 0)
+                                    ->where('updated_at', '<=', $booking->created_at)
+                                    ->orderBy('updated_at', 'desc')
+                                    ->first();
+                                    
+                                if ($oldBooking) {
+                                    $isChangedBooking = true;
+                                    $penaltyFee = $oldBooking->penalty_fee;
+                                } else {
+                                    $oldAmountEstimate = ($baseTotal - $booking->total_amount) / 0.9;
+                                    $penaltyFee = $oldAmountEstimate * 0.1;
+                                }
+                            }
+                            
+                            $grossTotal = $baseTotal + $penaltyFee;
+                        @endphp
+
+                        <div class="flex justify-between">
+                            <span class="text-white/50">Tổng tiền vé:</span> 
+                            <span class="text-white font-bold">{{ number_format($baseTotal, 0, ',', '.') }} đ</span>
+                        </div>
+
+                        @if($penaltyFee > 0)
+                        <div class="flex justify-between">
+                            <span class="text-white/50">Phụ phí đổi vé (10%):</span> 
+                            <span class="text-red-400 font-bold">+{{ number_format($penaltyFee, 0, ',', '.') }} đ</span>
+                        </div>
+                        @endif
+
+                        <div class="flex justify-between items-center pt-3 mt-3 border-t border-white/5">
+                            <span class="text-white/50 font-bold">Tổng tiền:</span>
+                            <span class="font-black text-brand-primary text-2xl">{{ number_format($grossTotal, 0, ',', '.') }} đ</span>
+                        </div>
                     </div>
                 </div>
 
@@ -112,7 +166,7 @@
                             <a href="{{ route('customer.bookings.changeDate', $booking->id) }}" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl border border-white/10 flex items-center justify-center gap-2 transition-colors text-sm">
                                 <i data-lucide="refresh-cw" class="w-4 h-4"></i> Đổi vé
                             </a>
-                            <form action="{{ route('customer.bookings.cancel', $booking->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Bạn có chắc chắn muốn hủy vé?\nNếu hủy sau 30 phút từ khi đặt sẽ chịu phí 10%.');">
+                            <form action="{{ route('customer.bookings.cancel', $booking->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Bạn có chắc chắn muốn hủy vé?\n- Chỉ được hủy trước khởi hành tối thiểu 4 tiếng.\n- Hủy sau 30 phút từ khi đặt sẽ chịu phí 10%.');">
                                 @csrf
                                 <button type="submit" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
                                     <i data-lucide="x" class="w-4 h-4"></i> Hủy vé
@@ -162,6 +216,33 @@
             </div>
         </div>
 
+        <!-- Chính sách Đổi / Hủy -->
+        <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6 mb-6 flex gap-4 items-start">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500">
+                <i data-lucide="file-text" class="w-6 h-6"></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-bold text-amber-500 mb-3 text-lg">Chính sách Đổi / Hủy vé</h4>
+                
+                <div class="grid md:grid-cols-2 gap-4 text-sm text-white/70">
+                    <div>
+                        <strong class="text-amber-400 block mb-1">Quy định Hủy vé:</strong>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Chỉ được phép hủy trước giờ khởi hành tối thiểu <strong>4 tiếng</strong>.</li>
+                            <li>Hủy vé sau 30 phút kể từ lúc đặt sẽ chịu phí <strong>10%</strong>.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong class="text-amber-400 block mb-1">Quy định Đổi vé:</strong>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Chỉ được phép đổi chuyến trước giờ khởi hành tối thiểu <strong>2 tiếng</strong>.</li>
+                            <li>Phụ phí đổi vé là <strong>10%</strong> giá trị vé cũ, cộng thêm chênh lệch (nếu có).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Danh sách vé -->
         <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
             <h3 class="font-bold text-lg text-white border-b border-white/10 pb-3 mb-6 flex items-center gap-2">
@@ -191,9 +272,8 @@
                             <p class="text-xs text-white/40 mb-1 uppercase tracking-wider">Mã vé điện tử</p>
                             <p class="font-mono font-black text-xl text-white mb-4 tracking-widest">{{ $ticket->ticket_code }}</p>
                             
-                            <div class="flex items-end justify-between border-t border-white/10 pt-3 mt-3">
-                                <span class="text-xs text-white/50">Ghế ngồi</span>
-                                <span class="font-black text-3xl text-brand-primary">{{ $ticket->seat->seat_number }}</span>
+                            <div class="bg-white p-2 rounded-lg inline-block shadow-sm">
+                                {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(100)->generate($ticket->ticket_code) !!}
                             </div>
                         </div>
                     @endforeach

@@ -22,7 +22,7 @@ class Booking extends Model
     }
     public function dropoffPoint()
     {
-        return $this->belongsTo(PickupPoint::class, 'dropoff_point_id');
+        return $this->belongsTo(DropoffPoint::class, 'dropoff_point_id');
     }
     public function promotion()
     {

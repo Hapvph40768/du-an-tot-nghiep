@@ -9,7 +9,10 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Mail\BookingSuccessMail;
 
 class PaymentController extends Controller
 {
@@ -55,7 +58,17 @@ class PaymentController extends Controller
                 'locked_until' => now()->addYears(100)
             ]);
 
+            $booking->update(['status' => 'paid']);
             DB::commit();
+
+            // Gửi email thông báo đặt vé thành công
+            try {
+                $booking->load(['trip.route.startLocation', 'trip.route.endLocation', 'tickets.seat', 'pickupPoint', 'dropoffPoint']);
+                Mail::to($booking->user->email)->send(new BookingSuccessMail($booking));
+            } catch (\Exception $e) {
+                Log::error('Gửi email đặt vé thất bại: ' . $e->getMessage());
+            }
+
             return redirect()->route('customer.bookings.show', $booking->id)
                 ->with('success', 'Đặt vé thành công! Vui lòng thanh toán tiền mặt tại quầy / nhà xe trước giờ khởi hành.');
         } catch (\Exception $e) {
@@ -176,7 +189,16 @@ class PaymentController extends Controller
                     ]);
 
                     DB::commit();
-                    return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán VNPay thành công. Vé của bạn đã xuất!');
+
+                    // Gửi email thông báo đặt vé thành công
+                    try {
+                        $booking->load(['trip.route.startLocation', 'trip.route.endLocation', 'tickets.seat', 'pickupPoint', 'dropoffPoint']);
+                        Mail::to($booking->user->email)->send(new BookingSuccessMail($booking));
+                    } catch (\Exception $ex) {
+                        Log::error('Gửi email đặt vé thất bại: ' . $ex->getMessage());
+                    }
+
+                    return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán VNPay thành công. Vé của bạn đã được xuất và gửi về email!');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     return redirect()->route('customer.bookings.show', $booking->id)->with('error', 'Lỗi lưu dữ liệu: ' . $e->getMessage());
@@ -274,7 +296,16 @@ class PaymentController extends Controller
                 ]);
 
                 DB::commit();
-                return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán qua Ví MoMo thành công. Vé của bạn đã được xuất.');
+
+                // Gửi email thông báo đặt vé thành công
+                try {
+                    $booking->load(['trip.route.startLocation', 'trip.route.endLocation', 'tickets.seat', 'pickupPoint', 'dropoffPoint']);
+                    Mail::to($booking->user->email)->send(new BookingSuccessMail($booking));
+                } catch (\Exception $ex) {
+                    Log::error('Gửi email đặt vé thất bại: ' . $ex->getMessage());
+                }
+
+                return redirect()->route('customer.bookings.show', $booking->id)->with('success', 'Thanh toán qua Ví MoMo thành công. Vé của bạn đã được xuất và gửi về email!');
             } catch (\Exception $e) {
                 DB::rollBack();
                 return redirect()->route('customer.bookings.show', $booking->id)->with('error', 'Lỗi lưu dữ liệu: ' . $e->getMessage());

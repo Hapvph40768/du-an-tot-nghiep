@@ -18,7 +18,24 @@
             </a>
         </div>
         
-        @if(session('success'))
+        @if(session('parcel_success'))
+            <div class="bg-brand-primary/10 border-2 border-brand-primary/50 text-white p-6 rounded-2xl mb-8 shadow-lg shadow-brand-primary/20 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/20 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-4 relative z-10">
+                    <div class="w-12 h-12 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-primary/30">
+                        <i data-lucide="phone-call" class="w-6 h-6 animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-brand-primary mb-2 uppercase tracking-wide">Đăng ký thành công!</h3>
+                        <p class="text-white/80 mb-3 text-base">Hệ thống đã ghi nhận đơn ký gửi của bạn. Nhân viên nhà xe sẽ gọi điện xác nhận và hướng dẫn gửi hàng trong vòng <strong>10 phút</strong>.</p>
+                        <div class="inline-flex items-center gap-3 bg-black/30 border border-white/10 px-4 py-2 rounded-xl">
+                            <span class="text-sm text-white/50">Hotline hỗ trợ nhanh:</span>
+                            <a href="tel:19001000" class="text-brand-primary font-black text-xl hover:text-brand-accent transition-colors">1900 1000</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif(session('success'))
             <div class="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl mb-8 flex items-center gap-3">
                 <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i>
                 <p class="text-sm font-medium">{{ session('success') }}</p>
@@ -49,7 +66,8 @@
                                 <th class="p-5 border-b border-white/5">Thông tin gửi/nhận</th>
                                 <th class="p-5 border-b border-white/5 text-center">Cân nặng</th>
                                 <th class="p-5 border-b border-white/5 text-right">Tổng tiền</th>
-                                <th class="p-5 pr-6 border-b border-white/5 text-center">Trạng thái</th>
+                                <th class="p-5 border-b border-white/5 text-center">Trạng thái</th>
+                                <th class="p-5 pr-6 border-b border-white/5 text-right"></th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5 text-sm">
@@ -105,6 +123,11 @@
                                                 {{ $parcel->status }}
                                             </span>
                                         @endif
+                                    </td>
+                                    <td class="p-5 pr-6 text-right">
+                                        <a href="{{ route('customer.parcels.show', $parcel->id) }}" class="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border border-white/10 px-4 py-2 rounded-lg text-xs font-bold transition-colors">
+                                            <i data-lucide="eye" class="w-3 h-3"></i> Chi tiết
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -6,7 +6,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerificationCodeMail;
+use App\Mail\PasswordResetCodeMail;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -32,10 +37,24 @@ class AuthController extends Controller
             'role'     => 'customer',
         ]);
 
-        // Tự động đăng nhập và chuyển hướng trang chủ
+        // Tạo mã xác nhận 6 số
+        $code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        $user->email_verification_code = $code;
+        $user->email_verification_expires_at = now()->addMinutes(15);
+        $user->save();
+
+        // Gửi email OTP (bọc trong try-catch để tránh lỗi sập trang nếu cấu hình SMTP sai)
+        try {
+            Mail::to($user->email)->send(new VerificationCodeMail($code));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Gửi email OTP thất bại: " . $e->getMessage());
+            // Vẫn tiếp tục cho phép đăng nhập và chuyển hướng
+        }
+
+        // Tự động đăng nhập và chuyển hướng trang xác thực
         Auth::login($user);
 
-        return redirect()->route('customer.home')->with('success', 'Đăng ký thành công!');
+        return redirect()->route('verification.notice')->with('success', 'Đăng ký thành công! Vui lòng xác thực email.');
     }
 
     public function showLogin()
@@ -81,6 +100,57 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Bạn đã đăng xuất thành công.');
     }
 
+    // --- XÁC THỰC EMAIL BẰNG MÃ OTP ---
+    public function verifyEmailForm()
+    {
+        if (Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('customer.home');
+        }
+        return view('auth.verify-email');
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|size:6'
+        ]);
+
+        $user = Auth::user();
+
+        if ($user->email_verification_code !== $request->code) {
+            return back()->withErrors(['code' => 'Mã xác thực không chính xác.']);
+        }
+
+        if (now()->greaterThan($user->email_verification_expires_at)) {
+            return back()->withErrors(['code' => 'Mã xác thực đã hết hạn. Vui lòng yêu cầu gửi lại mã.']);
+        }
+
+        $user->email_verified_at = now();
+        $user->email_verification_code = null;
+        $user->email_verification_expires_at = null;
+        $user->save();
+
+        return redirect()->route('customer.home')->with('success', 'Xác thực tài khoản thành công!');
+    }
+
+    public function resendVerificationCode(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('customer.home');
+        }
+
+        $code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        $user->email_verification_code = $code;
+        $user->email_verification_expires_at = now()->addMinutes(15);
+        $user->save();
+
+        Mail::to($user->email)->send(new VerificationCodeMail($code));
+
+        return back()->with('success', 'Mã xác thực mới đã được gửi tới email của bạn!');
+    }
+
     // --- QUÊN MẬT KHẨU ---
     public function showForgotForm()
     {
@@ -91,41 +161,60 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = \Illuminate\Support\Facades\Password::broker()->sendResetLink(
-            $request->only('email')
-        );
+        $user = User::where('email', $request->email)->first();
 
-        return $status === \Illuminate\Support\Facades\Password::RESET_LINK_SENT
-                    ? back()->with(['status' => __($status)])
-                    : back()->withErrors(['email' => __($status)]);
+        if (!$user) {
+            return back()->withErrors(['email' => 'Chúng tôi không tìm thấy tài khoản nào với địa chỉ email này.']);
+        }
+
+        $code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        $user->password_reset_code = $code;
+        $user->password_reset_expires_at = now()->addMinutes(15);
+        $user->save();
+
+        Mail::to($user->email)->send(new PasswordResetCodeMail($code));
+
+        return redirect()->route('password.reset', ['token' => 'code', 'email' => $user->email])
+                         ->with('status', 'Mã khôi phục mật khẩu đã được gửi tới email của bạn!');
     }
 
-    public function showResetForm(Request $request, $token)
+    public function showResetForm(Request $request)
     {
-        return view('auth.reset-password', ['token' => $token, 'email' => $request->email]);
+        return view('auth.reset-password', ['email' => $request->email]);
     }
 
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'token' => 'required',
             'email' => 'required|email',
+            'code' => 'required|string|size:6',
             'password' => 'required|confirmed|min:6',
         ]);
 
-        $status = \Illuminate\Support\Facades\Password::broker()->reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->password = Hash::make($password);
-                $user->setRememberToken(\Illuminate\Support\Str::random(60));
-                $user->save();
-                event(new \Illuminate\Auth\Events\PasswordReset($user));
-            }
-        );
+        $user = User::where('email', $request->email)->first();
 
-        return $status === \Illuminate\Support\Facades\Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('success', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);
+        if (!$user) {
+            return back()->withErrors(['email' => 'Lỗi xác thực email.']);
+        }
+
+        if ($user->password_reset_code !== $request->code) {
+            return back()->withErrors(['code' => 'Mã xác nhận không chính xác.']);
+        }
+
+        if (now()->greaterThan($user->password_reset_expires_at)) {
+            return back()->withErrors(['code' => 'Mã xác nhận đã hết hạn. Vui lòng yêu cầu lại mã mới.']);
+        }
+
+        // Đổi mật khẩu
+        $user->password = Hash::make($request->password);
+        $user->password_reset_code = null;
+        $user->password_reset_expires_at = null;
+        $user->setRememberToken(Str::random(60));
+        $user->save();
+
+        event(new \Illuminate\Auth\Events\PasswordReset($user));
+
+        return redirect()->route('login')->with('success', 'Mật khẩu đã được thiết lập lại thành công!');
     }
 
     // --- GOOGLE SSO ---

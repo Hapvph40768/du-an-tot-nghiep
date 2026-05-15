@@ -66,9 +66,21 @@
                                     placeholder="Ví dụ: 300">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Thời gian dự kiến (giờ)</label>
-                                <input type="number" step="0.1" name="estimated_time" class="form-control rounded-3"
-                                    placeholder="Ví dụ: 5.5">
+                                <label class="form-label fw-bold small">Thời gian dự kiến</label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <div class="input-group" style="max-width: 130px;">
+                                    <input type="number" name="estimated_hours" min="0" max="99"
+                                        class="form-control rounded-3"
+                                        placeholder="0" value="{{ old('estimated_hours', 0) }}">
+                                    <span class="input-group-text bg-light text-muted">giờ</span>
+                                </div>
+                                <div class="input-group" style="max-width: 130px;">
+                                    <input type="number" name="estimated_minutes" min="0" max="59"
+                                        class="form-control rounded-3"
+                                        placeholder="0" value="{{ old('estimated_minutes', 0) }}">
+                                    <span class="input-group-text bg-light text-muted">phút</span>
+                                </div>
+                            </div>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-top">

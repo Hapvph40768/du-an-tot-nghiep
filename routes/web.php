@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\SupportTicketController as AdminSupportController
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\TripPickupPointController;
+use App\Http\Controllers\Admin\TripStopoverController;
 use App\Http\Controllers\Customer\SupportTicketController;
 use App\Http\Controllers\Customer\ParcelController as CustomerParcelController;
 use App\Http\Controllers\Admin\PromotionController;
@@ -93,19 +94,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email');
-    })->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
-        return redirect()->route('customer.home')->with('success', 'Tài khoản của bạn đã được xác thực thành công!');
-    })->middleware('signed')->name('verification.verify');
-
-    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return back()->with('success', 'Link xác thực đã được gửi lại vào email của bạn!');
-    })->middleware('throttle:6,1')->name('verification.send');
+    Route::get('/email/verify', [AuthController::class, 'verifyEmailForm'])->name('verification.notice');
+    Route::post('/email/verify', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+    Route::post('/email/resend-code', [AuthController::class, 'resendVerificationCode'])->middleware('throttle:6,1')->name('verification.send');
 });
 
 /*
@@ -141,7 +132,10 @@ Route::middleware(['auth', CheckCustomerRole::class])->group(function () {
     Route::prefix('parcels')->group(function () {
         Route::get('/', [\App\Http\Controllers\Customer\ParcelController::class, 'index'])->name('customer.parcels.index');
         Route::get('/create', [\App\Http\Controllers\Customer\ParcelController::class, 'create'])->name('customer.parcels.create');
+        Route::get('/get-points/{route}', [\App\Http\Controllers\Customer\ParcelController::class, 'getPointsByRoute'])->name('customer.parcels.get_points');
         Route::post('/', [\App\Http\Controllers\Customer\ParcelController::class, 'store'])->name('customer.parcels.store');
+        Route::get('/{parcel}', [\App\Http\Controllers\Customer\ParcelController::class, 'show'])->name('customer.parcels.show');
+        Route::post('/{parcel}/cancel', [\App\Http\Controllers\Customer\ParcelController::class, 'cancel'])->name('customer.parcels.cancel');
     });
 
     Route::prefix('support')->group(function () {
@@ -176,7 +170,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
 
     // --- VẬN HÀNH CHUYẾN XE (TRIPS) ---
     // Đặt Resource lên trước để tránh xung đột prefix
+    Route::get('trips/get-points/{route}', [AdminTripController::class, 'getPointsByRoute'])->name('trips.get_points');
     Route::resource('trips', AdminTripController::class);
+
+    // Quản lý Lịch trình chi tiết (Stopovers) của chuyến đi
+    Route::post('trips/{trip}/stopovers', [TripStopoverController::class, 'store'])->name('trips.stopovers.store');
+    Route::put('trips/stopovers/{stopover}', [TripStopoverController::class, 'update'])->name('trips.stopovers.update');
+    Route::delete('trips/stopovers/{stopover}', [TripStopoverController::class, 'destroy'])->name('trips.stopovers.destroy');
 
     // Group quản lý điểm đón RIÊNG cho từng chuyến
     Route::prefix('trips/{trip}/pickup-points')->name('trips.pickup_points.')->group(function () {
@@ -235,6 +235,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', CheckAdminRole::clas
     Route::get('daily-reports', [DailyReportController::class, 'index'])->name('daily_reports.index');
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 
 });
 

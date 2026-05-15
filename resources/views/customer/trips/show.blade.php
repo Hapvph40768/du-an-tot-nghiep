@@ -62,11 +62,15 @@
                             
                             <div class="mb-2">
                                 <label class="block text-gray-700 font-medium mb-2">Điểm lên xe <span class="text-red-500">*</span></label>
-                                <select name="pickup_point_id" id="pickup_point_select" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
-                                    <option value="" data-address="{{ $trip->route->departureLocation->name ?? 'Bến xe' }}">-- Chọn điểm đón --</option>
+                                <select name="pickup_point_id" id="pickup_point_select" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors text-gray-900 bg-white">
+                                    <option value="" class="text-gray-500" data-address="{{ $trip->route->departureLocation->name ?? 'Bến xe' }}">-- Chọn điểm đón --</option>
                                     @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" data-address="{{ $point->address ? $point->address . ', ' . $point->name : $point->name }}" {{ old('pickup_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }} - {{ $point->name }} ({{ $point->address }})
+                                        <option value="{{ $point->id }}" class="text-gray-900"
+                                            data-address="{{ $point->address ? $point->address . ', ' . $point->name : $point->name }}"
+                                            {{ old('pickup_point_id') == $point->id ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::parse($point->pivot->pickup_time ?? $trip->departure_time)->format('H:i') }} - {{ $point->name }}
+                                            @if($point->address) ({{ $point->address }}) @endif
                                         </option>
                                     @endforeach
                                 </select>
@@ -86,13 +90,17 @@
                             <!-- Điểm trả khách -->
                             <div class="mt-4">
                                 <label class="block text-gray-700 font-medium mb-2">Điểm trả khách <span class="text-gray-400 text-sm font-normal">(tuỳ chọn)</span></label>
-                                <select name="dropoff_point_id" id="dropoff_point_select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors">
-                                    <option value="">-- Trả tại điểm cuối tuyến (mặc định) --</option>
-                                    @foreach($trip->pickupPoints as $point)
-                                        <option value="{{ $point->id }}" {{ old('dropoff_point_id') == $point->id ? 'selected' : '' }}>
-                                            {{ $point->name }} ({{ $point->address }})
+                                <select name="dropoff_point_id" id="dropoff_point_select"
+                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500 transition-colors text-gray-900 bg-white">
+                                    <option value="" class="text-gray-500">-- Trả tại điểm cuối tuyến (mặc định) --</option>
+                                    @forelse($trip->dropoffPoints as $point)
+                                        <option value="{{ $point->id }}" class="text-gray-900"
+                                            {{ old('dropoff_point_id') == $point->id ? 'selected' : '' }}>
+                                            {{ $point->name }}{{ $point->address ? ' (' . $point->address . ')' : '' }}
                                         </option>
-                                    @endforeach
+                                    @empty
+                                        <option disabled class="text-gray-400">Chưa có điểm trả được cấu hình</option>
+                                    @endforelse
                                 </select>
                                 <p class="text-xs text-gray-400 mt-1"><i class="fas fa-info-circle mr-1"></i>Chọn điểm trả nếu bạn muốn xuống xe trước điểm cuối.</p>
                             </div>
@@ -105,13 +113,15 @@
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Họ tên người đi <span class="text-red-500">*</span></label>
                                 <input type="text" name="contact_name" required value="{{ old('contact_name', Auth::user()->name ?? '') }}"
-                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-400 transition-colors"
+                                    placeholder="Nhập họ tên đầy đủ">
                             </div>
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Số điện thoại <span class="text-red-500">*</span></label>
                                 <input type="text" name="contact_phone" required value="{{ old('contact_phone', Auth::user()->phone ?? '') }}"
-                                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-amber-500">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-400 transition-colors"
+                                    placeholder="Nhập số điện thoại">
                             </div>
 
                             <div class="mb-2">
@@ -125,32 +135,38 @@
                     </div>
 
                     <!-- Right: Ticket Quantity & Summary -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 self-start sticky top-6">
-                        <h3 class="text-xl font-bold border-b pb-3 mb-4">Mua vé</h3>
-                        
-                        <div class="mb-6">
-                            <label class="block text-gray-700 font-bold mb-2">Số lượng vé muốn mua (Tối đa 4)</label>
-                            <div class="relative">
-                                <input type="number" name="ticket_quantity" id="ticket-qty-input" min="1" max="{{ min(4, $availableSeats) }}" value="1"
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-amber-500 focus:bg-white transition-colors text-center text-lg font-bold"
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 self-start sticky top-6">
+                        <h3 class="text-xl font-bold text-gray-800 border-b border-gray-200 pb-3 mb-5">🎫 Mua vé</h3>
+
+                        {{-- Số lượng vé --}}
+                        <div class="mb-5">
+                            <label class="block text-gray-700 font-semibold mb-2 text-sm">Số lượng vé muốn mua <span class="text-gray-400 font-normal">(Tối đa 4)</span></label>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="changeQty(-1)"
+                                    class="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-gray-300 text-gray-600 font-bold text-lg hover:border-amber-500 hover:text-amber-600 transition-colors select-none">−</button>
+                                <input type="number" name="ticket_quantity" id="ticket-qty-input"
+                                    min="1" max="{{ min(4, $availableSeats) }}" value="1"
+                                    class="flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg bg-white text-gray-900 font-bold text-xl text-center focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-colors"
                                     oninput="updateSummary()">
+                                <button type="button" onclick="changeQty(1)"
+                                    class="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-gray-300 text-gray-600 font-bold text-lg hover:border-amber-500 hover:text-amber-600 transition-colors select-none">+</button>
                             </div>
                             <p class="text-sm text-gray-500 mt-2 text-center">Còn lại <span class="font-bold text-amber-600">{{ $availableSeats }}</span> chỗ trống trên chuyến này.</p>
                         </div>
 
-                        <div class="border-t pt-4">
+                        <div class="border-t border-gray-200 pt-4">
 
                             {{-- Mã giảm giá --}}
                             @auth
-                            <div class="mb-3">
-                                <label class="block text-gray-600 text-sm mb-1">Mã giảm giá</label>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold text-sm mb-2">Mã giảm giá</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="coupon-input" name="coupon_code"
                                         placeholder="Nhập mã (nếu có)"
-                                        class="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-amber-500 uppercase"
+                                        class="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg text-sm text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-colors uppercase"
                                         autocomplete="off" oninput="this.value=this.value.toUpperCase()">
                                     <button type="button" id="coupon-btn"
-                                        class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap">
+                                        class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition-colors whitespace-nowrap shadow-sm">
                                         Áp dụng
                                     </button>
                                 </div>
@@ -158,10 +174,10 @@
                             </div>
                             @endauth
 
-                            <div id="price-breakdown" class="hidden mb-2 text-sm">
-                                <div class="flex justify-between text-gray-600">
+                            <div id="price-breakdown" class="hidden mb-3 bg-gray-50 rounded-lg p-3 text-sm border border-gray-100">
+                                <div class="flex justify-between text-gray-600 mb-1">
                                     <span>Giá gốc:</span>
-                                    <span id="base-price-display" class="font-medium">0 đ</span>
+                                    <span id="base-price-display" class="font-medium text-gray-800">0 đ</span>
                                 </div>
                                 <div class="flex justify-between text-green-600">
                                     <span id="discount-label">Giảm giá:</span>
@@ -169,19 +185,19 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-between items-center mb-6">
-                                <span class="text-gray-600 font-medium">Tổng tiền:</span>
-                                <span id="total-price-display" class="text-xl font-bold text-amber-600">0 đ</span>
+                            <div class="flex justify-between items-center mb-5 bg-amber-50 rounded-lg px-4 py-3 border border-amber-100">
+                                <span class="text-gray-700 font-semibold">Tổng tiền:</span>
+                                <span id="total-price-display" class="text-2xl font-bold text-amber-600">0 đ</span>
                             </div>
 
                             <input type="hidden" name="applied_promo_id" id="applied-promo-id" value="">
 
                             @guest
-                                <a href="{{ route('login') }}" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors">
+                                <a href="{{ route('login') }}" class="block text-center w-full py-3 rounded-lg font-bold text-white bg-amber-500 hover:bg-amber-600 transition-colors shadow-sm">
                                     Đăng nhập để đặt vé
                                 </a>
                             @else
-                                <button type="submit" id="submit-btn" disabled class="w-full py-3 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed transition-colors">
+                                <button type="submit" id="submit-btn" disabled class="w-full py-3 rounded-lg font-bold text-white bg-gray-300 text-gray-500 cursor-not-allowed transition-all shadow-sm">
                                     Tiếp tục
                                 </button>
                             @endguest
@@ -194,6 +210,17 @@
 
     <!-- JS Logic cho chọn số lượng + mã giảm giá -->
     <script>
+        function changeQty(delta) {
+            const input = document.getElementById('ticket-qty-input');
+            if (!input) return;
+            const min = parseInt(input.min) || 1;
+            const max = parseInt(input.max) || 4;
+            let val = parseInt(input.value) || 1;
+            val = Math.min(max, Math.max(min, val + delta));
+            input.value = val;
+            updateSummary();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const qtyInput      = document.getElementById('ticket-qty-input');
             const totalDisplay  = document.getElementById('total-price-display');

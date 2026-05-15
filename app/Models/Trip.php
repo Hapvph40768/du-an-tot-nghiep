@@ -40,4 +40,12 @@ class Trip extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+    public function parcels()
+    {
+        return $this->hasMany(Parcel::class);
+    }
+    public function stopovers()
+    {
+        return $this->hasMany(TripStopover::class)->orderBy('stop_order');
+    }
 }

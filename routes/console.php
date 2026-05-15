@@ -14,3 +14,5 @@ Schedule::call(function () {
             ->whereNull('booking_id')
             ->delete();
 })->everyMinute();
+
+Schedule::command('bookings:expire-pending')->everyMinute();

@@ -49,21 +49,51 @@
                             </div>
 
                             {{-- Giờ xuất bến --}}<div class="col-md-3">
-                                <label class="form-label fw-bold small text-muted">{{ __('time') }} xuất bến</label>
-                                <input type="time" name="departure_time" value="{{ old('departure_time') }}"
-                                    class="form-control rounded-3 @error('departure_time') is-invalid @enderror">
-                                @error('departure_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label class="form-label fw-bold small text-muted">Giờ xuất bến</label>
+                                @php
+                                    $depOld = old('departure_time', '');
+                                    $depH = $depOld ? (int)substr($depOld, 0, 2) : '';
+                                    $depM = $depOld ? substr($depOld, 3, 2) : '00';
+                                @endphp
+                                <div class="input-group">
+                                    <select name="departure_hour" class="form-select rounded-start-3 @error('departure_time') is-invalid @enderror" style="max-width:80px;">
+                                        <option value="">--</option>
+                                        @for($h = 0; $h < 24; $h++)
+                                        <option value="{{ str_pad($h,2,'0',STR_PAD_LEFT) }}" {{ $depH === $h ? 'selected' : '' }}>{{ str_pad($h,2,'0',STR_PAD_LEFT) }}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="input-group-text px-1">:</span>
+                                    <select name="departure_minute" class="form-select rounded-end-3" style="max-width:80px;">
+                                        @foreach(['00','15','30','45'] as $min)
+                                        <option value="{{ $min }}" {{ $depM === $min ? 'selected' : '' }}>{{ $min }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('departure_time')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                             </div>
 
                             {{-- Giờ đến dự kiến --}}<div class="col-md-3">
-                                <label class="form-label fw-bold small text-muted">{{ __('time') }} đến dự kiến</label>
-                                <input type="time" name="arrival_time" value="{{ old('arrival_time') }}"
-                                    class="form-control rounded-3 @error('arrival_time') is-invalid @enderror">
-                                @error('arrival_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label class="form-label fw-bold small text-muted">Giờ đến dự kiến</label>
+                                @php
+                                    $arrOld = old('arrival_time', '');
+                                    $arrH = $arrOld ? (int)substr($arrOld, 0, 2) : '';
+                                    $arrM = $arrOld ? substr($arrOld, 3, 2) : '00';
+                                @endphp
+                                <div class="input-group">
+                                    <select name="arrival_hour" class="form-select rounded-start-3 @error('arrival_time') is-invalid @enderror" style="max-width:80px;">
+                                        <option value="">--</option>
+                                        @for($h = 0; $h < 24; $h++)
+                                        <option value="{{ str_pad($h,2,'0',STR_PAD_LEFT) }}" {{ $arrH === $h ? 'selected' : '' }}>{{ str_pad($h,2,'0',STR_PAD_LEFT) }}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="input-group-text px-1">:</span>
+                                    <select name="arrival_minute" class="form-select rounded-end-3" style="max-width:80px;">
+                                        @foreach(['00','15','30','45'] as $min)
+                                        <option value="{{ $min }}" {{ $arrM === $min ? 'selected' : '' }}>{{ $min }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('arrival_time')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                             </div>
 
                             {{-- Chọn Xe --}}<div class="col-md-6">
@@ -125,6 +155,22 @@
                                         dừng/Hủy</option>
                                 </select>
                             </div>
+
+                            {{-- Điểm đón khách --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Điểm đón khách (Chọn theo tuyến đường)</label>
+                                <select name="pickup_points[]" id="pickup_points" class="form-select rounded-3" multiple style="height: 120px;">
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+
+                            {{-- Điểm trả khách --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Điểm trả khách (Chọn theo tuyến đường)</label>
+                                <select name="dropoff_points[]" id="dropoff_points" class="form-select rounded-3" multiple style="height: 120px;">
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
                         </div>
 
                         <div class="mt-5 pt-3 border-top d-flex gap-2">
@@ -143,3 +189,62 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const routeSelect = document.querySelector('select[name="route_id"]');
+        const pickupSelect = document.getElementById('pickup_points');
+        const dropoffSelect = document.getElementById('dropoff_points');
+
+        function fetchPoints(routeId) {
+            if (!routeId) {
+                pickupSelect.innerHTML = '';
+                dropoffSelect.innerHTML = '';
+                return;
+            }
+
+            fetch(`/admin/trips/get-points/${routeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate Pickup Points
+                    pickupSelect.innerHTML = '';
+                    if (data.pickup_points.length === 0) {
+                        pickupSelect.innerHTML = '<option disabled>Không có điểm đón nào</option>';
+                    } else {
+                        data.pickup_points.forEach(point => {
+                            const option = document.createElement('option');
+                            option.value = point.id;
+                            option.textContent = point.name + (point.address ? ' (' + point.address + ')' : '');
+                            pickupSelect.appendChild(option);
+                        });
+                    }
+
+                    // Populate Dropoff Points
+                    dropoffSelect.innerHTML = '';
+                    if (data.dropoff_points.length === 0) {
+                        dropoffSelect.innerHTML = '<option disabled>Không có điểm trả nào</option>';
+                    } else {
+                        data.dropoff_points.forEach(point => {
+                            const option = document.createElement('option');
+                            option.value = point.id;
+                            option.textContent = point.name + (point.address ? ' (' + point.address + ')' : '');
+                            dropoffSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching points:', error));
+        }
+
+        // Fetch on change
+        routeSelect.addEventListener('change', function () {
+            fetchPoints(this.value);
+        });
+
+        // Fetch on load if route is already selected (e.g. old input)
+        if (routeSelect.value) {
+            fetchPoints(routeSelect.value);
+        }
+    });
+</script>
+@endpush

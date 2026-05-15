@@ -11,7 +11,13 @@ use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Notifications\NewBookingNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Mail\BookingCancelledMail;
 
 class BookingController extends Controller
 {
@@ -97,8 +103,8 @@ class BookingController extends Controller
     {
         $request->validate([
             'trip_id'          => 'required|exists:trips,id',
-            'pickup_point_id'  => ['required', \Illuminate\Validation\Rule::exists('trip_pickup_points', 'pickup_point_id')->where('trip_id', $request->trip_id)],
-            'dropoff_point_id' => ['nullable', \Illuminate\Validation\Rule::exists('trip_pickup_points', 'pickup_point_id')->where('trip_id', $request->trip_id)],
+            'pickup_point_id'  => 'required|exists:pickup_points,id',
+            'dropoff_point_id' => 'nullable|exists:dropoff_points,id',
             'coupon_code'      => 'nullable|string|max:50',
             'ticket_quantity'  => 'required|integer|min:1|max:4',
             'contact_name'     => 'required|string|max:255',
@@ -167,16 +173,40 @@ class BookingController extends Controller
                 Promotion::where('id', $promotionId)->increment('current_uses');
             }
 
+            // Pick random seats
+            $bookedSeatIds = Ticket::where('trip_id', $trip->id)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->pluck('seat_id')->toArray();
+            
+            $lockedSeatIds = SeatLock::where('trip_id', $trip->id)
+                ->where('locked_until', '>', now())
+                ->pluck('seat_id')->toArray();
+            
+            $unavailableSeatIds = array_unique(array_merge($bookedSeatIds, $lockedSeatIds));
+            $availableSeats = $trip->vehicle->seats()->whereNotIn('id', $unavailableSeatIds)->get();
+
+            if ($availableSeats->count() < $request->ticket_quantity) {
+                DB::rollBack();
+                return back()->with('error', 'Chuyến xe không đủ số lượng vé trống do có người vừa đặt.');
+            }
+
+            $randomSeats = $availableSeats->random($request->ticket_quantity)->values();
+
             for ($i = 0; $i < $request->ticket_quantity; $i++) {
                 Ticket::create([
                     'booking_id' => $booking->id,
                     'trip_id'    => $trip->id,
-                    'seat_id'    => null,
+                    'seat_id'    => $randomSeats[$i]->id,
                     'status'     => 'pending',
                 ]);
             }
 
             DB::commit();
+
+            // Send notification to admin/staff
+            $admins = User::whereIn('role', ['admin', 'staff'])->get();
+            Notification::send($admins, new NewBookingNotification($booking));
+
             return redirect()->route('customer.payment.checkout', $booking->id)
                              ->with('success', 'Giữ chỗ thành công. Vui lòng thanh toán trong 15 phút.');
         } catch (\Exception $e) {
@@ -220,6 +250,15 @@ class BookingController extends Controller
             SeatLock::where('booking_id', $booking->id)->delete();
 
             DB::commit();
+
+            // Gửi email thông báo hủy vé
+            try {
+                $booking->load(['trip.route.startLocation', 'trip.route.endLocation', 'tickets', 'user']);
+                Mail::to($booking->user->email)->send(new BookingCancelledMail($booking));
+            } catch (\Exception $ex) {
+                Log::error('Gửi email hủy vé thất bại: ' . $ex->getMessage());
+            }
+
             return back()->with('success', "Đã yêu cầu hủy vé thành công. Phí hủy: " . number_format($penaltyFee) . "đ. Số tiền chờ hoàn lại: " . number_format($refundAmount) . "đ.");
         } catch (\Exception $e) {
             DB::rollBack();
@@ -241,8 +280,8 @@ class BookingController extends Controller
 
         // Tiền vé cũ
         $oldAmount = $booking->total_amount;
-        $penaltyFee = $oldAmount * 0.10; // Phụ phí đổi vé 10%
-        $creditAmount = max(0, $oldAmount - $penaltyFee);
+        $penaltyFee = $oldAmount * 0.10; // Phụ phí đổi vé 10% (Sẽ cộng thêm vào lúc thanh toán)
+        $creditAmount = $oldAmount; // Bảo lưu toàn bộ tiền vé cũ
 
         $availableTrips = Trip::with('vehicle')
             ->where('route_id', $booking->trip->route_id)
@@ -299,12 +338,13 @@ class BookingController extends Controller
 
         $baseAmount = $newTrip->price * $request->ticket_quantity;
         
-        // Phụ phí 10% của vé cũ
+        // Phụ phí 10% của vé cũ (Luôn phải thanh toán thêm)
         $penaltyFee = $booking->total_amount * 0.10;
-        $creditAmount = max(0, $booking->total_amount - $penaltyFee);
         
-        // Số tiền bù = Giá vé mới - Tiền còn lại từ vé cũ
-        $extraPay = max(0, $baseAmount - $creditAmount);
+        // Số tiền bù = (Giá vé mới - Giá vé cũ) + Phụ phí đổi vé
+        // Nếu vé mới rẻ hơn, không hoàn tiền dư, nhưng vẫn phải đóng phụ phí.
+        $priceDifference = max(0, $baseAmount - $booking->total_amount);
+        $extraPay = $priceDifference + $penaltyFee;
 
         DB::beginTransaction();
         try {
@@ -329,11 +369,30 @@ class BookingController extends Controller
                 'status' => $extraPay > 0 ? 'pending' : 'paid', // Nếu ko phải bù tiền, coi như đã paid
             ]);
 
+            // Pick random seats for the new trip
+            $bookedSeatIds = Ticket::where('trip_id', $newTrip->id)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->pluck('seat_id')->toArray();
+            
+            $lockedSeatIds = SeatLock::where('trip_id', $newTrip->id)
+                ->where('locked_until', '>', now())
+                ->pluck('seat_id')->toArray();
+            
+            $unavailableSeatIds = array_unique(array_merge($bookedSeatIds, $lockedSeatIds));
+            $availableSeats = $newTrip->vehicle->seats()->whereNotIn('id', $unavailableSeatIds)->get();
+
+            if ($availableSeats->count() < $request->ticket_quantity) {
+                DB::rollBack();
+                return back()->with('error', 'Chuyến xe thay thế không đủ số lượng vé trống do có người vừa đặt.');
+            }
+
+            $randomSeats = $availableSeats->random($request->ticket_quantity)->values();
+
             for ($i = 0; $i < $request->ticket_quantity; $i++) {
                 Ticket::create([
                     'booking_id' => $newBooking->id,
                     'trip_id' => $newTrip->id,
-                    'seat_id' => null,
+                    'seat_id' => $randomSeats[$i]->id,
                     'status' => $extraPay > 0 ? 'pending' : 'confirmed',
                 ]);
             }

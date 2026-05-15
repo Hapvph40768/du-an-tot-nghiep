@@ -185,8 +185,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-bold text-primary" style="font-size: 15px;"><?php echo e($trip->departure_time); ?></div>
-                                    <div class="text-muted small mt-1">Đến dự kiến: <?php echo e($trip->arrival_time); ?></div>
+                                    <div class="fw-bold text-primary" style="font-size: 15px;"><?php echo e(substr($trip->departure_time, 0, 5)); ?></div>
+                                    <div class="text-muted small mt-1">Đến dự kiến: <?php echo e($trip->arrival_time ? substr($trip->arrival_time, 0, 5) : '—'); ?></div>
                                 </td>
                                 <td>
                                     <div class="fw-bold" style="font-size: 13px;"><i class='bx bx-bus text-muted'></i>

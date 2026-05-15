@@ -30,7 +30,14 @@
                                 {{ $route->destinationLocation->name }}</div>
                         </td>
                         <td>{{ $route->distance_km }} km</td>
-                        <td>{{ $route->estimated_time }} giờ</td>
+                        <td>
+                            @php
+                                $m = (int) $route->estimated_time;
+                                $h = floor($m / 60);
+                                $min = $m % 60;
+                            @endphp
+                            {{ $h }} giờ{{ $min > 0 ? ' ' . $min . ' phút' : '' }}
+                        </td>
                         <td class="text-end">
                             <a href="{{ route('admin.routes.edit', $route->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
                             <form action="{{ route('admin.routes.destroy', $route->id) }}" method="POST" class="d-inline">

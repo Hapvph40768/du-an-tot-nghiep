@@ -42,7 +42,7 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card-box">
                 <h5 class="fw-bold mb-4 border-bottom pb-2">Vận hành & Tài chính</h5>
                 <div class="row g-4">
@@ -71,49 +71,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card-box" style="overflow-y: auto; max-height: 600px;">
-                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                    <h5 class="fw-bold m-0">Điểm đón khách</h5>
-                    <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
-                </div>
-                <div class="ps-2 mt-3 mb-5">
-                    @forelse($trip->pickupPoints as $point)
-                        <div class="timeline-item">
-                            <div class="fw-bold text-dark">{{ $point->name }}</div>
-                            <div class="text-muted small">{{ $point->address }}</div>
-                        </div>
-                    @empty
-                        <div class="text-center py-4">
-                            <i class='bx bx-map-alt fs-2 text-muted opacity-25'></i>
-                            <p class="text-muted small mt-2">Chưa thiết lập điểm đón.</p>
-                            <a href="{{ route('admin.trips.pickup_points.index', $trip->id) }}" class="btn btn-sm btn-outline-primary mt-2">Thiết lập ngay</a>
-                        </div>
-                    @endforelse
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 mt-4">
-                    <h5 class="fw-bold m-0">Điểm trả khách</h5>
-                    <a href="{{ route('admin.trips.dropoff_points.index', $trip->id) }}" class="btn btn-sm btn-light border"><i class='bx bx-edit'></i></a>
-                </div>
-                <div class="ps-2 mt-3">
-                    @forelse($trip->dropoffPoints as $point)
-                        <div class="timeline-item" style="--primary-color: #3b82f6;">
-                            <div class="fw-bold text-dark">{{ $point->name }}</div>
-                            <div class="text-muted small">{{ $point->address }}</div>
-                        </div>
-                    @empty
-                        <div class="text-center py-4">
-                            <i class='bx bx-map-alt fs-2 text-muted opacity-25'></i>
-                            <p class="text-muted small mt-2">Chưa thiết lập điểm trả.</p>
-                            <a href="{{ route('admin.trips.dropoff_points.index', $trip->id) }}" class="btn btn-sm btn-outline-primary mt-2">Thiết lập ngay</a>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card-box">
                 <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
                     <h5 class="fw-bold m-0">Tình trạng đặt vé</h5>
@@ -144,5 +102,160 @@
             </div>
         </div>
     </div>
+
+    <!-- Lịch trình chi tiết (Timeline) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card-box">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                    <h5 class="fw-bold m-0">Lịch trình chi tiết (Các điểm dừng)</h5>
+                    <button type="button" class="btn btn-sm btn-primary fw-bold" style="background: var(--primary-color); border-color: var(--primary-color);" data-bs-toggle="modal" data-bs-target="#addStopoverModal">
+                        <i class='bx bx-plus'></i> Thêm điểm dừng
+                    </button>
+                </div>
+
+                @if($trip->stopovers->count() > 0)
+                    <div class="ms-3 mt-4">
+                        @foreach($trip->stopovers as $stopover)
+                            <div class="timeline-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-1">{{ $stopover->stop_name }}</h6>
+                                        <div class="text-muted small">
+                                            @if($stopover->arrival_time)
+                                                <span class="me-3"><i class='bx bx-time-five'></i> Đến: {{ \Carbon\Carbon::parse($stopover->arrival_time)->format('H:i') }}</span>
+                                            @endif
+                                            @if($stopover->departure_time)
+                                                <span><i class='bx bx-time'></i> Đi: {{ \Carbon\Carbon::parse($stopover->departure_time)->format('H:i') }}</span>
+                                            @endif
+                                        </div>
+                                        @if($stopover->note)
+                                            <div class="text-secondary small mt-1 fst-italic">- {{ $stopover->note }}</div>
+                                        @endif
+                                    </div>
+                                    <div class="d-flex gap-2 align-items-start">
+                                        <span class="badge bg-light text-dark border">Thứ tự: {{ $stopover->stop_order }}</span>
+                                        <button class="btn btn-sm btn-outline-secondary py-0 px-2" title="Sửa" 
+                                            onclick="editStopover({{ $stopover->id }}, '{{ $stopover->stop_name }}', '{{ $stopover->arrival_time ? \Carbon\Carbon::parse($stopover->arrival_time)->format('H:i') : '' }}', '{{ $stopover->departure_time ? \Carbon\Carbon::parse($stopover->departure_time)->format('H:i') : '' }}', {{ $stopover->stop_order }}, '{{ $stopover->note }}')">
+                                            <i class='bx bx-edit'></i>
+                                        </button>
+                                        <form action="{{ route('admin.trips.stopovers.destroy', $stopover->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa điểm dừng này?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" title="Xóa">
+                                                <i class='bx bx-trash'></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-4 text-muted">
+                        <i class='bx bx-map-alt fs-1 mb-2 text-light'></i>
+                        <p>Chưa có lịch trình chi tiết nào cho chuyến đi này.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 </div>
-@endsection
+
+<!-- Modal Thêm Điểm Dừng -->
+<div class="modal fade" id="addStopoverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('admin.trips.stopovers.store', $trip->id) }}" method="POST" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Thêm Điểm Dừng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên địa điểm <span class="text-danger">*</span></label>
+                    <input type="text" name="stop_name" class="form-control" required placeholder="VD: Trạm dừng chân A">
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Giờ đến</label>
+                        <input type="time" name="arrival_time" class="form-control">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Giờ đi</label>
+                        <input type="time" name="departure_time" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Thứ tự <span class="text-danger">*</span></label>
+                    <input type="number" name="stop_order" class="form-control" required min="1" value="{{ $trip->stopovers->count() + 1 }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú</label>
+                    <textarea name="note" class="form-control" rows="2" placeholder="Ghi chú thêm..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer flex-nowrap p-0">
+                <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end text-muted" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 text-primary fw-bold">Thêm mới</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Sửa Điểm Dừng -->
+<div class="modal fade" id="editStopoverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editStopoverForm" method="POST" class="modal-content">
+            @csrf
+            @method('PUT')
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Chỉnh Sửa Điểm Dừng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên địa điểm <span class="text-danger">*</span></label>
+                    <input type="text" name="stop_name" id="edit_stop_name" class="form-control" required>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Giờ đến</label>
+                        <input type="time" name="arrival_time" id="edit_arrival_time" class="form-control">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label fw-bold">Giờ đi</label>
+                        <input type="time" name="departure_time" id="edit_departure_time" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Thứ tự <span class="text-danger">*</span></label>
+                    <input type="number" name="stop_order" id="edit_stop_order" class="form-control" required min="1">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú</label>
+                    <textarea name="note" id="edit_note" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer flex-nowrap p-0">
+                <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end text-muted" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 text-primary fw-bold">Cập nhật</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function editStopover(id, name, arrival, departure, order, note) {
+        document.getElementById('editStopoverForm').action = '/admin/trips/stopovers/' + id;
+        document.getElementById('edit_stop_name').value = name;
+        document.getElementById('edit_arrival_time').value = arrival;
+        document.getElementById('edit_departure_time').value = departure;
+        document.getElementById('edit_stop_order').value = order;
+        document.getElementById('edit_note').value = note;
+        
+        var editModal = new bootstrap.Modal(document.getElementById('editStopoverModal'));
+        editModal.show();
+    }
+</script>
+

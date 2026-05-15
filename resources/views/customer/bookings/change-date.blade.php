@@ -30,16 +30,12 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm bg-black/20 p-6 rounded-2xl border border-white/5">
                 <div>
-                    <p class="text-white/50 mb-1">Tiền vé cũ đã thanh toán:</p>
-                    <p class="font-bold text-white text-xl">{{ number_format($booking->total_amount) }} đ</p>
+                    <p class="text-white/50 mb-1">Tiền vé cũ đã thanh toán (Được bảo lưu toàn bộ):</p>
+                    <p class="font-black text-brand-primary text-2xl">{{ number_format($booking->total_amount) }} đ</p>
                 </div>
                 <div>
-                    <p class="text-red-400/80 mb-1">Phí đổi vé (10%):</p>
-                    <p class="font-bold text-red-400 text-xl">-{{ number_format($penaltyFee) }} đ</p>
-                </div>
-                <div class="col-span-1 md:col-span-2 pt-4 border-t border-white/10">
-                    <p class="text-white/50 mb-1">Giá trị vé cũ được bảo lưu (để trừ vào vé mới):</p>
-                    <p class="font-black text-brand-primary text-3xl">{{ number_format($creditAmount) }} đ</p>
+                    <p class="text-red-400/80 mb-1">Phụ phí đổi vé (Cộng thêm 10%):</p>
+                    <p class="font-bold text-red-400 text-2xl">+{{ number_format($penaltyFee) }} đ</p>
                 </div>
             </div>
         </div>

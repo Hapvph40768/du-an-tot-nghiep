@@ -51,7 +51,17 @@
                     </div>
                     <div class="col-md-6">
                         <div class="info-label"><i class='bx bx-time-five'></i> Thời gian hành trình dự kiến</div>
-                        <div class="info-value text-primary fs-4">{{ $route->duration }}<span class="small fw-normal text-muted">giờ</span></div>
+                        @php
+                            $totalMin = (int) $route->estimated_time;
+                            $h = floor($totalMin / 60);
+                            $m = $totalMin % 60;
+                        @endphp
+                        <div class="info-value text-primary fs-4">
+                            {{ $h }}<span class="small fw-normal text-muted">giờ</span>
+                            @if($m > 0)
+                                {{ $m }}<span class="small fw-normal text-muted">phút</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

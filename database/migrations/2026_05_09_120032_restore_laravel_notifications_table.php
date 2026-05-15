@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Drop the custom notifications table and recreate it following
+     * Laravel's standard DatabaseNotification schema so that
+     * Auth::user()->notifications() and ->unreadNotifications work correctly.
+     */
+    public function up(): void
+    {
+        Schema::dropIfExists('notifications');
+
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');   // notifiable_type + notifiable_id
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('notifications');
+
+        // Restore the custom table
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('title');
+            $table->text('content');
+            $table->string('type')->default('system');
+            $table->boolean('is_read')->default(false);
+            $table->timestamps();
+        });
+    }
+};

@@ -18,7 +18,7 @@ return new class extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('type');
-            $table->string('order_code')->unique()->nullable(false)->change();
+            $table->string('order_code')->nullable(false)->change();
         });
     }
 };

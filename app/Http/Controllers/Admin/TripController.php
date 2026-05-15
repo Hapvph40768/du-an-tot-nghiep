@@ -68,8 +68,20 @@ class TripController extends Controller
 
     public function store(Request $request)
     {
+        // Ghép giờ + phút từ dropdown thành chuỗi H:i
+        if ($request->filled('departure_hour')) {
+            $request->merge([
+                'departure_time' => $request->departure_hour . ':' . ($request->departure_minute ?? '00'),
+            ]);
+        }
+        if ($request->filled('arrival_hour')) {
+            $request->merge([
+                'arrival_time' => $request->arrival_hour . ':' . ($request->arrival_minute ?? '00'),
+            ]);
+        }
+
         $validated = $request->validate([
-            'route_id' => 'required|exists:routes,id',
+            'route_id'   => 'required|exists:routes,id',
             'vehicle_id' => [
                 'required',
                 'exists:vehicles,id',
@@ -78,17 +90,25 @@ class TripController extends Controller
                                  ->where('departure_time', $request->departure_time);
                 })
             ],
-            'driver_id' => 'required|exists:drivers,id',
-            'trip_date' => 'nullable|date',
+            'driver_id'      => 'required|exists:drivers,id',
+            'trip_date'      => 'nullable|date',
             'departure_time' => 'nullable|date_format:H:i',
-            'arrival_time' => 'nullable|date_format:H:i',
-            'price' => 'required|numeric|min:0',
-            'status' => 'required|in:active,completed,cancelled',
+            'arrival_time'   => 'nullable|date_format:H:i',
+            'price'          => 'required|numeric|min:0',
+            'status'         => 'required|in:active,completed,cancelled',
         ], [
             'vehicle_id.unique' => 'Xe này đã được xếp lịch chạy vào ngày và giờ này. Vui lòng chọn xe khác hoặc đổi thời gian khởi hành.',
         ]);
 
-        Trip::create($validated);
+        $trip = Trip::create($validated);
+
+        if ($request->has('pickup_points')) {
+            $trip->pickupPoints()->sync($request->pickup_points);
+        }
+        if ($request->has('dropoff_points')) {
+            $trip->dropoffPoints()->sync($request->dropoff_points);
+        }
+
         return redirect()->route('admin.trips.index')->with('success', 'Lên lịch chuyến đi thành công!');
     }
 
@@ -103,8 +123,20 @@ class TripController extends Controller
 
     public function update(Request $request, Trip $trip)
     {
+        // Ghép giờ + phút từ dropdown thành chuỗi H:i
+        if ($request->filled('departure_hour')) {
+            $request->merge([
+                'departure_time' => $request->departure_hour . ':' . ($request->departure_minute ?? '00'),
+            ]);
+        }
+        if ($request->filled('arrival_hour')) {
+            $request->merge([
+                'arrival_time' => $request->arrival_hour . ':' . ($request->arrival_minute ?? '00'),
+            ]);
+        }
+
         $validated = $request->validate([
-            'route_id' => 'required|exists:routes,id',
+            'route_id'   => 'required|exists:routes,id',
             'vehicle_id' => [
                 'required',
                 'exists:vehicles,id',
@@ -113,17 +145,30 @@ class TripController extends Controller
                                  ->where('departure_time', $request->departure_time);
                 })->ignore($trip->id)
             ],
-            'driver_id' => 'required|exists:drivers,id',
-            'trip_date' => 'required|date|after_or_equal:today',
+            'driver_id'      => 'required|exists:drivers,id',
+            'trip_date'      => 'required|date|after_or_equal:today',
             'departure_time' => 'required|date_format:H:i',
-            'arrival_time' => 'required|date_format:H:i',
-            'price' => 'required|numeric|min:0',
-            'status' => 'required|in:active,completed,cancelled',
+            'arrival_time'   => 'nullable|date_format:H:i',
+            'price'          => 'required|numeric|min:0',
+            'status'         => 'required|in:active,completed,cancelled',
         ], [
             'vehicle_id.unique' => 'Xe này đã được xếp lịch chạy vào ngày và giờ này. Vui lòng chọn xe khác hoặc đổi thời gian khởi hành.',
         ]);
 
         $trip->update($validated);
+
+        if ($request->has('pickup_points')) {
+            $trip->pickupPoints()->sync($request->pickup_points);
+        } else {
+            $trip->pickupPoints()->detach();
+        }
+
+        if ($request->has('dropoff_points')) {
+            $trip->dropoffPoints()->sync($request->dropoff_points);
+        } else {
+            $trip->dropoffPoints()->detach();
+        }
+
         return redirect()->route('admin.trips.index')->with('success', 'Cập nhật chuyến đi thành công!');
     }
 
@@ -131,5 +176,16 @@ class TripController extends Controller
     {
         $trip->delete();
         return redirect()->route('admin.trips.index')->with('success', 'Hủy chuyến đi thành công!');
+    }
+
+    public function getPointsByRoute(Route $route)
+    {
+        $pickupPoints = \App\Models\PickupPoint::where('location_id', $route->start_location_id)->get();
+        $dropoffPoints = \App\Models\DropoffPoint::where('location_id', $route->end_location_id)->get();
+
+        return response()->json([
+            'pickup_points' => $pickupPoints,
+            'dropoff_points' => $dropoffPoints
+        ]);
     }
 }

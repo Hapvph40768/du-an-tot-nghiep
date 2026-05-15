@@ -15,4 +15,19 @@ class Parcel extends Model
     {
         return $this->belongsTo(Route::class);
     }
+
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class);
+    }
+
+    public function pickupPoint()
+    {
+        return $this->belongsTo(PickupPoint::class);
+    }
+
+    public function dropoffPoint()
+    {
+        return $this->belongsTo(DropoffPoint::class);
+    }
 }

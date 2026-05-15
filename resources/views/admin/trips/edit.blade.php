@@ -27,13 +27,47 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Giờ xuất bến</label>
-                                <input type="time" name="departure_time" class="form-control rounded-3"
-                                    value="{{ $trip->departure_time }}">
+                                @php
+                                    $depH = substr($trip->departure_time, 0, 2);
+                                    $depM = substr($trip->departure_time, 3, 2) ?: '00';
+                                @endphp
+                                <div class="input-group">
+                                    <select name="departure_hour" class="form-select rounded-start-3" style="max-width:80px;">
+                                        <option value="">--</option>
+                                        @for($h = 0; $h < 24; $h++)
+                                        <option value="{{ str_pad($h,2,'0',STR_PAD_LEFT) }}"
+                                            {{ $depH == str_pad($h,2,'0',STR_PAD_LEFT) ? 'selected' : '' }}>{{ str_pad($h,2,'0',STR_PAD_LEFT) }}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="input-group-text px-1">:</span>
+                                    <select name="departure_minute" class="form-select rounded-end-3" style="max-width:80px;">
+                                        @foreach(['00','15','30','45'] as $min)
+                                        <option value="{{ $min }}" {{ $depM === $min ? 'selected' : '' }}>{{ $min }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Giờ đến</label>
-                                <input type="time" name="arrival_time" class="form-control rounded-3"
-                                    value="{{ $trip->arrival_time }}">
+                                <label class="form-label fw-bold">Giờ đến dự kiến</label>
+                                @php
+                                    $arrH = substr($trip->arrival_time ?? '', 0, 2);
+                                    $arrM = substr($trip->arrival_time ?? '', 3, 2) ?: '00';
+                                @endphp
+                                <div class="input-group">
+                                    <select name="arrival_hour" class="form-select rounded-start-3" style="max-width:80px;">
+                                        <option value="">--</option>
+                                        @for($h = 0; $h < 24; $h++)
+                                        <option value="{{ str_pad($h,2,'0',STR_PAD_LEFT) }}"
+                                            {{ $arrH == str_pad($h,2,'0',STR_PAD_LEFT) ? 'selected' : '' }}>{{ str_pad($h,2,'0',STR_PAD_LEFT) }}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="input-group-text px-1">:</span>
+                                    <select name="arrival_minute" class="form-select rounded-end-3" style="max-width:80px;">
+                                        @foreach(['00','15','30','45'] as $min)
+                                        <option value="{{ $min }}" {{ $arrM === $min ? 'selected' : '' }}>{{ $min }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Xe phụ trách</label>
@@ -76,6 +110,22 @@
                                 <input type="number" name="price" class="form-control rounded-3"
                                     value="{{ $trip->price }}">
                             </div>
+
+                            {{-- Điểm đón khách --}}
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label fw-bold">Điểm đón khách (Chọn theo tuyến đường)</label>
+                                <select name="pickup_points[]" id="pickup_points" class="form-select rounded-3" multiple style="height: 120px;">
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+
+                            {{-- Điểm trả khách --}}
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label fw-bold">Điểm trả khách (Chọn theo tuyến đường)</label>
+                                <select name="dropoff_points[]" id="dropoff_points" class="form-select rounded-3" multiple style="height: 120px;">
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
                         </div>
                         <div class="mt-5 pt-3 border-top">
                             <button type="submit" class="btn btn-success px-5 py-2 fw-bold"
@@ -89,3 +139,71 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const routeSelect = document.querySelector('select[name="route_id"]');
+        const pickupSelect = document.getElementById('pickup_points');
+        const dropoffSelect = document.getElementById('dropoff_points');
+
+        const selectedPickups = @json($trip->pickupPoints->pluck('id')->toArray());
+        const selectedDropoffs = @json($trip->dropoffPoints->pluck('id')->toArray());
+
+        function fetchPoints(routeId) {
+            if (!routeId) {
+                pickupSelect.innerHTML = '';
+                dropoffSelect.innerHTML = '';
+                return;
+            }
+
+            fetch(`/admin/trips/get-points/${routeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate Pickup Points
+                    pickupSelect.innerHTML = '';
+                    if (data.pickup_points.length === 0) {
+                        pickupSelect.innerHTML = '<option disabled>Không có điểm đón nào</option>';
+                    } else {
+                        data.pickup_points.forEach(point => {
+                            const option = document.createElement('option');
+                            option.value = point.id;
+                            option.textContent = point.name + (point.address ? ' (' + point.address + ')' : '');
+                            if (selectedPickups.includes(point.id)) {
+                                option.selected = true;
+                            }
+                            pickupSelect.appendChild(option);
+                        });
+                    }
+
+                    // Populate Dropoff Points
+                    dropoffSelect.innerHTML = '';
+                    if (data.dropoff_points.length === 0) {
+                        dropoffSelect.innerHTML = '<option disabled>Không có điểm trả nào</option>';
+                    } else {
+                        data.dropoff_points.forEach(point => {
+                            const option = document.createElement('option');
+                            option.value = point.id;
+                            option.textContent = point.name + (point.address ? ' (' + point.address + ')' : '');
+                            if (selectedDropoffs.includes(point.id)) {
+                                option.selected = true;
+                            }
+                            dropoffSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching points:', error));
+        }
+
+        // Fetch on change
+        routeSelect.addEventListener('change', function () {
+            fetchPoints(this.value);
+        });
+
+        // Fetch on load if route is already selected
+        if (routeSelect.value) {
+            fetchPoints(routeSelect.value);
+        }
+    });
+</script>
+@endpush

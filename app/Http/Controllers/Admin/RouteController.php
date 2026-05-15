@@ -39,9 +39,15 @@ class RouteController extends Controller
             'start_location_id' => 'required|exists:locations,id',
             'end_location_id' => 'required|exists:locations,id|different:start_location_id',
             'distance_km' => 'nullable|integer|min:1',
-            'estimated_time' => 'nullable|integer|min:1',
+            'estimated_hours' => 'nullable|integer|min:0|max:99',
+            'estimated_minutes' => 'nullable|integer|min:0|max:59',
         ]);
+
         $validated['is_active'] = $request->has('is_active');
+        // Lưu theo phút để tính toán chính xác
+        $validated['estimated_time'] = ((int)($request->estimated_hours ?? 0) * 60)
+                                     + (int)($request->estimated_minutes ?? 0);
+        unset($validated['estimated_hours'], $validated['estimated_minutes']);
 
         Route::create($validated);
         return redirect()->route('admin.routes.index')->with('success', 'Tạo tuyến đường thành công');
@@ -53,9 +59,15 @@ class RouteController extends Controller
             'start_location_id' => 'required|exists:locations,id',
             'end_location_id' => 'required|exists:locations,id|different:start_location_id',
             'distance_km' => 'nullable|integer|min:1',
-            'estimated_time' => 'nullable|integer|min:1',
+            'estimated_hours' => 'nullable|integer|min:0|max:99',
+            'estimated_minutes' => 'nullable|integer|min:0|max:59',
         ]);
+
         $validated['is_active'] = $request->has('is_active');
+        // Lưu theo phút
+        $validated['estimated_time'] = ((int)($request->estimated_hours ?? 0) * 60)
+                                     + (int)($request->estimated_minutes ?? 0);
+        unset($validated['estimated_hours'], $validated['estimated_minutes']);
 
         $route->update($validated);
         return redirect()->route('admin.routes.index')->with('success', 'Cập nhật tuyến đường thành công');
