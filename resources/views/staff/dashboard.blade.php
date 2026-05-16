@@ -32,6 +32,18 @@
         <div class="text-xs opacity-60">Yêu cầu liên hệ khách chốt tiền mặt / hủy giữ chỗ.</div>
     </div>
 
+    <div class="bg-white dark:bg-[#111] border {{ $waitingChatCount > 0 ? 'border-orange-400 dark:border-orange-900/50 shadow-orange-100 dark:shadow-none animate-pulse' : 'border-gray-200 dark:border-[#262626]' }} rounded-3xl p-6 shadow-sm transition-all">
+        <div class="flex items-center gap-2 mb-2">
+            <div class="w-3 h-3 rounded-full {{ $waitingChatCount > 0 ? 'bg-orange-500' : 'bg-gray-400' }}"></div>
+            <div class="text-sm font-bold {{ $waitingChatCount > 0 ? 'text-orange-600 dark:text-orange-400' : 'opacity-50' }} uppercase tracking-wider">Khách Chờ Hỗ Trợ</div>
+        </div>
+        <div class="text-4xl font-black {{ $waitingChatCount > 0 ? 'text-orange-600 dark:text-orange-400' : 'opacity-20' }} mb-1">{{ $waitingChatCount }}</div>
+        <div class="text-xs opacity-60 mb-3">Yêu cầu hỗ trợ về mất đồ, khiếu nại hoặc gặp người thật.</div>
+        <a href="{{ route('staff.chat.index') }}" class="w-full py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold rounded-xl text-center transition-colors block border border-orange-200">
+            💬 Trò chuyện ngay
+        </a>
+    </div>
+
     <div class="bg-white dark:bg-[#111] border border-gray-200 dark:border-[#262626] rounded-3xl p-6 shadow-sm flex flex-col justify-center gap-3">
         <div class="text-sm font-bold uppercase tracking-wider opacity-50 mb-1">Lối Tắt Nhanh</div>
         <a href="{{ route('staff.checkin.index') }}" class="w-full py-2.5 px-4 bg-gray-100 hover:bg-blue-600 hover:text-white dark:bg-gray-800 text-sm font-bold rounded-xl text-center transition-colors">🔍 Quét Check-in</a>

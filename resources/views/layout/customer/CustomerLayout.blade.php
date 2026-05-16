@@ -45,7 +45,7 @@
     <!-- Footer -->
     @include('layout.customer.blocks.footer')
 
-    @livewire('chatbox')
+    @include('layout.partials.chatbox')
     @livewireScripts
     
     <script>

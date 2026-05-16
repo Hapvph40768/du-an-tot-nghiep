@@ -69,6 +69,7 @@ class DashboardController extends Controller
         $todayTripCount = Trip::whereDate('trip_date', $today)->count();
         $todayBookingsCount = Booking::whereDate('created_at', $today)->count();
         $pendingBookingsCount = Booking::where('status', 'pending')->count();
+        $waitingChatCount = \App\Models\ChatSession::where('status', 'waiting_staff')->count();
 
         // 4. ACTIVITY LOG (Minh bạch thao tác)
         $recentLogs = StaffLog::with('user')
@@ -83,6 +84,7 @@ class DashboardController extends Controller
             'todayTripCount', 
             'todayBookingsCount', 
             'pendingBookingsCount',
+            'waitingChatCount',
             'recentLogs'
         ));
     }

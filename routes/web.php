@@ -63,6 +63,9 @@ Route::get('/', [CustomerHomeController::class, 'index'])->name('customer.home')
 Route::get('/set-locale/{locale}', [LocaleController::class, 'setLocale'])->name('set.locale');
 Route::get('/trips/search', [CustomerTripController::class, 'search'])->name('customer.trips.search');
 Route::get('/trips/{trip}', [CustomerTripController::class, 'show'])->name('customer.trips.show');
+Route::post('/ai-chat', [\App\Http\Controllers\ChatController::class, 'chat'])->name('ai.chat');
+Route::get('/ai-chat-poll', [\App\Http\Controllers\ChatController::class, 'poll'])->name('ai.chat.poll');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -284,6 +287,12 @@ Route::prefix('staff')->name('staff.')->middleware(['auth', CheckStaffRole::clas
     Route::get('/parking', [StaffParking::class, 'index'])->name('parking.index');
     Route::post('/parking/slots/{slot}/check-in', [StaffParking::class, 'checkIn'])->name('parking.checkin');
     Route::post('/parking/slots/{slot}/check-out', [StaffParking::class, 'checkOut'])->name('parking.checkout');
+
+    // Live Chat Support
+    Route::get('/chat', [\App\Http\Controllers\Staff\ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{id}', [\App\Http\Controllers\Staff\ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{id}/reply', [\App\Http\Controllers\Staff\ChatController::class, 'reply'])->name('chat.reply');
+    Route::post('/chat/{id}/close', [\App\Http\Controllers\Staff\ChatController::class, 'close'])->name('chat.close');
 });
 
 // 5. DRIVERS ROUTES

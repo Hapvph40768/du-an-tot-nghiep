@@ -153,6 +153,7 @@
         // Initialize Lucide Icons
         lucide.createIcons();
     </script>
+    @include('layout.partials.chatbox')
     @stack('scripts')
 </body>
 </html>
